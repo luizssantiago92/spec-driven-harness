@@ -1,6 +1,6 @@
 {
   "name": "@luizsantiago/agentic-harness",
-  "version": "0.1.2",
+  "version": "0.1.3",
   "description": "Framework agêntico Spec-Driven + Loop + Harness Engineering. Zero Ceremony via npx: skills, regras pt-BR/EN, memória .specs/, Specify→Verify com verificador independente.",
   "type": "module",
   "bin": {
