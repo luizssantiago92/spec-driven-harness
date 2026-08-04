@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@luizsantiago/agentic-harness.svg)](https://www.npmjs.com/package/@luizsantiago/agentic-harness)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**Framework agêntico que une Spec-Driven Development, Loop e Harness Engineering.** Zero Ceremony via npx: skills SDD, engenharia, segurança, regras pt-BR/EN e memória `.specs/`. Fluxo Specify→Verify com Verificador Independente, `STATE.md` e `LESSONS.md`.
+**Framework agêntico que une Spec-Driven Development, Loop e Harness Engineering.** Zero Ceremony via npx: skills SDD, engenharia, segurança, git handoff, regras pt-BR/EN e memória `.specs/`. Fluxo Specify→Verify com Verificador Independente, `STATE.md` e `LESSONS.md`.
 
 ## Instalação (Zero Ceremony)
 
@@ -26,6 +26,7 @@ curl -sSL https://raw.githubusercontent.com/luizssantiago92/spec-driven-harness/
 | `.cursor/skills/agent-architecture.md` | SDD workflow (Specify → Verify) |
 | `.cursor/skills/engineering-standards.md` | Locale, segurança e qualidade de código |
 | `.cursor/skills/security-review.md` | Checklist OWASP para `/verify` |
+| `.cursor/skills/git-handoff.md` | Git sync e handoff de sessão para `.specs/` |
 | `.cursor/rules/locale-and-standards.mdc` | Regra global Cursor (pt-BR chat, artefatos em inglês) |
 | `.claude/skills/*.md` | Mesmas skills para Claude |
 | `.specs/STATE.md` | Decisões e handoff entre sessões |
@@ -87,6 +88,29 @@ SPECIFY → DESIGN (opcional) → TASKS (opcional) → EXECUTE (loop) → VERIFY
 | `/tasks` | Breakdown atômico em tarefas |
 | `/loop` | Inicia implementação autônoma em loop |
 | `/verify` | Aciona validação técnica independente |
+| `/handoff` | Atualiza STATE, commita `.specs/` no git (sem push) |
+
+## Skills irmãs (use juntas)
+
+As quatro skills instaladas pelo harness formam um **conjunto complementar** — cada uma cobre uma camada diferente do fluxo agêntico. Funcionam melhor **em conjunto** do que isoladas:
+
+| Skill | Camada | Papel |
+| --- | --- | --- |
+| `agent-architecture.md` | **Processo** | Workflow SDD — Specify → Verify, comandos `/specify`, `/loop`, `/verify` |
+| `engineering-standards.md` | **Qualidade** | Locale (pt-BR chat / artefatos EN), secure coding, formato de commits |
+| `security-review.md` | **Verificação** | Checklist OWASP para a fase `/verify` |
+| `git-handoff.md` | **Persistência** | Git sync em fronteiras de fase e handoff de sessão para `.specs/` |
+
+```
+agent-architecture  →  define O QUE fazer e QUANDO (fases SDD)
+engineering-standards →  define COMO escrever código e commits
+security-review       →  valida segurança na verificação
+git-handoff           →  persiste memória e specs no git
+```
+
+Cada skill referencia as outras na seção **Related Skills / Sister Skills**. O contrato em `.cursorrules` aponta para todas — o agente carrega o conjunto completo ao planejar ou executar features.
+
+> **Complementar a catálogos externos** — projetos como [agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills) oferecem centenas de skills especializadas (React, Docker, SEO…). Este harness foca no **processo e na memória**: SDD, verificação independente e handoff entre sessões. Use catálogos amplos para domínio; use estas skills irmãs para o fluxo de trabalho.
 
 ## Cadeia de verificação de conhecimento
 
@@ -109,7 +133,8 @@ spec-driven-harness/
 ├── skills/
 │   ├── agent-architecture.md   # SDD workflow
 │   ├── engineering-standards.md
-│   └── security-review.md
+│   ├── security-review.md
+│   └── git-handoff.md          # Git sync & session handoff
 ├── rules/
 │   └── locale-and-standards.mdc
 ├── test/                     # Testes de integração

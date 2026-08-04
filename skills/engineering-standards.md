@@ -74,3 +74,4 @@ test(auth): add session expiry edge case
 
 - `agent-architecture.md` — SDD workflow (Specify → Verify)
 - `security-review.md` — deep checklist for `/verify` phase
+- `git-handoff.md` — git sync and session handoff for `.specs/`
