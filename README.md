@@ -3,9 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@luizsantiago/agentic-harness.svg)](https://www.npmjs.com/package/@luizsantiago/agentic-harness)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**Arquitetura Agêntica focada em Precisão, Autonomia e Qualidade.**
-
-Framework de **Harness Engineering** para desenvolvimento assistido por IA. Substitui o "Vibe Coding" por **Spec-Driven Development (SDD)** e **Loop Engineering** — com verificação independente, memória persistente e sensores operacionais.
+**Framework agêntico que une Spec-Driven Development, Loop e Harness Engineering.** Zero Ceremony via npx: skills SDD, engenharia, segurança, regras pt-BR/EN e memória `.specs/`. Fluxo Specify→Verify com Verificador Independente, `STATE.md` e `LESSONS.md`.
 
 ## Instalação (Zero Ceremony)
 

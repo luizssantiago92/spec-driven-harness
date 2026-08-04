@@ -1,7 +1,7 @@
 {
   "name": "@luizsantiago/agentic-harness",
   "version": "0.1.1",
-  "description": "Zero Ceremony onboarding for AI agents — skills, memory harness, execution contract",
+  "description": "Framework agêntico Spec-Driven + Loop + Harness Engineering. Zero Ceremony via npx: skills, regras pt-BR/EN, memória .specs/, Specify→Verify com verificador independente.",
   "type": "module",
   "bin": {
     "agentic-harness": "./index.js"
