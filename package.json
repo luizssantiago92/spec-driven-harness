@@ -10,11 +10,29 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node --test test/**/*.test.js"
+    "test": "node --test test/**/*.test.js",
+    "prepublishOnly": "npm test"
   },
   "files": [
     "index.js",
     "lib/"
   ],
-  "license": "MIT"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luizssantiago92/spec-driven-harness.git"
+  },
+  "keywords": [
+    "ai",
+    "agent",
+    "cursor",
+    "claude",
+    "spec-driven",
+    "harness",
+    "cli"
+  ],
+  "author": "luizssantiago92",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public"
+  }
 }
