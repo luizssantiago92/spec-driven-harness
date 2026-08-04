@@ -153,6 +153,37 @@ describe("install harness", () => {
     });
   });
 
+  it("upgrades an outdated .cursorrules harness block on re-run", async () => {
+    await withMockServer(async (mockServer) => {
+      const cwd = await createTempDir("harness-cursorrules-upgrade-");
+
+      try {
+        await install({ cwd, repoUrl: mockServer.baseUrl, silent: true });
+
+        const cursorRules = path.join(cwd, ".cursorrules");
+        await fs.writeFile(
+          cursorRules,
+          `<!-- AGENTIC-HARNESS:BEGIN -->
+# Old block
+- \`.cursor/skills/agent-architecture.md\`
+<!-- AGENTIC-HARNESS:END -->
+`,
+          "utf8",
+        );
+
+        await install({ cwd, repoUrl: mockServer.baseUrl, silent: true });
+
+        const rulesContent = await fs.readFile(cursorRules, "utf8");
+        assert.match(rulesContent, /engineering-standards\.md/);
+        assert.match(rulesContent, /security-review\.md/);
+        assert.match(rulesContent, /locale-and-standards\.mdc/);
+        assert.doesNotMatch(rulesContent, /# Old block/);
+      } finally {
+        await fs.rm(cwd, { recursive: true, force: true });
+      }
+    });
+  });
+
   it("throws a descriptive error when download fails", async () => {
     await withMockServer(
       async (failingServer) => {
