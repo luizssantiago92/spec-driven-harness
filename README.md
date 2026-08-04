@@ -1,11 +1,10 @@
-# 🤖 Spec-Driven Harness (2026)
-**Arquitetura Agêntica focada em Precisão, Autonomia e Qualidade.**
+# Spec-Driven Harness (2026)
 
-Este repositório implementa um **Harness Engineering** avançado para o desenvolvimento de software assistido por IA. Ele substitui o "Vibe Coding" por um fluxo estruturado de **Spec-Driven Development (SDD)** e **Loop Engineering**.
+Framework agêntico que une **Spec-Driven Development**, **Loop Engineering** e **Harness Engineering**. Substitui o "Vibe Coding" por um fluxo estruturado com verificação independente, memória persistente e sensores operacionais.
 
-## 🚀 Instalação Instantânea (Zero Ceremony)
+## Instalação (Zero Ceremony)
 
-Com um único comando `npx`, configure skills, memória persistente e contrato de execução:
+Com um único comando `npx`, configure skills, memória persistente e contrato de execução em qualquer projeto:
 
 ```bash
 npx @luizssantiago92/agentic-harness install
@@ -28,74 +27,104 @@ curl -sSL https://raw.githubusercontent.com/luizssantiago92/spec-driven-harness/
 | `.specs/features/` | Specs por feature (spec, design, tasks, validation) |
 | `.cursorrules` | Contrato de execução (Progressive Disclosure) |
 
+## Fluxo Spec-Driven (5 fases)
 
-## 🏗️ O Fluxo Spec-Driven
+```
+SPECIFY → DESIGN (opcional) → TASKS (opcional) → EXECUTE (loop) → VERIFY
+```
 
-Um pipeline que se ajusta automaticamente à complexidade do projeto:
+| Fase | Obrigatória | Descrição |
+| --- | --- | --- |
+| **Specify** | Sim | Mapeia requisitos em IDs únicos; define out-of-scope |
+| **Design** | Não | Arquitetura, reúso e riscos — ignorado em mudanças simples |
+| **Tasks** | Não | Quebra atômica com critérios binários e paralelismo |
+| **Execute** | Sim | Implementação em loops guiada por testes e commits atômicos |
+| **Verify** | Sim | Validação independente por subagente especializado |
 
-SPECIFY → DESIGN (opcional) → TASKS (opcional) → EXECUTE (LOOP) → VERIFY
+## Regras críticas (Contrato de Execução)
 
-SPECIFY (Obrigatório): Mapeia requisitos em IDs únicos e define o que está fora de escopo.
-DESIGN: Define arquitetura, reúso e riscos. Ignorado em mudanças simples.
-TASKS: Quebra atômica com critérios binários de sucesso e paralelismo.
-EXECUTE: Implementação em loops guiada por testes e commits atômicos.
-VERIFY (Obrigatório): Validação independente por um subagente especializado.
+- **Test-First Imperative** — Nenhum código antes da spec e testes derivados dos critérios de aceite.
+- **Autor ≠ Verificador** — O verificador tem contexto limpo e nunca é o autor do código.
+- **Discrimination Sensor** — O verificador injeta falhas propositais (mutantes) para validar os testes.
+- **Evidence-or-Zero** — Requisito "pronto" só com evidência (arquivo + linha) de teste assertivo passando.
 
-## ⚠️ Regras Críticas (Contrato de Execução)
+## Persistência e memória (`.specs/`)
 
-Test-First Imperative: Nenhum código é escrito antes que a spec e os testes derivados dos critérios de aceite sejam aprovados.
-Autor ≠ Verificador: Após a última tarefa, um Verificador Independente (contexto limpo) deve validar a entrega. Ele nunca é o autor do código.
-Discrimination Sensor: O verificador deve injetar falhas propositais (mutantes) para confirmar se os testes realmente detectam erros.
-Evidence-or-Zero: Um requisito só é considerado "pronto" se houver evidência (arquivo e linha) de um teste assertivo passando.
+| Arquivo | Função |
+| --- | --- |
+| `STATE.md` | Decisões técnicas e snapshot de progresso (handoff) |
+| `LESSONS.md` | Lições aprendidas — falhas de verificação viram playbook local |
+| `features/[feature]/spec.md` | Requisitos e critérios de aceite |
+| `features/[feature]/design.md` | Arquitetura (quando aplicável) |
+| `features/[feature]/tasks.md` | Breakdown atômico de tarefas |
+| `features/[feature]/validation.md` | Relatório de verificação independente |
 
-## 🧠 Persistência e Memória (.specs/)
-Para combater a "amnésia entre sessões", a skill mantém os seguintes artefatos:
-STATE.md: Registro de decisões técnicas e snapshot do progresso para passagens de bastão (handoff).
-LESSONS.md: Playbook de aprendizado contínuo. Falhas de verificação tornam-se lições locais para evitar repetição de erros.
-features/[feature]/: Contém a spec.md, design.md, tasks.md e o relatório final de validation.md.
+## Loop Engineering & Harness
 
-## 🔁 Loop Engineering & Harness
-Diferente do prompt isolado, esta skill opera em loops autônomos:
-Loop de Correção: Se o sensor (Harness) falhar, o agente deve corrigir o código e retestar até 3 vezes antes de chamar um humano.
-Harness Operacional: O controle é feito por ferramentas externas (test runners, linters, compiladores como Rust) e não por autodeclaração da IA.
+- **Loop de Correção** — Se o sensor (Harness) falhar, corrigir e retestar até 3 vezes antes de escalar para humano.
+- **Harness Operacional** — Qualidade garantida por ferramentas externas (test runners, linters, compiladores), não por autodeclaração da IA.
 
-## 🛠️ Comandos Disponíveis
+## Comandos disponíveis
 
-/specify: Define requisitos e IDs de spec.
+| Comando | Ação |
+| --- | --- |
+| `/specify` | Define requisitos e IDs de spec |
+| `/plan` | Cria design técnico e arquitetura |
+| `/tasks` | Breakdown atômico em tarefas |
+| `/loop` | Inicia implementação autônoma em loop |
+| `/verify` | Aciona validação técnica independente |
 
-/plan: Cria o design técnico e arquitetura.
+## Cadeia de verificação de conhecimento
 
-/tasks: Breakdown atômico em tarefas paralelas ou sequenciais.
+Ao tomar decisões técnicas, siga esta ordem:
 
-/loop: Inicia a implementação autônoma em loop.
+1. **Codebase** — Convenções e padrões já em uso
+2. **Docs** — README e `.specs/STATE.md`
+3. **MCP/Context** — Documentação atualizada via ferramentas externas
+4. **Web Search** — Padrões de comunidade e fontes oficiais
+5. **Incerteza** — Se não encontrar, diga "Eu não sei". Nunca invente APIs.
 
-/verify: Aciona a validação técnica independente.
+> Otimizado para modelos de alto raciocínio (Opus, GPT-4o) no planejamento e modelos rápidos (Sonnet, Composer) na execução do loop.
 
-## ⛓️ Cadeia de Verificação de Conhecimento
+---
 
-Ao tomar qualquer decisão técnica, siga esta ordem estritamente:
+## Estrutura do repositório
 
-Codebase: Verifique convenções e padrões já em uso.
-Docs: Leia o README e o STATE.md (Decisões).
-MCP/Context: Consulte documentações atualizadas via ferramentas externas.
-Web Search: Busque padrões de comunidade e fontes oficiais.
-Incerteza: Se não encontrar, diga "Eu não sei". Jamais invente APIs ou comportamentos.
-Nota: Esta skill é otimizada para modelos de alto raciocínio (Opus, GPT-4o) durante o planejamento e modelos rápidos/baratos (Sonnet, Composer) durante a execução do loop
+```
+spec-driven-harness/
+├── index.js                  # CLI entrypoint (agentic-harness)
+├── lib/                      # Lógica do instalador
+├── skills/
+│   └── agent-architecture.md # Skill fonte (baixada pelo instalador)
+├── test/                     # Testes de integração
+├── install.sh                # Instalador legado (bash)
+└── .github/workflows/
+    ├── ci.yml                # Testes automáticos (Node 18/20/22)
+    └── publish.yml           # Publicação no npm
+```
 
-## 📦 Publicação no npm
+O pacote npm [`@luizssantiago92/agentic-harness`](https://www.npmjs.com/package/@luizssantiago92/agentic-harness) é publicado a partir deste repositório.
 
-### Pré-requisitos
+---
 
-1. Conta npm com acesso ao scope `@luizssantiago92`
-2. Secret `NPM_TOKEN` configurado no GitHub (Settings → Secrets → Actions)
+## Desenvolvimento e publicação (mantenedores)
 
-### Publicar via GitHub Actions (recomendado)
+### Desenvolvimento local
 
-1. Merge o PR na `main`
-2. Vá em **Actions → Publish to npm → Run workflow**
-3. Escolha o tipo de bump (`patch`, `minor`, `major`)
+```bash
+git clone https://github.com/luizssantiago92/spec-driven-harness.git
+cd spec-driven-harness
+npm test
+node index.js install
+```
 
-Alternativamente, crie um **GitHub Release** — o workflow publica automaticamente na versão do tag.
+### Publicar no npm via GitHub Actions
+
+1. Configure o secret `NPM_TOKEN` em **Settings → Secrets → Actions**
+2. Vá em **Actions → `.github/workflows/publish.yml`**
+3. Clique em **Run workflow** → branch `main` → version `patch` → **Run workflow**
+
+Alternativa: crie um **GitHub Release** — o workflow publica automaticamente.
 
 ### Publicar manualmente
 
@@ -105,10 +134,6 @@ npm test
 npm publish --access public
 ```
 
-### Desenvolvimento local
+## Licença
 
-```bash
-npm test                              # roda testes
-node index.js install                 # instala harness no cwd
-HARNESS_SKILL_URL=http://127.0.0.1:.../skill.md node index.js install  # URL customizada
-```
+MIT
