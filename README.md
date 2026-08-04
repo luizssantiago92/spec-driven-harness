@@ -3,13 +3,30 @@
 
 Este repositório implementa um **Harness Engineering** avançado para o desenvolvimento de software assistido por IA. Ele substitui o "Vibe Coding" por um fluxo estruturado de **Spec-Driven Development (SDD)** e **Loop Engineering**.
 
-## 🚀 Instalação Instantânea
-Copie e cole no terminal do seu projeto:
+## 🚀 Instalação Instantânea (Zero Ceremony)
+
+Com um único comando `npx`, configure skills, memória persistente e contrato de execução:
 
 ```bash
-    
+npx @luizssantiago92/agentic-harness install
+```
+
+Alternativa legada via bash:
+
+```bash
 curl -sSL https://raw.githubusercontent.com/luizssantiago92/spec-driven-harness/main/install.sh | bash
 ```
+
+### O que o instalador cria
+
+| Artefato | Propósito |
+| --- | --- |
+| `.cursor/skills/agent-architecture.md` | Skill principal (Cursor) |
+| `.claude/skills/agent-architecture.md` | Skill principal (Claude) |
+| `.specs/STATE.md` | Decisões e handoff entre sessões |
+| `.specs/LESSONS.md` | Playbook de aprendizado contínuo |
+| `.specs/features/` | Specs por feature (spec, design, tasks, validation) |
+| `.cursorrules` | Contrato de execução (Progressive Disclosure) |
 
 
 ## 🏗️ O Fluxo Spec-Driven

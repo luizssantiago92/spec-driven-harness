@@ -1,0 +1,20 @@
+{
+  "name": "@luizssantiago92/agentic-harness",
+  "version": "0.1.0",
+  "description": "Zero Ceremony onboarding for AI agents — skills, memory harness, execution contract",
+  "type": "module",
+  "bin": {
+    "agentic-harness": "./index.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "test": "node --test test/**/*.test.js"
+  },
+  "files": [
+    "index.js",
+    "lib/"
+  ],
+  "license": "MIT"
+}
