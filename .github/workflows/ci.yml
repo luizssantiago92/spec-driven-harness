@@ -26,3 +26,9 @@ jobs:
 
       - name: Verify skill file exists
         run: test -f skills/agent-architecture.md
+
+      - name: Verify additional skills and rules exist
+        run: |
+          test -f skills/engineering-standards.md
+          test -f skills/security-review.md
+          test -f rules/locale-and-standards.mdc

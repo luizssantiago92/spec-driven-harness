@@ -10,7 +10,11 @@ import {
 } from "../lib/constants.js";
 import { install } from "../lib/install.js";
 import {
+  createMockAssetServer,
   createMockSkillServer,
+  ENGINEERING_FIXTURE,
+  RULES_FIXTURE,
+  SECURITY_FIXTURE,
   SKILL_FIXTURE,
 } from "./helpers/mock-server.js";
 
@@ -28,10 +32,20 @@ async function pathExists(filePath) {
 }
 
 async function withMockServer(fn, options) {
-  const mockServer = await createMockSkillServer(
-    options?.body,
-    options?.statusCode ?? 200,
-  );
+  if (options?.statusCode && options.statusCode !== 200) {
+    const mockServer = await createMockSkillServer(
+      options.body ?? "",
+      options.statusCode,
+    );
+    try {
+      await fn(mockServer);
+    } finally {
+      await mockServer.close();
+    }
+    return;
+  }
+
+  const mockServer = await createMockAssetServer(options?.fixtures);
   try {
     await fn(mockServer);
   } finally {
@@ -45,15 +59,27 @@ describe("install harness", () => {
       const cwd = await createTempDir("harness-install-");
 
       try {
-        await install({ cwd, skillUrl: mockServer.url, silent: true });
+        await install({ cwd, repoUrl: mockServer.baseUrl, silent: true });
 
         const cursorSkill = path.join(
           cwd,
           ".cursor/skills/agent-architecture.md",
         );
+        const engineeringSkill = path.join(
+          cwd,
+          ".cursor/skills/engineering-standards.md",
+        );
+        const securitySkill = path.join(
+          cwd,
+          ".cursor/skills/security-review.md",
+        );
         const claudeSkill = path.join(
           cwd,
           ".claude/skills/agent-architecture.md",
+        );
+        const localeRule = path.join(
+          cwd,
+          ".cursor/rules/locale-and-standards.mdc",
         );
         const stateFile = path.join(cwd, ".specs/STATE.md");
         const lessonsFile = path.join(cwd, ".specs/LESSONS.md");
@@ -61,47 +87,66 @@ describe("install harness", () => {
         const cursorRules = path.join(cwd, ".cursorrules");
 
         assert.equal(await pathExists(cursorSkill), true);
+        assert.equal(await pathExists(engineeringSkill), true);
+        assert.equal(await pathExists(securitySkill), true);
         assert.equal(await pathExists(claudeSkill), true);
+        assert.equal(await pathExists(localeRule), true);
         assert.equal(await pathExists(featuresDir), true);
         assert.equal(await pathExists(cursorRules), true);
 
         assert.equal(await fs.readFile(cursorSkill, "utf8"), SKILL_FIXTURE);
+        assert.equal(
+          await fs.readFile(engineeringSkill, "utf8"),
+          ENGINEERING_FIXTURE,
+        );
+        assert.equal(
+          await fs.readFile(securitySkill, "utf8"),
+          SECURITY_FIXTURE,
+        );
         assert.equal(await fs.readFile(claudeSkill, "utf8"), SKILL_FIXTURE);
+        assert.equal(await fs.readFile(localeRule, "utf8"), RULES_FIXTURE);
         assert.equal(await fs.readFile(stateFile, "utf8"), STATE_HEADER);
         assert.equal(await fs.readFile(lessonsFile, "utf8"), LESSONS_HEADER);
 
         const rulesContent = await fs.readFile(cursorRules, "utf8");
         assert.match(rulesContent, /agent-architecture\.md/);
-        assert.match(
-          rulesContent,
-          /Specify → Design → Tasks → Execute → Verify/,
-        );
+        assert.match(rulesContent, /engineering-standards\.md/);
+        assert.match(rulesContent, /security-review\.md/);
+        assert.match(rulesContent, /locale-and-standards\.mdc/);
+        assert.match(rulesContent, /pt-BR/);
+        assert.match(rulesContent, /Specify → Verify/);
       } finally {
         await fs.rm(cwd, { recursive: true, force: true });
       }
     });
   });
 
-  it("does not overwrite existing STATE.md and LESSONS.md on re-run", async () => {
+  it("does not overwrite existing STATE.md, LESSONS.md, or project rules on re-run", async () => {
     await withMockServer(async (mockServer) => {
       const cwd = await createTempDir("harness-idempotent-");
 
       try {
-        await install({ cwd, skillUrl: mockServer.url, silent: true });
+        await install({ cwd, repoUrl: mockServer.baseUrl, silent: true });
 
         const stateFile = path.join(cwd, ".specs/STATE.md");
         const lessonsFile = path.join(cwd, ".specs/LESSONS.md");
+        const localeRule = path.join(
+          cwd,
+          ".cursor/rules/locale-and-standards.mdc",
+        );
 
         await fs.writeFile(stateFile, "# Custom state\n", "utf8");
         await fs.writeFile(lessonsFile, "# Custom lessons\n", "utf8");
+        await fs.writeFile(localeRule, "# Custom rules\n", "utf8");
 
-        await install({ cwd, skillUrl: mockServer.url, silent: true });
+        await install({ cwd, repoUrl: mockServer.baseUrl, silent: true });
 
         assert.equal(await fs.readFile(stateFile, "utf8"), "# Custom state\n");
         assert.equal(
           await fs.readFile(lessonsFile, "utf8"),
           "# Custom lessons\n",
         );
+        assert.equal(await fs.readFile(localeRule, "utf8"), "# Custom rules\n");
       } finally {
         await fs.rm(cwd, { recursive: true, force: true });
       }
@@ -115,7 +160,12 @@ describe("install harness", () => {
 
         try {
           await assert.rejects(
-            () => install({ cwd, skillUrl: failingServer.url, silent: true }),
+            () =>
+              install({
+                cwd,
+                repoUrl: failingServer.baseUrl,
+                silent: true,
+              }),
             (err) => {
               assert.match(err.message, /Download failed: 404/);
               return true;
@@ -131,7 +181,7 @@ describe("install harness", () => {
           await fs.rm(cwd, { recursive: true, force: true });
         }
       },
-      { body: "", statusCode: 404 },
+      { statusCode: 404, body: "" },
     );
   });
 
@@ -147,7 +197,7 @@ describe("install harness", () => {
           () =>
             install({
               cwd: blockedDir,
-              skillUrl: mockServer.url,
+              repoUrl: mockServer.baseUrl,
               silent: true,
             }),
           (err) => {
