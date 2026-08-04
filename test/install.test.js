@@ -13,6 +13,7 @@ import {
   createMockAssetServer,
   createMockSkillServer,
   ENGINEERING_FIXTURE,
+  GIT_HANDOFF_FIXTURE,
   RULES_FIXTURE,
   SECURITY_FIXTURE,
   SKILL_FIXTURE,
@@ -73,6 +74,10 @@ describe("install harness", () => {
           cwd,
           ".cursor/skills/security-review.md",
         );
+        const gitHandoffSkill = path.join(
+          cwd,
+          ".cursor/skills/git-handoff.md",
+        );
         const claudeSkill = path.join(
           cwd,
           ".claude/skills/agent-architecture.md",
@@ -89,6 +94,7 @@ describe("install harness", () => {
         assert.equal(await pathExists(cursorSkill), true);
         assert.equal(await pathExists(engineeringSkill), true);
         assert.equal(await pathExists(securitySkill), true);
+        assert.equal(await pathExists(gitHandoffSkill), true);
         assert.equal(await pathExists(claudeSkill), true);
         assert.equal(await pathExists(localeRule), true);
         assert.equal(await pathExists(featuresDir), true);
@@ -103,6 +109,10 @@ describe("install harness", () => {
           await fs.readFile(securitySkill, "utf8"),
           SECURITY_FIXTURE,
         );
+        assert.equal(
+          await fs.readFile(gitHandoffSkill, "utf8"),
+          GIT_HANDOFF_FIXTURE,
+        );
         assert.equal(await fs.readFile(claudeSkill, "utf8"), SKILL_FIXTURE);
         assert.equal(await fs.readFile(localeRule, "utf8"), RULES_FIXTURE);
         assert.equal(await fs.readFile(stateFile, "utf8"), STATE_HEADER);
@@ -112,6 +122,7 @@ describe("install harness", () => {
         assert.match(rulesContent, /agent-architecture\.md/);
         assert.match(rulesContent, /engineering-standards\.md/);
         assert.match(rulesContent, /security-review\.md/);
+        assert.match(rulesContent, /git-handoff\.md/);
         assert.match(rulesContent, /locale-and-standards\.mdc/);
         assert.match(rulesContent, /pt-BR/);
         assert.match(rulesContent, /Specify → Verify/);
@@ -176,6 +187,7 @@ describe("install harness", () => {
         const rulesContent = await fs.readFile(cursorRules, "utf8");
         assert.match(rulesContent, /engineering-standards\.md/);
         assert.match(rulesContent, /security-review\.md/);
+        assert.match(rulesContent, /git-handoff\.md/);
         assert.match(rulesContent, /locale-and-standards\.mdc/);
         assert.doesNotMatch(rulesContent, /# Old block/);
       } finally {

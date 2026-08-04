@@ -85,3 +85,9 @@ If critical vulnerability found:
 1. Do not merge
 2. Log lesson in `.specs/LESSONS.md`
 3. Notify project owner in pt-BR with severity and remediation steps
+
+## Related Skills
+
+- `agent-architecture.md` — SDD workflow (Specify → Verify)
+- `engineering-standards.md` — locale, secure coding, commit format
+- `git-handoff.md` — git sync and session handoff for `.specs/`

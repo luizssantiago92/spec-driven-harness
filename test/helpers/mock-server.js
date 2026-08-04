@@ -12,6 +12,10 @@ export const SECURITY_FIXTURE = `# Security Review (test fixture)
 OWASP checklist for verify phase
 `;
 
+export const GIT_HANDOFF_FIXTURE = `# Git Handoff (test fixture)
+Git sync at phase boundaries
+`;
+
 export const RULES_FIXTURE = `---
 description: test rule
 alwaysApply: true
@@ -24,6 +28,7 @@ export const DEFAULT_FIXTURES = {
   "/skills/agent-architecture.md": SKILL_FIXTURE,
   "/skills/engineering-standards.md": ENGINEERING_FIXTURE,
   "/skills/security-review.md": SECURITY_FIXTURE,
+  "/skills/git-handoff.md": GIT_HANDOFF_FIXTURE,
   "/rules/locale-and-standards.mdc": RULES_FIXTURE,
 };
 

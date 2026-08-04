@@ -24,5 +24,6 @@ alwaysApply: true
 | `.cursor/skills/agent-architecture.md` | SDD workflow (Specify → Verify) |
 | `.cursor/skills/engineering-standards.md` | Code quality, locale, git hygiene |
 | `.cursor/skills/security-review.md` | Security checklist for verification |
+| `.cursor/skills/git-handoff.md` | Git sync and session handoff |
 
-Persistent state: `.specs/STATE.md` (decisions/handoff), `.specs/LESSONS.md` (lessons learned).
+Persistent state: `.specs/STATE.md` (decisions/handoff), `.specs/LESSONS.md` (lessons learned). Commit `.specs/` via `/handoff` — see `git-handoff.md`.

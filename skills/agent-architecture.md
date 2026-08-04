@@ -97,7 +97,7 @@ Combat session amnesia with these artifacts:
 | `.specs/features/[feature]/tasks.md` | Atomic task breakdown |
 | `.specs/features/[feature]/validation.md` | Independent verification report |
 
-Always read `STATE.md` at session start. Update it at session end with decisions and progress.
+Always read `STATE.md` at session start. Update it at session end with decisions and progress. Run `/handoff` per `git-handoff.md` to commit `.specs/` to git.
 
 ## Loop Engineering & Harness
 
@@ -127,6 +127,7 @@ When making any technical decision, follow this order strictly:
 | --- | --- |
 | `engineering-standards.md` | Locale policy (pt-BR chat, English artifacts), secure coding, git hygiene |
 | `security-review.md` | OWASP-oriented checklist for `/verify` |
+| `git-handoff.md` | Git sync at phase boundaries and session handoff |
 
 Project rules: `.cursor/rules/locale-and-standards.mdc` (always applied in Cursor).
 
@@ -139,3 +140,4 @@ Project rules: `.cursor/rules/locale-and-standards.mdc` (always applied in Curso
 | `/tasks` | Atomic task breakdown |
 | `/loop` | Start autonomous implementation loop |
 | `/verify` | Trigger independent technical validation |
+| `/handoff` | Update STATE, commit `.specs/` to git (no push) |
