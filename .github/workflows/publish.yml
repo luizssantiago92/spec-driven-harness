@@ -42,7 +42,13 @@ jobs:
 
       - name: Bump version (manual dispatch)
         if: github.event_name == 'workflow_dispatch'
+<<<<<<< Updated upstream
         run: npm version ${{ inputs.version }} -m 'chore: release v%s'
+=======
+        env:
+          VERSION_BUMP: ${{ inputs.version }}
+        run: npm version "$VERSION_BUMP" -m "chore: release"
+>>>>>>> Stashed changes
 
       - name: Publish to npm
         run: npm publish --access public
