@@ -1,0 +1,28 @@
+---
+description: Locale policy and engineering baseline for this repository
+alwaysApply: true
+---
+
+# Locale Policy
+
+- **Chat with project owner:** Brazilian Portuguese (pt-BR).
+- **All project artifacts in English:** source code, tests, comments, commit messages, PR titles/descriptions, `.specs/` documents, API docs, and identifier names (variables, functions, classes).
+
+# Engineering Baseline
+
+- Follow existing codebase conventions before introducing new patterns.
+- Run tests and linters before considering work done.
+- Never commit secrets, API keys, or credentials.
+- Prefer small, focused diffs over large refactors.
+- Apply secure coding practices from `.cursor/skills/engineering-standards.md`.
+- Run security checklist from `.cursor/skills/security-review.md` during `/verify`.
+
+# Harness Skills
+
+| Skill | Purpose |
+| --- | --- |
+| `.cursor/skills/agent-architecture.md` | SDD workflow (Specify → Verify) |
+| `.cursor/skills/engineering-standards.md` | Code quality, locale, git hygiene |
+| `.cursor/skills/security-review.md` | Security checklist for verification |
+
+Persistent state: `.specs/STATE.md` (decisions/handoff), `.specs/LESSONS.md` (lessons learned).

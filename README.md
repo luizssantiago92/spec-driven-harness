@@ -25,12 +25,23 @@ curl -sSL https://raw.githubusercontent.com/luizssantiago92/spec-driven-harness/
 
 | Artefato | Propósito |
 | --- | --- |
-| `.cursor/skills/agent-architecture.md` | Skill principal (Cursor) |
-| `.claude/skills/agent-architecture.md` | Skill principal (Claude) |
+| `.cursor/skills/agent-architecture.md` | SDD workflow (Specify → Verify) |
+| `.cursor/skills/engineering-standards.md` | Locale, segurança e qualidade de código |
+| `.cursor/skills/security-review.md` | Checklist OWASP para `/verify` |
+| `.cursor/rules/locale-and-standards.mdc` | Regra global Cursor (pt-BR chat, artefatos em inglês) |
+| `.claude/skills/*.md` | Mesmas skills para Claude |
 | `.specs/STATE.md` | Decisões e handoff entre sessões |
 | `.specs/LESSONS.md` | Playbook de aprendizado contínuo |
 | `.specs/features/` | Specs por feature (spec, design, tasks, validation) |
 | `.cursorrules` | Contrato de execução (Progressive Disclosure) |
+
+### Cursor User Rules (opcional)
+
+Para preferência pessoal em **todos** os projetos, adicione em **Cursor → Settings → Rules**:
+
+> Always respond to me in Brazilian Portuguese (pt-BR). Project artifacts remain in English.
+
+As regras do projeto (`.cursor/rules/`) são versionadas e compartilhadas com o time via git.
 
 ## Fluxo Spec-Driven (5 fases)
 
@@ -98,7 +109,11 @@ spec-driven-harness/
 ├── index.js                  # CLI entrypoint
 ├── lib/                      # Lógica do instalador
 ├── skills/
-│   └── agent-architecture.md # Skill fonte (baixada pelo instalador)
+│   ├── agent-architecture.md   # SDD workflow
+│   ├── engineering-standards.md
+│   └── security-review.md
+├── rules/
+│   └── locale-and-standards.mdc
 ├── test/                     # Testes de integração
 ├── install.sh                # Instalador legado (bash)
 └── .github/workflows/

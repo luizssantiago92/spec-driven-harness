@@ -62,6 +62,7 @@ Create `.specs/features/[feature]/tasks.md` with:
 Implementation rules:
 
 - **Test-First Imperative**: Write tests derived from acceptance criteria before production code
+- **Engineering Standards**: Apply `.cursor/skills/engineering-standards.md` (locale, security, code quality)
 - Work in loops: implement → run harness (tests, linter, compiler) → fix → repeat
 - Atomic commits per logical unit of work
 - Maximum 3 correction loops before escalating to a human
@@ -71,6 +72,7 @@ Implementation rules:
 Independent verification rules:
 
 - **Author ≠ Verificador**: The verifier must have a clean context and never be the code author
+- **Security Review**: Run checklist in `.cursor/skills/security-review.md`
 - **Discrimination Sensor**: Inject deliberate failures (mutants) to confirm tests detect errors
 - **Evidence-or-Zero**: A requirement is "done" only with evidence (file + line) of an assertive test passing
 - Write results to `.specs/features/[feature]/validation.md`
@@ -118,6 +120,15 @@ When making any technical decision, follow this order strictly:
 
 - **Planning phases** (Specify, Design, Tasks): High-reasoning models (Opus, GPT-4o)
 - **Execution loop**: Fast/cost-effective models (Sonnet, Composer)
+
+## Related Skills
+
+| Skill | Purpose |
+| --- | --- |
+| `engineering-standards.md` | Locale policy (pt-BR chat, English artifacts), secure coding, git hygiene |
+| `security-review.md` | OWASP-oriented checklist for `/verify` |
+
+Project rules: `.cursor/rules/locale-and-standards.mdc` (always applied in Cursor).
 
 ## Available Commands
 

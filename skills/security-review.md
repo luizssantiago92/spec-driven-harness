@@ -1,0 +1,87 @@
+# Security Review
+
+Independent security checklist for the **Verify** phase.
+Use alongside `agent-architecture.md` and `engineering-standards.md`.
+
+## When to Use
+
+- Running `/verify` on any feature touching auth, data, APIs, or infrastructure
+- Before merging PRs that handle user input, payments, or sensitive data
+- After dependency updates (supply chain review)
+
+## Pre-Review Setup
+
+- Verifier must have **clean context** (not the code author).
+- Read `.specs/features/[feature]/spec.md` acceptance criteria.
+- Identify attack surface: inputs, outputs, auth boundaries, data stores.
+
+## OWASP-Oriented Checklist
+
+### Injection
+- [ ] SQL/NoSQL queries use parameterization or ORM safely
+- [ ] Shell commands avoid unsanitized user input
+- [ ] Template rendering escapes user content (XSS prevention)
+
+### Broken Authentication
+- [ ] Sessions/tokens expire appropriately
+- [ ] Passwords hashed with modern algorithms (bcrypt, argon2)
+- [ ] No credentials in URLs, logs, or client-side storage
+
+### Sensitive Data Exposure
+- [ ] Secrets in environment variables, not source code
+- [ ] TLS for data in transit; encryption at rest where required
+- [ ] PII minimized and masked in logs/responses
+
+### Access Control
+- [ ] Authorization checked on every protected endpoint
+- [ ] IDOR prevented — users cannot access others' resources by ID manipulation
+- [ ] Role/permission checks server-side, not client-only
+
+### Security Misconfiguration
+- [ ] Default credentials removed
+- [ ] Error messages do not leak stack traces or internals in production
+- [ ] CORS configured restrictively (not `*` with credentials)
+
+### Vulnerable Components
+- [ ] `npm audit` / equivalent run; critical/high addressed or documented
+- [ ] No known-vulnerable dependencies without mitigation
+
+### SSRF / External Requests
+- [ ] URL fetchers validate allowed domains/schemes
+- [ ] Internal network not reachable from user-controlled URLs
+
+## Discrimination Sensor (Mutants)
+
+Confirm tests catch intentional failures:
+
+1. Remove or bypass an auth check → test must fail
+2. Skip input validation → test must fail
+3. Return wrong status code on error → test must fail
+
+Document mutants tested in `.specs/features/[feature]/validation.md`.
+
+## Evidence-or-Zero
+
+Each security requirement from spec must have:
+- Test file and line proving the control works
+- Or explicit documented exception with owner approval
+
+## Output
+
+Write findings to `.specs/features/[feature]/validation.md`:
+
+```markdown
+## Security Review
+- Reviewer: [independent agent]
+- Date: [ISO date]
+- Mutants tested: [list]
+- Findings: [pass/fail per item]
+- Evidence: [file:line references]
+```
+
+## Escalation
+
+If critical vulnerability found:
+1. Do not merge
+2. Log lesson in `.specs/LESSONS.md`
+3. Notify project owner in pt-BR with severity and remediation steps
