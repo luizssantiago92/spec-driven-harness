@@ -1,5 +1,5 @@
 {
-  "name": "@luizssantiago92/agentic-harness",
+  "name": "@luizsantiago/agentic-harness",
   "version": "0.1.0",
   "description": "Zero Ceremony onboarding for AI agents — skills, memory harness, execution contract",
   "type": "module",
@@ -30,7 +30,7 @@
     "harness",
     "cli"
   ],
-  "author": "luizssantiago92",
+  "author": "luizsantiago",
   "license": "MIT",
   "publishConfig": {
     "access": "public"

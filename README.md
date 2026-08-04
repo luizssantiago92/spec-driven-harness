@@ -8,7 +8,7 @@ Este repositório implementa um **Harness Engineering** avançado para o desenvo
 Com um único comando `npx`, configure skills, memória persistente e contrato de execução:
 
 ```bash
-npx @luizssantiago92/agentic-harness install
+npx @luizsantiago/agentic-harness install
 ```
 
 Alternativa legada via bash:
@@ -86,14 +86,15 @@ Nota: Esta skill é otimizada para modelos de alto raciocínio (Opus, GPT-4o) du
 
 ### Pré-requisitos
 
-1. Conta npm com acesso ao scope `@luizssantiago92`
+1. Conta npm com username `luizsantiago` (scope `@luizsantiago`)
 2. Secret `NPM_TOKEN` configurado no GitHub (Settings → Secrets → Actions)
 
 ### Publicar via GitHub Actions (recomendado)
 
-1. Merge o PR na `main`
-2. Vá em **Actions → Publish to npm → Run workflow**
-3. Escolha o tipo de bump (`patch`, `minor`, `major`)
+1. Token npm criado em https://www.npmjs.com/settings/luizsantiago/tokens (Packages: Read and Write)
+2. Secret `NPM_TOKEN` configurado no GitHub (Settings → Secrets → Actions)
+3. Vá em **Actions → Publish to npm → Run workflow**
+4. Escolha o tipo de bump (`patch`, `minor`, `major`)
 
 Alternativamente, crie um **GitHub Release** — o workflow publica automaticamente na versão do tag.
 
