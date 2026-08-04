@@ -1,0 +1,7 @@
+node_modules/
+
+# Artefatos gerados pelo instalador (não commitar no repo fonte)
+.cursor/
+.claude/
+.specs/
+.cursorrules
