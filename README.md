@@ -3,13 +3,30 @@
 
 Este repositório implementa um **Harness Engineering** avançado para o desenvolvimento de software assistido por IA. Ele substitui o "Vibe Coding" por um fluxo estruturado de **Spec-Driven Development (SDD)** e **Loop Engineering**.
 
-## 🚀 Instalação Instantânea
-Copie e cole no terminal do seu projeto:
+## 🚀 Instalação Instantânea (Zero Ceremony)
+
+Com um único comando `npx`, configure skills, memória persistente e contrato de execução:
 
 ```bash
-    
+npx @luizssantiago92/agentic-harness install
+```
+
+Alternativa legada via bash:
+
+```bash
 curl -sSL https://raw.githubusercontent.com/luizssantiago92/spec-driven-harness/main/install.sh | bash
 ```
+
+### O que o instalador cria
+
+| Artefato | Propósito |
+| --- | --- |
+| `.cursor/skills/agent-architecture.md` | Skill principal (Cursor) |
+| `.claude/skills/agent-architecture.md` | Skill principal (Claude) |
+| `.specs/STATE.md` | Decisões e handoff entre sessões |
+| `.specs/LESSONS.md` | Playbook de aprendizado contínuo |
+| `.specs/features/` | Specs por feature (spec, design, tasks, validation) |
+| `.cursorrules` | Contrato de execução (Progressive Disclosure) |
 
 
 ## 🏗️ O Fluxo Spec-Driven
@@ -64,3 +81,34 @@ MCP/Context: Consulte documentações atualizadas via ferramentas externas.
 Web Search: Busque padrões de comunidade e fontes oficiais.
 Incerteza: Se não encontrar, diga "Eu não sei". Jamais invente APIs ou comportamentos.
 Nota: Esta skill é otimizada para modelos de alto raciocínio (Opus, GPT-4o) durante o planejamento e modelos rápidos/baratos (Sonnet, Composer) durante a execução do loop
+
+## 📦 Publicação no npm
+
+### Pré-requisitos
+
+1. Conta npm com acesso ao scope `@luizssantiago92`
+2. Secret `NPM_TOKEN` configurado no GitHub (Settings → Secrets → Actions)
+
+### Publicar via GitHub Actions (recomendado)
+
+1. Merge o PR na `main`
+2. Vá em **Actions → Publish to npm → Run workflow**
+3. Escolha o tipo de bump (`patch`, `minor`, `major`)
+
+Alternativamente, crie um **GitHub Release** — o workflow publica automaticamente na versão do tag.
+
+### Publicar manualmente
+
+```bash
+npm login
+npm test
+npm publish --access public
+```
+
+### Desenvolvimento local
+
+```bash
+npm test                              # roda testes
+node index.js install                 # instala harness no cwd
+HARNESS_SKILL_URL=http://127.0.0.1:.../skill.md node index.js install  # URL customizada
+```
