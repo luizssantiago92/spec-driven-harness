@@ -110,8 +110,6 @@ git-handoff           →  persiste memória e specs no git
 
 Cada skill referencia as outras na seção **Related Skills / Sister Skills**. O contrato em `.cursorrules` aponta para todas — o agente carrega o conjunto completo ao planejar ou executar features.
 
-> **Complementar a catálogos externos** — projetos como [agentic-awesome-skills](https://github.com/sickn33/agentic-awesome-skills) oferecem centenas de skills especializadas (React, Docker, SEO…). Este harness foca no **processo e na memória**: SDD, verificação independente e handoff entre sessões. Use catálogos amplos para domínio; use estas skills irmãs para o fluxo de trabalho.
-
 ## Cadeia de verificação de conhecimento
 
 1. **Codebase** — Convenções e padrões já em uso
