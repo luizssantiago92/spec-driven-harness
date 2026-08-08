@@ -1,7 +1,7 @@
 {
   "name": "@luizsantiago/agentic-harness",
   "version": "0.1.4",
-  "description": "Framework agêntico Spec-Driven + Loop + Harness Engineering. Zero Ceremony via npx: skills, regras pt-BR/EN, memória .specs/, Specify→Verify com verificador independente.",
+  "description": "Framework agêntico que une Spec-Driven Development, Loop e Harness Engineering. Zero Ceremony via npx @luizsantiago/agentic-harness install: 5 skills irmãs (SDD, task graphs, engenharia, segurança, git handoff), regras pt-BR/EN, memória .specs/, contrato .cursorrules. Specify→Verify com verificador independente, test-first, STATE.md e LESSONS.md.",
   "type": "module",
   "bin": {
     "agentic-harness": "./index.js"
