@@ -17,6 +17,7 @@ import {
   RULES_FIXTURE,
   SECURITY_FIXTURE,
   SKILL_FIXTURE,
+  TASK_GRAPH_FIXTURE,
 } from "./helpers/mock-server.js";
 
 async function createTempDir(prefix) {
@@ -78,6 +79,10 @@ describe("install harness", () => {
           cwd,
           ".cursor/skills/git-handoff.md",
         );
+        const taskGraphSkill = path.join(
+          cwd,
+          ".cursor/skills/task-graph-engineering.md",
+        );
         const claudeSkill = path.join(
           cwd,
           ".claude/skills/agent-architecture.md",
@@ -95,6 +100,7 @@ describe("install harness", () => {
         assert.equal(await pathExists(engineeringSkill), true);
         assert.equal(await pathExists(securitySkill), true);
         assert.equal(await pathExists(gitHandoffSkill), true);
+        assert.equal(await pathExists(taskGraphSkill), true);
         assert.equal(await pathExists(claudeSkill), true);
         assert.equal(await pathExists(localeRule), true);
         assert.equal(await pathExists(featuresDir), true);
@@ -113,6 +119,10 @@ describe("install harness", () => {
           await fs.readFile(gitHandoffSkill, "utf8"),
           GIT_HANDOFF_FIXTURE,
         );
+        assert.equal(
+          await fs.readFile(taskGraphSkill, "utf8"),
+          TASK_GRAPH_FIXTURE,
+        );
         assert.equal(await fs.readFile(claudeSkill, "utf8"), SKILL_FIXTURE);
         assert.equal(await fs.readFile(localeRule, "utf8"), RULES_FIXTURE);
         assert.equal(await fs.readFile(stateFile, "utf8"), STATE_HEADER);
@@ -123,6 +133,7 @@ describe("install harness", () => {
         assert.match(rulesContent, /engineering-standards\.md/);
         assert.match(rulesContent, /security-review\.md/);
         assert.match(rulesContent, /git-handoff\.md/);
+        assert.match(rulesContent, /task-graph-engineering\.md/);
         assert.match(rulesContent, /locale-and-standards\.mdc/);
         assert.match(rulesContent, /pt-BR/);
         assert.match(rulesContent, /Specify → Verify/);
@@ -188,6 +199,7 @@ describe("install harness", () => {
         assert.match(rulesContent, /engineering-standards\.md/);
         assert.match(rulesContent, /security-review\.md/);
         assert.match(rulesContent, /git-handoff\.md/);
+        assert.match(rulesContent, /task-graph-engineering\.md/);
         assert.match(rulesContent, /locale-and-standards\.mdc/);
         assert.doesNotMatch(rulesContent, /# Old block/);
       } finally {

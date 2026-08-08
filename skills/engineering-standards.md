@@ -50,6 +50,11 @@ Apply during **Execute** and **Verify** phases, and whenever writing or reviewin
 - Assert behavior, not implementation details (unless testing internals is intentional).
 - Test names describe scenario and expected outcome in English.
 
+## Parallel Work Guardrails
+
+- **One writer per file** — no two agents or jobs mutate the same file in the same round (see `task-graph-engineering.md`)
+- **Disjoint ownership** — parallel tasks must touch different files or modules
+
 ## Git & PR Hygiene
 
 ```
@@ -61,6 +66,7 @@ test(auth): add session expiry edge case
 
 - One concern per PR when possible.
 - Link to spec requirement IDs (e.g. `REQ-003`) in PR description.
+- Include test evidence (file:line) for each REQ addressed — not just a summary.
 - Never force-push shared branches without coordination.
 
 ## Logging & Observability
@@ -75,3 +81,4 @@ test(auth): add session expiry edge case
 - `agent-architecture.md` — SDD workflow (Specify → Verify)
 - `security-review.md` — deep checklist for `/verify` phase
 - `git-handoff.md` — git sync and session handoff for `.specs/`
+- `task-graph-engineering.md` — task DAG and parallelism rules

@@ -32,4 +32,5 @@ jobs:
           test -f skills/engineering-standards.md
           test -f skills/security-review.md
           test -f skills/git-handoff.md
+          test -f skills/task-graph-engineering.md
           test -f rules/locale-and-standards.mdc

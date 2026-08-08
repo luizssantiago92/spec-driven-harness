@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@luizsantiago/agentic-harness.svg)](https://www.npmjs.com/package/@luizsantiago/agentic-harness)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**Framework agêntico que une Spec-Driven Development, Loop e Harness Engineering.** Zero Ceremony via npx: skills SDD, engenharia, segurança, git handoff, regras pt-BR/EN e memória `.specs/`. Fluxo Specify→Verify com Verificador Independente, `STATE.md` e `LESSONS.md`.
+**Framework agêntico que une Spec-Driven Development, Loop e Harness Engineering.** Zero Ceremony via npx: skills SDD, task graphs, engenharia, segurança, git handoff, regras pt-BR/EN e memória `.specs/`. Fluxo Specify→Verify com Verificador Independente, `STATE.md` e `LESSONS.md`.
 
 ## Instalação (Zero Ceremony)
 
@@ -27,6 +27,7 @@ curl -sSL https://raw.githubusercontent.com/luizssantiago92/spec-driven-harness/
 | `.cursor/skills/engineering-standards.md` | Locale, segurança e qualidade de código |
 | `.cursor/skills/security-review.md` | Checklist OWASP para `/verify` |
 | `.cursor/skills/git-handoff.md` | Git sync e handoff de sessão para `.specs/` |
+| `.cursor/skills/task-graph-engineering.md` | Task DAG, paralelismo e padrão diamond verify |
 | `.cursor/rules/locale-and-standards.mdc` | Regra global Cursor (pt-BR chat, artefatos em inglês) |
 | `.claude/skills/*.md` | Mesmas skills para Claude |
 | `.specs/STATE.md` | Decisões e handoff entre sessões |
@@ -89,23 +90,27 @@ SPECIFY → DESIGN (opcional) → TASKS (opcional) → EXECUTE (loop) → VERIFY
 | `/loop` | Inicia implementação autônoma em loop |
 | `/verify` | Aciona validação técnica independente |
 | `/handoff` | Atualiza STATE, commita `.specs/` no git (sem push) |
+| `/task-graph` | Desenha ou revisa o DAG de tarefas em `task-graph.md` |
+| `/sync-spec` | Commita artefatos da feature atual (sem handoff completo) |
 
 ## Skills irmãs (use juntas)
 
-As quatro skills instaladas pelo harness formam um **conjunto complementar** — cada uma cobre uma camada diferente do fluxo agêntico. Funcionam melhor **em conjunto** do que isoladas:
+As cinco skills instaladas pelo harness formam um **conjunto complementar** — cada uma cobre uma camada diferente do fluxo agêntico. Funcionam melhor **em conjunto** do que isoladas:
 
 | Skill | Camada | Papel |
 | --- | --- | --- |
-| `agent-architecture.md` | **Processo** | Workflow SDD — Specify → Verify, comandos `/specify`, `/loop`, `/verify` |
-| `engineering-standards.md` | **Qualidade** | Locale (pt-BR chat / artefatos EN), secure coding, formato de commits |
+| `agent-architecture.md` | **Processo** | Workflow SDD — Specify → Verify, roteador de complexidade |
+| `task-graph-engineering.md` | **Topologia** | Task DAG, paralelismo, stop rule, diamond verify |
+| `engineering-standards.md` | **Qualidade** | Locale (pt-BR chat / artefatos EN), secure coding, one-writer-per-file |
 | `security-review.md` | **Verificação** | Checklist OWASP para a fase `/verify` |
-| `git-handoff.md` | **Persistência** | Git sync em fronteiras de fase e handoff de sessão para `.specs/` |
+| `git-handoff.md` | **Persistência** | Git sync, template STATE, handoff de sessão |
 
 ```
-agent-architecture  →  define O QUE fazer e QUANDO (fases SDD)
-engineering-standards →  define COMO escrever código e commits
-security-review       →  valida segurança na verificação
-git-handoff           →  persiste memória e specs no git
+agent-architecture       →  define O QUE fazer e QUANDO (fases SDD)
+task-graph-engineering →  define COMO conectar jobs (DAG, paralelismo)
+engineering-standards  →  define COMO escrever código e commits
+security-review        →  valida segurança na verificação
+git-handoff            →  persiste memória e specs no git
 ```
 
 Cada skill referencia as outras na seção **Related Skills / Sister Skills**. O contrato em `.cursorrules` aponta para todas — o agente carrega o conjunto completo ao planejar ou executar features.
@@ -132,7 +137,8 @@ spec-driven-harness/
 │   ├── agent-architecture.md   # SDD workflow
 │   ├── engineering-standards.md
 │   ├── security-review.md
-│   └── git-handoff.md          # Git sync & session handoff
+│   ├── git-handoff.md          # Git sync & session handoff
+│   └── task-graph-engineering.md  # Task DAG & parallelism
 ├── rules/
 │   └── locale-and-standards.mdc
 ├── test/                     # Testes de integração

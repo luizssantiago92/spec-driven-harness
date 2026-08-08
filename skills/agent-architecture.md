@@ -39,6 +39,31 @@ Create `.specs/features/[feature]/spec.md` with:
 
 Do not write implementation code until spec and derived tests are approved.
 
+## Complexity Router
+
+Pick the path before starting — do not run every phase on every change:
+
+| Tier | Examples | Path |
+| --- | --- | --- |
+| **Trivial** | Typo, copy, single-file bug | Minimal Specify → Execute → Verify |
+| **Simple** | 2–5 files, localized change | Specify → Execute → Verify |
+| **Medium** | New feature, multiple modules | Specify → Tasks → Execute → Verify |
+| **Complex** | New architecture, API surface, infra | Specify → Design → Tasks → Execute → Verify |
+| **Parallel** | Splittable work, multi-agent | Above + `/task-graph` per `task-graph-engineering.md` |
+
+When in doubt, start at **Medium** and drop phases only with owner approval.
+
+## Session Resume Protocol
+
+At every session start:
+
+1. Read `.specs/STATE.md` — active feature, phase, next step
+2. Run harness (tests/lint) before writing new code
+3. Confirm the "Next step" with the owner if ambiguous or stale
+4. Resume the correct SDD phase — do not restart from scratch unless STATE says so
+
+At session end: run `/handoff` per `git-handoff.md`.
+
 #### 2. Design (`/plan`) — optional
 
 Create `.specs/features/[feature]/design.md` with:
@@ -57,6 +82,9 @@ Create `.specs/features/[feature]/tasks.md` with:
 - Dependencies and parallelization hints
 - Links back to spec requirement IDs
 
+Apply **fake-edge** and **stop-rule** checks from `task-graph-engineering.md`.
+For 3+ tasks or parallel work, create `task-graph.md` via `/task-graph` before `/loop`.
+
 #### 4. Execute (`/loop`)
 
 Implementation rules:
@@ -67,11 +95,19 @@ Implementation rules:
 - Atomic commits per logical unit of work
 - Maximum 3 correction loops before escalating to a human
 
+**Change control** — if requirements change mid-loop:
+
+1. Stop the loop
+2. Update `spec.md` and record the change in `STATE.md`
+3. Re-derive affected tests from updated acceptance criteria
+4. Resume only after owner approves the spec delta
+
 #### 5. Verify (`/verify`)
 
 Independent verification rules:
 
 - **Author ≠ Verificador**: The verifier must have a clean context and never be the code author
+- **Diamond pattern**: For parallel work, verify in a separate context per `task-graph-engineering.md`
 - **Security Review**: Run checklist in `.cursor/skills/security-review.md`
 - **Discrimination Sensor**: Inject deliberate failures (mutants) to confirm tests detect errors
 - **Evidence-or-Zero**: A requirement is "done" only with evidence (file + line) of an assertive test passing
@@ -95,6 +131,7 @@ Combat session amnesia with these artifacts:
 | `.specs/features/[feature]/spec.md` | Requirements and acceptance criteria |
 | `.specs/features/[feature]/design.md` | Architecture (when applicable) |
 | `.specs/features/[feature]/tasks.md` | Atomic task breakdown |
+| `.specs/features/[feature]/task-graph.md` | DAG of jobs and parallelism (when applicable) |
 | `.specs/features/[feature]/validation.md` | Independent verification report |
 
 Always read `STATE.md` at session start. Update it at session end with decisions and progress. Run `/handoff` per `git-handoff.md` to commit `.specs/` to git.
@@ -128,6 +165,7 @@ When making any technical decision, follow this order strictly:
 | `engineering-standards.md` | Locale policy (pt-BR chat, English artifacts), secure coding, git hygiene |
 | `security-review.md` | OWASP-oriented checklist for `/verify` |
 | `git-handoff.md` | Git sync at phase boundaries and session handoff |
+| `task-graph-engineering.md` | Task DAG, parallelism, diamond verify pattern |
 
 Project rules: `.cursor/rules/locale-and-standards.mdc` (always applied in Cursor).
 
@@ -138,6 +176,8 @@ Project rules: `.cursor/rules/locale-and-standards.mdc` (always applied in Curso
 | `/specify` | Define requirements and spec IDs |
 | `/plan` | Create technical design and architecture |
 | `/tasks` | Atomic task breakdown |
+| `/task-graph` | Draw or revise task DAG in `task-graph.md` |
 | `/loop` | Start autonomous implementation loop |
 | `/verify` | Trigger independent technical validation |
 | `/handoff` | Update STATE, commit `.specs/` to git (no push) |
+| `/sync-spec` | Commit current feature spec artifacts only (no full handoff) |

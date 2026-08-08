@@ -9,6 +9,23 @@ Use alongside `agent-architecture.md` and `engineering-standards.md`.
 - Before merging PRs that handle user input, payments, or sensitive data
 - After dependency updates (supply chain review)
 
+## Lightweight Path (non-security changes)
+
+For changes with **no** auth, API, user input, payments, or infrastructure impact (e.g. copy, docs, pure UI styling):
+
+1. Verifier still uses clean context (Author ≠ Verificador)
+2. Run discrimination sensor on affected tests
+3. Document in `validation.md`:
+
+```markdown
+## Security Review — Skipped (justified)
+- Reason: [no auth/API/input surface touched]
+- Mutants tested: [list]
+- Evidence: [file:line references]
+```
+
+Full OWASP checklist remains mandatory for anything touching auth, data, APIs, or infra.
+
 ## Pre-Review Setup
 
 - Verifier must have **clean context** (not the code author).
@@ -91,3 +108,4 @@ If critical vulnerability found:
 - `agent-architecture.md` — SDD workflow (Specify → Verify)
 - `engineering-standards.md` — locale, secure coding, commit format
 - `git-handoff.md` — git sync and session handoff for `.specs/`
+- `task-graph-engineering.md` — verify node in diamond pattern

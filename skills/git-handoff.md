@@ -17,6 +17,7 @@ Sister skill to `agent-architecture.md` — SDD defines *what* to build; this sk
 | `agent-architecture.md` | Process — Specify → Verify workflow |
 | `engineering-standards.md` | Quality — locale, secure coding, commit format |
 | `security-review.md` | Verification — OWASP checklist for `/verify` |
+| `task-graph-engineering.md` | Topology — task DAG and parallelism |
 | **`git-handoff.md`** | **Persistence — git sync for `.specs/` and handoff** |
 
 ## What to Commit
@@ -51,11 +52,25 @@ Run at session end or phase milestone:
 
 ### 1. Update memory
 
-- Refresh `.specs/STATE.md`:
-  - Decisions made this session
-  - Current phase and feature
-  - Next actionable step (single clear item)
-  - Blockers or open questions
+Use this structure in `.specs/STATE.md`:
+
+```markdown
+## Active Feature
+- Feature: [name]
+- Phase: [Specify|Design|Tasks|Execute|Verify]
+- Branch: [branch-name]
+
+## Decisions (this session)
+- [decision and rationale]
+
+## Next Step (single item)
+- [ ] [one concrete action]
+
+## Blockers
+- [open questions or dependencies]
+```
+
+- Refresh all sections above each handoff
 - Append to `.specs/LESSONS.md` if verification failed or a mistake was corrected
 
 ### 2. Validate before commit
@@ -83,6 +98,7 @@ Stop after commit. Human or explicit instruction handles `git push`.
 | Specify | `docs(spec): add REQ-001 auth requirements` |
 | Design | `docs(spec): design OAuth flow for auth feature` |
 | Tasks | `docs(spec): task breakdown for auth feature` |
+| Task graph | `docs(spec): add task graph for auth feature` |
 | Verify | `docs(spec): validation report auth feature` |
 | Session handoff | `docs(spec): update STATE handoff — auth in progress` |
 | Lessons learned | `docs(spec): record lesson — JWT expiry edge case` |
@@ -92,7 +108,7 @@ Stop after commit. Human or explicit instruction handles `git push`.
 | Event | Git action |
 | --- | --- |
 | Spec approved | Commit `spec.md` (+ tests scaffold if created) |
-| Tasks approved | Commit `tasks.md` |
+| Tasks approved | Commit `tasks.md` (+ `task-graph.md` if created) |
 | Verify passed | Commit `validation.md` |
 | Execute loop | Atomic code commits per task (existing Execute rules) |
 | Session ends | `/handoff` — always update STATE + commit `.specs/` |
@@ -128,5 +144,5 @@ Report to owner in **pt-BR**; commit messages remain in **English**.
 | Command | Action |
 | --- | --- |
 | `/handoff` | End session — update STATE, commit `.specs/`, no push |
-| `/sync-spec` | Commit current feature spec artifacts only |
+| `/sync-spec` | Commit current feature spec artifacts only (`spec.md`, `tasks.md`, `task-graph.md`, etc.) |
 | `/verify` | After verify — commit `validation.md` (see `security-review.md`) |
