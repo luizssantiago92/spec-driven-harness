@@ -16,6 +16,10 @@ export const GIT_HANDOFF_FIXTURE = `# Git Handoff (test fixture)
 Git sync at phase boundaries
 `;
 
+export const TASK_GRAPH_FIXTURE = `# Task Graph Engineering (test fixture)
+Task DAG and parallelism rules
+`;
+
 export const RULES_FIXTURE = `---
 description: test rule
 alwaysApply: true
@@ -29,6 +33,7 @@ export const DEFAULT_FIXTURES = {
   "/skills/engineering-standards.md": ENGINEERING_FIXTURE,
   "/skills/security-review.md": SECURITY_FIXTURE,
   "/skills/git-handoff.md": GIT_HANDOFF_FIXTURE,
+  "/skills/task-graph-engineering.md": TASK_GRAPH_FIXTURE,
   "/rules/locale-and-standards.mdc": RULES_FIXTURE,
 };
 
