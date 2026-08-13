@@ -405,6 +405,12 @@ def _chdir(path: Path):
         os.chdir(previous)
 
 
+def _run_main(fn):
+    buf = io.StringIO()
+    with redirect_stdout(buf):
+        return fn(), buf.getvalue()
+
+
 def _capture_exit(fn):
     buf = io.StringIO()
     with redirect_stdout(buf):
@@ -487,14 +493,14 @@ class FeatureResolveTest(unittest.TestCase):
     def test_validate_spec_main_auto_detects_from_cwd(self):
         self._write_feature("auth")
         with _chdir(self.root):
-            code = validate_spec.main([])
+            code, _ = _run_main(lambda: validate_spec.main([]))
         self.assertEqual(code, 0)
 
     def test_validate_spec_main_accepts_a_feature_name(self):
         self._write_feature("auth")
         self._write_feature("billing")
         with _chdir(self.root):
-            code = validate_spec.main(["billing"])
+            code, _ = _run_main(lambda: validate_spec.main(["billing"]))
         self.assertEqual(code, 0)
 
     def test_validate_spec_main_lists_candidates_when_ambiguous(self):
@@ -509,14 +515,14 @@ class FeatureResolveTest(unittest.TestCase):
     def test_validate_tasks_main_accepts_a_feature_name(self):
         self._write_feature("auth", tasks=VALID_TASKS)
         with _chdir(self.root):
-            code = validate_tasks.main(["auth"])
+            code, _ = _run_main(lambda: validate_tasks.main(["auth"]))
         self.assertEqual(code, 0)
 
     def test_validate_state_main_accepts_a_feature_name(self):
         directory = self._write_feature("auth")
         (directory / "validation.md").write_text(VALID_VALIDATION, encoding="utf-8")
         with _chdir(self.root):
-            code = validate_state.main(["auth"])
+            code, _ = _run_main(lambda: validate_state.main(["auth"]))
         self.assertEqual(code, 0)
 
 
