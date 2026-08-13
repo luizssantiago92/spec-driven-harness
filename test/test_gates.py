@@ -109,6 +109,20 @@ class SpecGateTest(unittest.TestCase):
             [w for w in report.warnings if "Owner" in w or "Priority" in w], []
         )
 
+    def test_generic_types_are_not_placeholders(self):
+        spec = VALID_SPEC.replace(
+            "THEN the system SHALL create a session",
+            "THEN the system SHALL return Promise<void> for a List<User> payload",
+        )
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertTrue(report.passed, report.errors)
+
+    def test_template_tokens_in_angle_brackets_still_fail(self):
+        spec = VALID_SPEC.replace("- Social login providers", "- <fill me>")
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("placeholder" in error for error in report.errors))
+
     def test_placeholder_fails(self):
         spec = VALID_SPEC.replace("Social login providers", "TBD")
         report = validate_spec.build_report("spec.md", spec)
@@ -158,6 +172,14 @@ class TasksGateTest(unittest.TestCase):
     def test_no_tasks_fails(self):
         report = validate_tasks.build_report("tasks.md", "# Tasks\n\nnothing here\n")
         self.assertFalse(report.passed)
+
+    def test_checked_task_boxes_are_not_placeholders(self):
+        report = validate_tasks.build_report(
+            "tasks.md", VALID_TASKS + "- [x] complete\n- [ ] pending\n"
+        )
+        self.assertEqual(
+            [error for error in report.errors if "placeholder" in error], []
+        )
 
     def test_cycle_is_detected(self):
         tasks = "# Tasks\n\n" + "".join(
@@ -245,6 +267,16 @@ class StateGateTest(unittest.TestCase):
             self._feature_dir(
                 "# V\n- Verdict: PASS\n## Coverage\n"
                 "- REQ-001 - test/routes/login.test.ts:24 (https://ci.example.com:8080)\n"
+                "## Discrimination Sensor\n- mutant killed\n"
+            )
+        )
+        self.assertTrue(report.passed, report.errors)
+
+    def test_verdict_written_as_a_heading_is_accepted(self):
+        report = validate_state.build_report(
+            self._feature_dir(
+                "# V\n\n## Verdict\nPASS\n\n## Coverage\n"
+                "- REQ-001 - test/routes/login.test.ts:24\n"
                 "## Discrimination Sensor\n- mutant killed\n"
             )
         )

@@ -31,6 +31,10 @@ VERDICT = re.compile(
     r"^\s*[-*]?\s*\*{0,2}(?:verdict|result|status)\*{0,2}\s*:\s*\*{0,2}(?P<value>[A-Za-z ]+)",
     re.IGNORECASE | re.MULTILINE,
 )
+VERDICT_HEADING = re.compile(
+    r"^#{1,6}\s*(?:verdict|result|status)\s*$\s*\n+\s*\*{0,2}(?P<value>[A-Za-z ]+)",
+    re.IGNORECASE | re.MULTILINE,
+)
 EVIDENCE = re.compile(r"[\w./\\-]+\.[A-Za-z][A-Za-z0-9]{0,9}:\d{1,6}\b")
 URL = re.compile(r"\b[a-z][a-z0-9+.-]*://\S+", re.IGNORECASE)
 SENSOR = re.compile(r"(discrimination sensor|mutant)", re.IGNORECASE)
@@ -65,10 +69,10 @@ def build_report(feature_dir: Path) -> Report:
         report.error("validation.md is empty")
         return report
 
-    verdict_match = VERDICT.search(validation)
+    verdict_match = VERDICT.search(validation) or VERDICT_HEADING.search(validation)
     if not verdict_match:
         report.error(
-            "validation.md has no verdict line - add 'Verdict: PASS' or 'Verdict: FAIL'"
+            "validation.md has no verdict - add 'Verdict: PASS' or 'Verdict: FAIL'"
         )
     else:
         verdict = verdict_match.group("value").strip().upper()
