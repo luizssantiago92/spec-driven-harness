@@ -34,7 +34,7 @@ Break the work into atomic tasks with real dependencies and binary done criteria
    - `Gate` — the command that must pass
    - `Done when` — binary criterion
 3. **Delete fake edges.** For every "and then", ask whether the next task actually reads the previous task's output. If not, the edge is fake — remove it and the tasks can run in parallel. See `task-graph-engineering.md`.
-4. **Order tasks so dependencies come first.** Forward dependencies fail the gate.
+4. **Order tasks so dependencies come first.** Forward dependencies fail the gate. When grouping under `### Phase N`, a task must not depend on a task in a later phase.
 5. **Apply the stop rule.** Only split work that never reads its siblings' results; sequential work stays with one agent.
 6. **Draw the graph** in `task-graph.md` when there are 3+ tasks or any parallel group.
 7. **Run the gate**, then present the breakdown for approval.
@@ -43,9 +43,11 @@ Break the work into atomic tasks with real dependencies and binary done criteria
 
 ```bash
 python3 .specs/harness/scripts/validate_tasks.py .specs/features/[feature]/tasks.md
+python3 .specs/harness/scripts/validate_tasks.py [feature]
+python3 .specs/harness/scripts/validate_tasks.py          # single-feature projects
 ```
 
-Checks task IDs, required fields, dependency direction, cycles, and granularity smells. Non-zero exit means STOP.
+Checks task IDs, required fields, dependency direction, later-phase dependencies, cycles, and granularity smells. Non-zero exit means STOP.
 
 ## Template
 

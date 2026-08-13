@@ -56,6 +56,8 @@ Write `validation.md`, then run the completion gate.
 
 ```bash
 python3 .specs/harness/scripts/validate_state.py .specs/features/[feature]
+python3 .specs/harness/scripts/validate_state.py [feature]
+python3 .specs/harness/scripts/validate_state.py          # single-feature projects
 ```
 
 Checks that the report exists, the verdict is filled to PASS, evidence cites `file:line`, the sensor ran, and no task remains open. Non-zero exit means the feature is not done.

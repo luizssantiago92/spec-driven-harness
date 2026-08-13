@@ -7,14 +7,18 @@ Run from the repository root:
 
 from __future__ import annotations
 
+import io
+import os
 import sys
 import tempfile
 import unittest
+from contextlib import contextmanager, redirect_stdout
 from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
 
+import _common  # noqa: E402
 import check_commit  # noqa: E402
 import validate_spec  # noqa: E402
 import validate_state  # noqa: E402
@@ -30,6 +34,9 @@ Let users sign in with email and password.
 ### REQ-001: Email login
 - **Acceptance Criteria**: WHEN a user submits valid credentials THEN the system SHALL create a session
 - WHEN a user submits invalid credentials THEN the system SHALL return 401 with code AUTH_INVALID
+
+## Assumptions
+- Email is the only identity provider for this feature
 
 ## Out of Scope
 - Social login providers
@@ -135,6 +142,53 @@ class SpecGateTest(unittest.TestCase):
         self.assertFalse(report.passed)
         self.assertTrue(any("duplicate" in error for error in report.errors))
 
+    def test_missing_assumptions_fails(self):
+        spec = VALID_SPEC.replace(
+            "## Assumptions\n- Email is the only identity provider for this feature\n\n",
+            "",
+        )
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("Assumptions" in error for error in report.errors))
+
+    def test_criterion_without_shall_or_must_fails(self):
+        spec = VALID_SPEC.replace(
+            "THEN the system SHALL create a session",
+            "THEN the system should create a session",
+        )
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertFalse(report.passed)
+        self.assertTrue(
+            any("SHALL or MUST" in error for error in report.errors)
+        )
+
+    def test_will_is_not_a_normative_verb(self):
+        spec = VALID_SPEC.replace(
+            "THEN the system SHALL return 401 with code AUTH_INVALID",
+            "THEN the system will return 401 with code AUTH_INVALID",
+        )
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertFalse(report.passed)
+
+    def test_must_is_accepted_as_normative_verb(self):
+        spec = VALID_SPEC.replace("SHALL", "MUST")
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertTrue(report.passed, report.errors)
+        self.assertEqual(
+            [w for w in report.warnings if "no trigger" in w], []
+        )
+
+    def test_shall_without_ears_trigger_is_a_warning(self):
+        spec = VALID_SPEC.replace(
+            "WHEN a user submits valid credentials THEN the system SHALL create a session",
+            "the system SHALL create a session",
+        )
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertTrue(report.passed, report.errors)
+        self.assertTrue(
+            any("no trigger" in warning for warning in report.warnings)
+        )
+
 
 class TasksGateTest(unittest.TestCase):
     def test_valid_tasks_pass(self):
@@ -214,6 +268,57 @@ class TasksGateTest(unittest.TestCase):
         report = validate_tasks.build_report("tasks.md", tasks)
         self.assertTrue(report.passed, report.errors[:3])
 
+    def test_same_phase_dependency_passes(self):
+        tasks = """# Tasks
+
+### Phase 1
+
+### T1: Create session token module
+- **Requirement**: REQ-001
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+
+### T2: Add login endpoint handler
+- **Requirement**: REQ-001
+- **Depends on**: T1
+- **Tests**: t.ts
+- **Gate**: npm test
+"""
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertTrue(report.passed, report.errors)
+        self.assertTrue(any("phase" in check for check in report.checks))
+
+    def test_later_phase_dependency_fails(self):
+        # T1 is later in the file (not a forward-ID error) but sits in an
+        # earlier phase than T2, which it depends on.
+        tasks = """# Tasks
+
+### Phase 2
+
+### T2: Add login endpoint handler
+- **Requirement**: REQ-001
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+
+### Phase 1
+
+### T1: Create session token module
+- **Requirement**: REQ-001
+- **Depends on**: T2
+- **Tests**: t.ts
+- **Gate**: npm test
+"""
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertFalse(report.passed)
+        self.assertTrue(
+            any("later one" in error or "from phase" in error for error in report.errors)
+        )
+        self.assertFalse(
+            any("forward dependency" in error for error in report.errors)
+        )
+
 
 class StateGateTest(unittest.TestCase):
     def _feature_dir(self, validation: str | None = VALID_VALIDATION, tasks: str | None = None):
@@ -288,6 +393,137 @@ class StateGateTest(unittest.TestCase):
         )
         self.assertFalse(report.passed)
         self.assertTrue(any("open task" in e for e in report.errors))
+
+
+@contextmanager
+def _chdir(path: Path):
+    previous = Path.cwd()
+    os.chdir(path)
+    try:
+        yield
+    finally:
+        os.chdir(previous)
+
+
+def _run_main(fn):
+    buf = io.StringIO()
+    with redirect_stdout(buf):
+        return fn(), buf.getvalue()
+
+
+def _capture_exit(fn):
+    buf = io.StringIO()
+    with redirect_stdout(buf):
+        try:
+            fn()
+        except SystemExit as exc:
+            return exc.code, buf.getvalue()
+    raise AssertionError("expected SystemExit")
+
+
+class FeatureResolveTest(unittest.TestCase):
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.root = Path(self.tmp.name)
+        self.features = self.root / ".specs" / "features"
+
+    def tearDown(self):
+        self.tmp.cleanup()
+
+    def _write_feature(self, name: str, spec: str = VALID_SPEC, tasks: str | None = None):
+        directory = self.features / name
+        directory.mkdir(parents=True)
+        (directory / "spec.md").write_text(spec, encoding="utf-8")
+        if tasks is not None:
+            (directory / "tasks.md").write_text(tasks, encoding="utf-8")
+        return directory
+
+    def test_auto_detects_the_only_feature(self):
+        feature = self._write_feature("auth")
+        resolved = _common.resolve_feature_dir(None, "validate-spec", root=self.root)
+        self.assertEqual(resolved.resolve(), feature.resolve())
+
+    def test_resolves_a_bare_feature_name(self):
+        feature = self._write_feature("oauth-2_0")
+        resolved = _common.resolve_feature_dir("oauth-2_0", "validate-spec", root=self.root)
+        self.assertEqual(resolved.resolve(), feature.resolve())
+
+    def test_resolves_a_path_to_the_artifact(self):
+        feature = self._write_feature("auth")
+        path, text = _common.resolve_artifact(
+            str(feature / "spec.md"), "spec.md", "validate-spec", root=self.root
+        )
+        self.assertEqual(path.resolve(), (feature / "spec.md").resolve())
+        self.assertIn("REQ-001", text)
+
+    def test_empty_features_dir_is_a_usage_error(self):
+        self.features.mkdir(parents=True)
+        code, output = _capture_exit(
+            lambda: _common.resolve_feature_dir(None, "validate-spec", root=self.root)
+        )
+        self.assertEqual(code, _common.EXIT_USAGE)
+        self.assertIn("no features found", output)
+
+    def test_missing_features_dir_is_a_usage_error(self):
+        code, output = _capture_exit(
+            lambda: _common.resolve_feature_dir(None, "validate-spec", root=self.root)
+        )
+        self.assertEqual(code, _common.EXIT_USAGE)
+        self.assertIn("no features found", output)
+
+    def test_multiple_features_require_an_explicit_name(self):
+        self._write_feature("auth")
+        self._write_feature("billing")
+        code, output = _capture_exit(
+            lambda: _common.resolve_feature_dir(None, "validate-spec", root=self.root)
+        )
+        self.assertEqual(code, _common.EXIT_USAGE)
+        self.assertIn("2 features found", output)
+        self.assertIn("auth", output)
+        self.assertIn("billing", output)
+
+    def test_unknown_feature_name_is_a_usage_error(self):
+        self._write_feature("auth")
+        code, output = _capture_exit(
+            lambda: _common.resolve_feature_dir("nope", "validate-spec", root=self.root)
+        )
+        self.assertEqual(code, _common.EXIT_USAGE)
+        self.assertIn("no such feature or path", output)
+
+    def test_validate_spec_main_auto_detects_from_cwd(self):
+        self._write_feature("auth")
+        with _chdir(self.root):
+            code, _ = _run_main(lambda: validate_spec.main([]))
+        self.assertEqual(code, 0)
+
+    def test_validate_spec_main_accepts_a_feature_name(self):
+        self._write_feature("auth")
+        self._write_feature("billing")
+        with _chdir(self.root):
+            code, _ = _run_main(lambda: validate_spec.main(["billing"]))
+        self.assertEqual(code, 0)
+
+    def test_validate_spec_main_lists_candidates_when_ambiguous(self):
+        self._write_feature("auth")
+        self._write_feature("billing")
+        with _chdir(self.root):
+            code, output = _capture_exit(lambda: validate_spec.main([]))
+        self.assertEqual(code, _common.EXIT_USAGE)
+        self.assertIn("auth", output)
+        self.assertIn("billing", output)
+
+    def test_validate_tasks_main_accepts_a_feature_name(self):
+        self._write_feature("auth", tasks=VALID_TASKS)
+        with _chdir(self.root):
+            code, _ = _run_main(lambda: validate_tasks.main(["auth"]))
+        self.assertEqual(code, 0)
+
+    def test_validate_state_main_accepts_a_feature_name(self):
+        directory = self._write_feature("auth")
+        (directory / "validation.md").write_text(VALID_VALIDATION, encoding="utf-8")
+        with _chdir(self.root):
+            code, _ = _run_main(lambda: validate_state.main(["auth"]))
+        self.assertEqual(code, 0)
 
 
 class CommitGateTest(unittest.TestCase):

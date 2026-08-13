@@ -30,10 +30,12 @@ Structural gates run **before** owner review, so they cannot drift when the mode
 
 | When | Command |
 | --- | --- |
-| Before confirming a spec | `python3 .specs/harness/scripts/validate_spec.py .specs/features/[feature]/spec.md` |
-| Before presenting tasks for approval | `python3 .specs/harness/scripts/validate_tasks.py .specs/features/[feature]/tasks.md` |
+| Before confirming a spec | `python3 .specs/harness/scripts/validate_spec.py [feature]` |
+| Before presenting tasks for approval | `python3 .specs/harness/scripts/validate_tasks.py [feature]` |
 | On each commit | `python3 .specs/harness/scripts/check_commit.py --message "<message>"` |
-| Before declaring a feature done | `python3 .specs/harness/scripts/validate_state.py .specs/features/[feature]` |
+| Before declaring a feature done | `python3 .specs/harness/scripts/validate_state.py [feature]` |
+
+Gates accept a feature name, a feature directory, or a path to the artifact. With no argument they auto-detect when the project has exactly one feature; with several they list candidates and exit 2. A spec is rejected unless every criterion uses `SHALL` or `MUST` and `## Assumptions` is present.
 
 A **non-zero exit means STOP** — fix the artifact, then re-run the gate. Never continue past a failing gate.
 
