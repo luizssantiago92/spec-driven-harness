@@ -26,14 +26,14 @@ from _common import Report, find_placeholders, read_artifact
 GATE = "validate-tasks"
 
 TASK_HEADING = re.compile(
-    r"^#{2,6}\s*(?P<id>T\d{1,3})\s*[:\-–]?\s*(?P<title>.*)$",
+    r"^#{2,6}\s*(?P<id>T\d{1,6})\s*[:\-–]?\s*(?P<title>.*)$",
     re.MULTILINE | re.IGNORECASE,
 )
 FIELD = re.compile(
     r"^\s*[-*]?\s*\*{0,2}(?P<key>[A-Za-z][A-Za-z ]+?)\*{0,2}\s*:\s*(?P<value>.+?)\s*$",
     re.MULTILINE,
 )
-TASK_REF = re.compile(r"\bT(\d{1,3})\b", re.IGNORECASE)
+TASK_REF = re.compile(r"\bT(\d{1,6})\b", re.IGNORECASE)
 REQUIREMENT_REF = re.compile(r"\b[A-Z][A-Z0-9]{1,9}-\d{2,4}\b")
 NONE_VALUES = {"-", "—", "–", "none", "n/a", "na", "nenhum", "nenhuma", "no"}
 
@@ -81,33 +81,42 @@ def parse_dependencies(value: str) -> list[str]:
 
 
 def detect_cycle(graph: dict[str, list[str]]) -> list[str] | None:
-    visiting: set[str] = set()
+    """Iterative DFS so a long dependency chain cannot blow the call stack."""
+
     visited: set[str] = set()
-    stack: list[str] = []
 
-    def walk(node: str) -> list[str] | None:
-        if node in visited:
-            return None
-        if node in visiting:
-            return stack[stack.index(node):] + [node]
+    for root in graph:
+        if root in visited:
+            continue
 
-        visiting.add(node)
-        stack.append(node)
+        path: list[str] = []
+        on_path: set[str] = set()
+        stack: list[tuple[str, bool]] = [(root, False)]
 
-        for neighbour in graph.get(node, []):
-            cycle = walk(neighbour)
-            if cycle:
-                return cycle
+        while stack:
+            node, expanded = stack.pop()
 
-        stack.pop()
-        visiting.discard(node)
-        visited.add(node)
-        return None
+            if expanded:
+                path.pop()
+                on_path.discard(node)
+                continue
 
-    for node in graph:
-        cycle = walk(node)
-        if cycle:
-            return cycle
+            if node in visited:
+                continue
+
+            if node in on_path:
+                return path[path.index(node):] + [node]
+
+            visited.add(node)
+            path.append(node)
+            on_path.add(node)
+            stack.append((node, True))
+
+            for neighbour in graph.get(node, []):
+                if neighbour in on_path:
+                    return path[path.index(neighbour):] + [neighbour]
+                if neighbour not in visited:
+                    stack.append((neighbour, False))
 
     return None
 

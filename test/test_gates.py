@@ -98,6 +98,17 @@ class SpecGateTest(unittest.TestCase):
             any("no acceptance criteria" in error for error in report.errors)
         )
 
+    def test_metadata_bullets_are_not_acceptance_criteria(self):
+        spec = VALID_SPEC.replace(
+            "### REQ-001: Email login\n",
+            "### REQ-001: Email login\n- **Owner**: platform team\n- **Priority**: P1\n",
+        )
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertTrue(report.passed, report.errors)
+        self.assertEqual(
+            [w for w in report.warnings if "Owner" in w or "Priority" in w], []
+        )
+
     def test_placeholder_fails(self):
         spec = VALID_SPEC.replace("Social login providers", "TBD")
         report = validate_spec.build_report("spec.md", spec)
@@ -148,6 +159,39 @@ class TasksGateTest(unittest.TestCase):
         report = validate_tasks.build_report("tasks.md", "# Tasks\n\nnothing here\n")
         self.assertFalse(report.passed)
 
+    def test_cycle_is_detected(self):
+        tasks = "# Tasks\n\n" + "".join(
+            f"### T{i}: Do the thing {i}\n"
+            f"- **Requirement**: REQ-001\n"
+            f"- **Depends on**: T{3 if i == 1 else i - 1}\n"
+            f"- **Tests**: t.ts\n"
+            f"- **Gate**: npm test\n\n"
+            for i in (1, 2, 3)
+        )
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertTrue(any("cycle" in error for error in report.errors))
+
+    def test_task_ids_beyond_t999_are_parsed(self):
+        tasks = (
+            "# Tasks\n\n### T1000: Add the last module\n"
+            "- **Requirement**: REQ-001\n- **Depends on**: —\n"
+            "- **Tests**: t.ts\n- **Gate**: npm test\n"
+        )
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertTrue(any("1 task(s)" in check for check in report.checks))
+
+    def test_long_dependency_chain_does_not_exhaust_the_stack(self):
+        tasks = "# Tasks\n\n" + "".join(
+            f"### T{i}: Add module number {i}\n"
+            f"- **Requirement**: REQ-001\n"
+            f"- **Depends on**: {'—' if i == 1 else f'T{i - 1}'}\n"
+            f"- **Tests**: t.ts\n"
+            f"- **Gate**: npm test\n\n"
+            for i in range(1, 3001)
+        )
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertTrue(report.passed, report.errors[:3])
+
 
 class StateGateTest(unittest.TestCase):
     def _feature_dir(self, validation: str | None = VALID_VALIDATION, tasks: str | None = None):
@@ -184,6 +228,27 @@ class StateGateTest(unittest.TestCase):
         report = validate_state.build_report(self._feature_dir(without_evidence))
         self.assertFalse(report.passed)
         self.assertTrue(any("evidence" in e for e in report.errors))
+
+    def test_url_with_port_is_not_evidence(self):
+        report = validate_state.build_report(
+            self._feature_dir(
+                "# V\n- Verdict: PASS\n## Coverage\n"
+                "- REQ-001 - see https://ci.example.com:8080 for the run\n"
+                "## Discrimination Sensor\n- mutant killed\n"
+            )
+        )
+        self.assertFalse(report.passed)
+        self.assertTrue(any("evidence" in e for e in report.errors))
+
+    def test_real_evidence_still_counts_next_to_a_url(self):
+        report = validate_state.build_report(
+            self._feature_dir(
+                "# V\n- Verdict: PASS\n## Coverage\n"
+                "- REQ-001 - test/routes/login.test.ts:24 (https://ci.example.com:8080)\n"
+                "## Discrimination Sensor\n- mutant killed\n"
+            )
+        )
+        self.assertTrue(report.passed, report.errors)
 
     def test_open_task_blocks_completion(self):
         report = validate_state.build_report(
