@@ -10,18 +10,11 @@ Apply during **Execute** and **Verify** phases, and whenever writing or reviewin
 - Fixing bugs, refactors, or dependency updates
 - Any task that touches source code, tests, or infrastructure
 
-## Locale Policy
+## Artifact Language
 
-| Context | Language |
-| --- | --- |
-| Chat with project owner | Brazilian Portuguese (pt-BR) |
-| Source code | English |
-| Tests | English |
-| Comments & docstrings | English |
-| Commit messages | English (Conventional Commits) |
-| PR titles & descriptions | English |
-| `.specs/` documents | English |
-| Variable, function, class names | English |
+Every project artifact is written in **English**: source code, tests, comments and docstrings, commit messages, PR titles and descriptions, `.specs/` documents, and identifier names.
+
+Chat language is a personal preference, not a harness rule. Set it as a global rule in your agent settings if you want replies in another language.
 
 ## Secure Coding
 
@@ -95,3 +88,7 @@ Optionally wire it as a git `commit-msg` hook so the rule holds without agent in
 - `security-review.md` — deep checklist for `/verify` phase
 - `git-handoff.md` — git sync and session handoff for `.specs/`
 - `task-graph-engineering.md` — task DAG and parallelism rules
+
+## Related Rules
+
+Project rules: `.cursor/rules/engineering-baseline.mdc` (always applied in Cursor).

@@ -5,7 +5,7 @@ Workflow: Specify → Design → Tasks → Execute → Verify
 `;
 
 export const ENGINEERING_FIXTURE = `# Engineering Standards (test fixture)
-Locale: pt-BR chat, English artifacts
+All project artifacts are written in English
 `;
 
 export const SECURITY_FIXTURE = `# Security Review (test fixture)
@@ -24,7 +24,7 @@ export const RULES_FIXTURE = `---
 description: test rule
 alwaysApply: true
 ---
-# Locale Policy (test fixture)
+# Engineering Baseline (test fixture)
 `;
 
 export const SPECIFY_REFERENCE_FIXTURE = `# Specify (test fixture)
@@ -54,7 +54,7 @@ export const DEFAULT_FIXTURES = {
   "/skills/references/validate.md": VALIDATE_REFERENCE_FIXTURE,
   "/scripts/validate_spec.py": SPEC_GATE_FIXTURE,
   "/scripts/check_commit.py": COMMIT_GATE_FIXTURE,
-  "/rules/locale-and-standards.mdc": RULES_FIXTURE,
+  "/rules/engineering-baseline.mdc": RULES_FIXTURE,
 };
 
 /**

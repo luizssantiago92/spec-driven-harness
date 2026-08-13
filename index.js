@@ -18,9 +18,7 @@ const [, , command, ...args] = process.argv;
 if (command === "install") {
   try {
     await install();
-    console.log(
-      "✨ Configuração concluída! Seu agente agora é um Engenheiro de IA 2026.",
-    );
+    console.log("✨ Setup complete. Your agent now runs on a spec-driven harness.");
   } catch (err) {
     console.error(`❌ ${err.message}`);
     process.exit(1);

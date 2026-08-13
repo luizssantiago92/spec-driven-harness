@@ -91,7 +91,7 @@ Run at session end or at a phase milestone:
 
 ## Rules
 
-- Chat with the owner in **pt-BR**; write every artifact in **English**.
+- Write every artifact in **English**.
 - Lazy artifacts: never scaffold empty files to look organized.
 - `STATE.md` has exactly one "Next Step" item. A list of five is not a handoff.
 

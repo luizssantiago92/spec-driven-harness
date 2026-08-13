@@ -3,54 +3,54 @@
 [![npm version](https://img.shields.io/npm/v/@luizsantiago/agentic-harness.svg)](https://www.npmjs.com/package/@luizsantiago/agentic-harness)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-Framework agêntico que une **Spec-Driven Development**, **Loop** e **Harness Engineering**. Hub SDD + **5 skills irmãs** + **references por fase** + **gates determinísticos em Python**, regras pt-BR/EN, memória `.specs/` e contrato `.cursorrules`. Fluxo **Specify→Verify** com verificador independente, test-first, `STATE.md` e `LESSONS.md`.
+An agentic framework that combines **Spec-Driven Development**, **Loop** and **Harness Engineering**. An SDD hub plus **5 sister skills**, **per-phase references** and **deterministic Python gates**, backed by `.specs/` memory and a `.cursorrules` execution contract. **Specify→Verify** flow with an independent verifier, test-first implementation, `STATE.md` and `LESSONS.md`.
 
-A diferença em relação a um conjunto de instruções: os **gates rodam como código**. Spec incompleta, task sem critério ou feature sem evidência de teste **não passam** — o script sai com código ≠ 0 e o agente para.
+What sets it apart from a pile of instructions: the **gates run as code**. An incomplete spec, a task without a success criterion, or a feature without test evidence **do not pass** — the script exits non-zero and the agent stops.
 
-## Requisitos
+## Requirements
 
-| Runtime | Para quê | Obrigatório |
+| Runtime | Used for | Required |
 | --- | --- | --- |
-| Node.js 18+ | `npx` install e CLI | Sim |
-| Python 3.10+ | Gates estruturais | Recomendado |
+| Node.js 18+ | `npx` install and CLI | Yes |
+| Python 3.10+ | Structural gates | Recommended |
 
-Sem Python o harness entra em **modo degradado**: as skills continuam funcionando e o agente executa as mesmas checagens manualmente contra o checklist da reference. O padrão não cai — só muda quem verifica.
+Without Python the harness runs in **degraded mode**: the skills still work and the agent performs the same checks manually against the reference checklist. The standard does not drop — only who runs the check.
 
-## Instalação
+## Install
 
 ```bash
 npx @luizsantiago/agentic-harness install
 ```
 
-Reinstalar atualiza skills, references e scripts, e faz **upgrade** do bloco harness em `.cursorrules` sem sobrescrever `STATE.md`, `LESSONS.md` ou regras customizadas.
+Re-running updates skills, references and scripts, and **upgrades** the harness block in `.cursorrules` without overwriting `STATE.md`, `LESSONS.md` or customized rules.
 
-### O que o instalador cria
+### What the installer creates
 
-| Artefato | Propósito |
+| Artifact | Purpose |
 | --- | --- |
-| `.cursor/skills/agent-architecture.md` | **Hub** — contrato, fases, gates, roteador de complexidade |
-| `.cursor/skills/references/*.md` | Procedimentos por fase (8 arquivos) |
-| `.cursor/skills/task-graph-engineering.md` | Task DAG, paralelismo, diamond verify, sub-agentes |
-| `.cursor/skills/engineering-standards.md` | Locale, secure coding, one-writer-per-file |
-| `.cursor/skills/security-review.md` | Checklist OWASP para `/verify` |
-| `.cursor/skills/git-handoff.md` | Git sync, reconcile, handoff de sessão |
-| `.claude/skills/**` | Mesmas skills e references para Claude |
-| `.cursor/rules/locale-and-standards.mdc` | Regra global Cursor (pt-BR chat, artefatos em inglês) |
-| `.specs/harness/scripts/*.py` | **Gates determinísticos** |
-| `.specs/STATE.md` | Decisões (`AD-NNN`) e handoff |
-| `.specs/LESSONS.md` | Lições destiladas de falhas de verificação |
-| `.cursorrules` | Contrato de execução (Progressive Disclosure) |
+| `.cursor/skills/agent-architecture.md` | **Hub** — contract, phases, gates, complexity router |
+| `.cursor/skills/references/*.md` | Per-phase procedures (8 files) |
+| `.cursor/skills/task-graph-engineering.md` | Task DAG, parallelism, diamond verify, sub-agents |
+| `.cursor/skills/engineering-standards.md` | Secure coding, code quality, one writer per file |
+| `.cursor/skills/security-review.md` | OWASP checklist for `/verify` |
+| `.cursor/skills/git-handoff.md` | Git sync, reconcile, session handoff |
+| `.claude/skills/**` | The same skills and references for Claude |
+| `.cursor/rules/engineering-baseline.mdc` | Always-applied Cursor project rule |
+| `.specs/harness/scripts/*.py` | **Deterministic gates** |
+| `.specs/STATE.md` | Decisions (`AD-NNN`) and handoff |
+| `.specs/LESSONS.md` | Lessons distilled from verification failures |
+| `.cursorrules` | Execution contract (progressive disclosure) |
 
-## Gates determinísticos
+## Deterministic gates
 
-| Momento | Comando |
+| When | Command |
 | --- | --- |
-| Antes de confirmar a spec | `python3 .specs/harness/scripts/validate_spec.py .specs/features/X/spec.md` |
-| Antes de aprovar as tasks | `python3 .specs/harness/scripts/validate_tasks.py .specs/features/X/tasks.md` |
-| A cada commit | `python3 .specs/harness/scripts/check_commit.py --message "feat: ..."` |
-| Antes de fechar a feature | `python3 .specs/harness/scripts/validate_state.py .specs/features/X` |
+| Before confirming a spec | `python3 .specs/harness/scripts/validate_spec.py .specs/features/X/spec.md` |
+| Before approving tasks | `python3 .specs/harness/scripts/validate_tasks.py .specs/features/X/tasks.md` |
+| On each commit | `python3 .specs/harness/scripts/check_commit.py --message "feat: ..."` |
+| Before closing a feature | `python3 .specs/harness/scripts/validate_state.py .specs/features/X` |
 
-Ou via CLI, sem decorar caminhos:
+Or through the CLI, without memorizing paths:
 
 ```bash
 npx @luizsantiago/agentic-harness validate-spec .specs/features/auth/spec.md
@@ -59,18 +59,18 @@ npx @luizsantiago/agentic-harness validate-state .specs/features/auth
 npx @luizsantiago/agentic-harness check-commit --message "feat(auth): add token refresh"
 ```
 
-O que cada gate bloqueia:
+What each gate blocks:
 
-| Gate | Bloqueia |
+| Gate | Blocks |
 | --- | --- |
-| `validate_spec` | Seções faltando, IDs malformados, requisito sem critério de aceite, placeholders (`TBD`, `TODO`) |
-| `validate_tasks` | Campo obrigatório ausente, dependência inexistente, dependência para frente, ciclo, task vaga |
-| `check_commit` | Fora do Conventional Commits, tipo desconhecido, header > 72 chars, ponto final |
-| `validate_state` | `validation.md` ausente, verdict != PASS, sem evidência `file:line`, task em aberto |
+| `validate_spec` | Missing sections, malformed IDs, requirement without acceptance criteria, placeholders (`TBD`, `TODO`) |
+| `validate_tasks` | Missing required field, unknown dependency, forward dependency, cycle, vague task |
+| `check_commit` | Not Conventional Commits, unknown type, header over 72 chars, trailing period |
+| `validate_state` | Missing `validation.md`, verdict other than PASS, no `file:line` evidence, open task |
 
-Saída ≠ 0 significa **STOP**: corrigir o artefato e rodar o gate de novo.
+A non-zero exit means **STOP**: fix the artifact and run the gate again.
 
-Opcional — travar o formato de commit sem depender do agente:
+Optional — enforce the commit format without relying on the agent:
 
 ```bash
 # .git/hooks/commit-msg
@@ -78,19 +78,19 @@ Opcional — travar o formato de commit sem depender do agente:
 python3 .specs/harness/scripts/check_commit.py --file "$1"
 ```
 
-Os scripts são commitados junto com `.specs/` — time e CI rodam os mesmos gates que o agente. Ignore apenas o bytecode:
+The scripts are committed alongside `.specs/`, so the team and CI run the same gates as the agent. Ignore only the bytecode:
 
 ```gitignore
 .specs/harness/scripts/__pycache__/
 ```
 
-## Fluxo Spec-Driven
+## The Spec-Driven flow
 
 ```
-SPECIFY → DISCUSS (condicional) → DESIGN (opcional) → TASKS (opcional) → EXECUTE (loop) → VERIFY
+SPECIFY → DISCUSS (conditional) → DESIGN (optional) → TASKS (optional) → EXECUTE (loop) → VERIFY
 ```
 
-| Fase | Reference | Skill irmã | Gate |
+| Phase | Reference | Sister skill | Gate |
 | --- | --- | --- | --- |
 | **Specify** | `references/specify.md` | — | `validate_spec.py` |
 | **Discuss** | `references/discuss.md` | — | — |
@@ -101,47 +101,47 @@ SPECIFY → DISCUSS (condicional) → DESIGN (opcional) → TASKS (opcional) →
 | **Handoff** | `references/memory.md` | `git-handoff` | — |
 | **Quick** | `references/quick-mode.md` | — | `check_commit.py` |
 
-### Roteador de complexidade
+### Complexity router
 
-| Tier | Escopo | Caminho |
+| Tier | Scope | Path |
 | --- | --- | --- |
-| **Quick** | ≤3 arquivos, sem decisão de design | `quick-mode` — descrever, implementar, verificar, commitar |
-| **Simples** | 2–5 arquivos | Specify → Execute → Verify |
-| **Médio** | Feature nova, <10 tasks | Specify → Tasks → Execute → Verify |
-| **Complexo** | Arquitetura, API, infra | Specify → Discuss → Design → Tasks → Execute → Verify |
-| **Paralelo** | Trabalho divisível, multi-agente | Acima + `/task-graph` |
+| **Quick** | ≤3 files, no design decision | `quick-mode` — describe, implement, verify, commit |
+| **Simple** | 2–5 files | Specify → Execute → Verify |
+| **Medium** | New feature, <10 tasks | Specify → Tasks → Execute → Verify |
+| **Complex** | Architecture, API, infrastructure | Specify → Discuss → Design → Tasks → Execute → Verify |
+| **Parallel** | Splittable work, multiple agents | Any of the above + `/task-graph` |
 
-**Safety valve** — mesmo pulando Tasks, o Execute começa listando os passos atômicos. Se aparecerem mais de 5 passos ou dependências reais, para e cria `tasks.md`.
+**Safety valve** — even when Tasks is skipped, Execute starts by listing the atomic steps. If more than 5 steps or real dependencies show up, it stops and creates `tasks.md`.
 
-## Contrato de Execução
+## Execution contract
 
-1. **Test-First Imperative** — Testes derivam dos critérios de aceite e afirmam o resultado da spec, nunca a implementação.
-2. **Gate antes de "pronto"** — Quem decide é o test runner, não a autoavaliação.
-3. **Um commit atômico por task** — Inclui código, testes e o check da task no `tasks.md`.
-4. **Autor ≠ Verificador** — Após a última task, `/verify` roda com contexto limpo. Obrigatório, nunca solicitado.
-5. **Blast radius** — Aprovar spec/tasks autoriza implementação e commit **locais**. `git push`, deploy e operações destrutivas exigem OK explícito.
+1. **Test-First Imperative** — Tests derive from acceptance criteria and assert the spec's outcome, never the implementation.
+2. **Gate before done** — The test runner decides, not self-assessment.
+3. **One atomic commit per task** — Code, tests and the task checkbox in `tasks.md` land together.
+4. **Author ≠ Verifier** — After the last task, `/verify` runs with a clean context. Mandatory, never prompted.
+5. **Blast radius** — Approving a spec or tasks authorizes **local** implementation and commits. `git push`, deploy and destructive operations need an explicit go-ahead.
 
-## Persistência e memória (`.specs/`)
+## Persistent memory (`.specs/`)
 
-| Caminho | Função |
+| Path | Purpose |
 | --- | --- |
-| `STATE.md` | Feature ativa, próximo passo, blockers, ideias adiadas, decisões `AD-NNN` |
-| `LESSONS.md` | Lições de falhas fundamentadas (mutante sobrevivente, critério impreciso) |
-| `project/PROJECT.md` · `project/ROADMAP.md` | Visão, stack, milestones |
-| `quick/NNN-slug/` | Tasks de quick mode |
-| `features/[feature]/spec.md` | Requisitos e critérios de aceite |
-| `features/[feature]/context.md` | Decisões do owner para gray areas |
-| `features/[feature]/design.md` | Arquitetura (tier Complexo) |
-| `features/[feature]/tasks.md` | Breakdown atômico |
-| `features/[feature]/task-graph.md` | DAG de jobs e grupos paralelos |
-| `features/[feature]/validation.md` | Relatório do verificador independente |
-| `harness/scripts/` | Gates determinísticos |
+| `STATE.md` | Active feature, next step, blockers, deferred ideas, `AD-NNN` decisions |
+| `LESSONS.md` | Lessons from grounded failures (surviving mutant, imprecise criterion) |
+| `project/PROJECT.md` · `project/ROADMAP.md` | Vision, stack, milestones |
+| `quick/NNN-slug/` | Quick-mode tasks |
+| `features/[feature]/spec.md` | Requirements and acceptance criteria |
+| `features/[feature]/context.md` | Owner decisions for gray areas |
+| `features/[feature]/design.md` | Architecture (Complex tier) |
+| `features/[feature]/tasks.md` | Atomic breakdown |
+| `features/[feature]/task-graph.md` | Job DAG and parallel groups |
+| `features/[feature]/validation.md` | Independent verifier report |
+| `harness/scripts/` | Deterministic gates |
 
-**Artefatos lazy** — nunca criar `design.md`, `tasks.md` ou `context.md` vazios. Arquivo vazio finge que uma fase rodou; ausência é o estado correto de uma fase pulada.
+**Lazy artifacts** — never create an empty `design.md`, `tasks.md` or `context.md`. An empty file claims a phase ran when it did not; absence is the correct state for a skipped phase.
 
-### Retomada de sessão
+### Session resume
 
-`STATE.md` pode estar desatualizado. No início da sessão, reconcilie contra o git — **evidência vence**:
+`STATE.md` can be stale. At session start, reconcile it against git — **evidence wins**:
 
 ```bash
 git branch --show-current
@@ -149,126 +149,133 @@ git status --porcelain
 git log --oneline -10
 ```
 
-## Verificação independente
+## Independent verification
 
-- **Spec-anchored check** — cada critério tem teste que afirma o resultado definido na spec
-- **Discrimination sensor** — mutantes injetados em cópia isolada (worktree temporário), nunca `git stash`
-- **Security review** — checklist OWASP, com caminho leve justificado para mudanças sem auth/API
-- **Evidence-or-zero** — requisito só é "pronto" com `file:line` de teste assertivo passando
-- **Loop limitado** — fix → re-verify no máximo 3 vezes antes de escalar
+- **Spec-anchored check** — every criterion has a test asserting the outcome the spec defines
+- **Discrimination sensor** — mutants injected into an isolated scratch copy (temp worktree), never `git stash`
+- **Security review** — OWASP checklist, with a justified lightweight path for changes with no auth or API surface
+- **Evidence-or-zero** — a requirement is done only with a `file:line` reference to a passing assertive test
+- **Bounded loop** — fix → re-verify at most 3 times before escalating
 
-## Comandos
+## Commands
 
-| Comando | Reference | Ação |
+| Command | Reference | Action |
 | --- | --- | --- |
-| `/specify` | `specify.md` | Requisitos e IDs de spec |
-| `/discuss` | `discuss.md` | Resolver gray areas em `context.md` |
-| `/plan` | `design.md` | Design técnico |
-| `/tasks` | `tasks.md` | Breakdown atômico |
-| `/task-graph` | `task-graph-engineering.md` | Desenhar o DAG de jobs |
-| `/loop` | `implement.md` | Implementação autônoma |
-| `/verify` | `validate.md` | Validação independente |
-| `/quick` | `quick-mode.md` | Express lane para ≤3 arquivos |
-| `/handoff` | `memory.md` | Atualiza STATE, commita `.specs/`, sem push |
-| `/sync-spec` | `git-handoff.md` | Commita artefatos da feature atual |
+| `/specify` | `specify.md` | Requirements and spec IDs |
+| `/discuss` | `discuss.md` | Resolve gray areas into `context.md` |
+| `/plan` | `design.md` | Technical design |
+| `/tasks` | `tasks.md` | Atomic breakdown |
+| `/task-graph` | `task-graph-engineering.md` | Draw the job DAG |
+| `/loop` | `implement.md` | Autonomous implementation |
+| `/verify` | `validate.md` | Independent validation |
+| `/quick` | `quick-mode.md` | Express lane for ≤3 files |
+| `/handoff` | `memory.md` | Update STATE, commit `.specs/`, no push |
+| `/sync-spec` | `git-handoff.md` | Commit the current feature's artifacts |
 
-## Skills irmãs (use juntas)
+## Sister skills (use them together)
 
-| Skill | Camada | Papel |
+| Skill | Layer | Role |
 | --- | --- | --- |
-| `agent-architecture.md` | **Processo** | Hub — contrato, fases, gates, roteador |
-| `task-graph-engineering.md` | **Topologia** | Task DAG, stop rule, diamond verify, batches de sub-agentes |
-| `engineering-standards.md` | **Qualidade** | Locale, secure coding, one-writer-per-file, surgical changes |
-| `security-review.md` | **Verificação** | Checklist OWASP para `/verify` |
-| `git-handoff.md` | **Persistência** | Git sync, reconcile, template STATE |
+| `agent-architecture.md` | **Process** | Hub — contract, phases, gates, router |
+| `task-graph-engineering.md` | **Topology** | Task DAG, stop rule, diamond verify, sub-agent batches |
+| `engineering-standards.md` | **Quality** | Secure coding, one writer per file, surgical changes |
+| `security-review.md` | **Verification** | OWASP checklist for `/verify` |
+| `git-handoff.md` | **Persistence** | Git sync, reconcile, STATE template |
 
 ```
-agent-architecture       →  O QUE fazer e QUANDO (fases + contrato)
-task-graph-engineering →  COMO conectar jobs (DAG, paralelismo)
-engineering-standards  →  COMO escrever código e commits
-security-review        →  segurança na verificação
-git-handoff            →  persistir memória e specs no git
+agent-architecture       →  WHAT to do and WHEN (phases + contract)
+task-graph-engineering →  HOW jobs connect (DAG, parallelism)
+engineering-standards  →  HOW to write code and commits
+security-review        →  security during verification
+git-handoff            →  persist memory and specs in git
 ```
 
-## Locale
+## Language
 
-| Contexto | Idioma |
-| --- | --- |
-| Chat com o owner | Português brasileiro (pt-BR) |
-| Código, testes, commits, PRs, `.specs/` | Inglês |
+Every project artifact is written in **English**: code, tests, commit messages, PR descriptions and `.specs/` documents.
 
-Para preferência pessoal em todos os projetos, adicione em **Cursor → Settings → Rules**:
+Chat language is a personal preference, not a harness rule. If you want replies in another language, set it as a global rule in **Cursor → Settings → Rules**, for example:
 
-> Always respond to me in Brazilian Portuguese (pt-BR). Project artifacts remain in English.
+> Always reply to me in Brazilian Portuguese. Project artifacts remain in English.
 
-## Cadeia de verificação de conhecimento
+## Knowledge verification chain
 
-1. **Codebase** — Convenções e padrões já em uso
+1. **Codebase** — conventions and patterns already in use
 2. **Docs** — README, `docs/`, `.specs/STATE.md`
-3. **MCP/Context** — Documentação via ferramentas externas
-4. **Web Search** — Fontes oficiais e padrões de comunidade
-5. **Incerteza** — Se não encontrar, diga "Eu não sei". Nunca invente APIs.
+3. **MCP/Context** — library documentation through tools
+4. **Web search** — official sources and community patterns
+5. **Uncertainty** — if you cannot find it, say "I don't know". Never invent APIs.
 
-> Planejamento: modelos de alto raciocínio. Execução: modelos rápidos. Verificador: tier médio-alto (raciocínio adversarial).
+> Planning: high-reasoning models. Execution: fast models. Verifier: mid-to-high tier (adversarial reasoning).
 
-## Migração 0.1.x → 0.2.0
+## Migration
 
-| Mudança | Impacto |
+### 0.2.x → English-only
+
+| Change | Impact |
 | --- | --- |
-| Hub + `references/` | `agent-architecture.md` virou índice; procedimentos estão em `references/` |
-| Gates Python | Novo diretório `.specs/harness/scripts/` — commite junto com `.specs/` |
-| Novo template `STATE.md` | **Não sobrescreve** arquivos existentes; migre manualmente se quiser as seções novas |
-| Novos artefatos | `context.md`, `project/`, `quick/` — criados sob demanda |
-| Python | Opcional; sem ele o harness roda em modo degradado |
+| `locale-and-standards.mdc` → `engineering-baseline.mdc` | Re-running install adds the new rule; **delete the old file manually** so the pt-BR chat rule stops applying |
+| Locale policy removed from skills | Artifact language stays English; chat language moves to your personal agent settings |
+| CLI output in English | Cosmetic only |
 
-Basta rodar `npx @luizsantiago/agentic-harness install` novamente.
+### 0.1.x → 0.2.0
+
+| Change | Impact |
+| --- | --- |
+| Hub + `references/` | `agent-architecture.md` is now an index; procedures live in `references/` |
+| Python gates | New `.specs/harness/scripts/` directory — commit it along with `.specs/` |
+| New `STATE.md` template | **Does not overwrite** existing files; migrate manually if you want the new sections |
+| New artifacts | `context.md`, `project/`, `quick/` — created on demand |
+| Python | Optional; without it the harness runs in degraded mode |
+
+Just run `npx @luizsantiago/agentic-harness install` again.
 
 ---
 
-## Estrutura do repositório
+## Repository layout
 
 ```
 spec-driven-harness/
 ├── index.js                        # CLI: install + gates
-├── lib/                            # Instalador e ponte com Python
+├── lib/                            # Installer and Python bridge
 ├── skills/
 │   ├── agent-architecture.md       # Hub
-│   ├── references/                 # 8 procedimentos de fase
+│   ├── references/                 # 8 phase procedures
 │   ├── task-graph-engineering.md
 │   ├── engineering-standards.md
 │   ├── security-review.md
 │   └── git-handoff.md
-├── rules/locale-and-standards.mdc
-├── scripts/                        # Gates determinísticos (Python)
+├── rules/engineering-baseline.mdc
+├── scripts/                        # Deterministic gates (Python)
 ├── test/
-│   ├── install.test.js             # Testes do instalador (Node)
-│   └── test_gates.py               # Testes dos gates (Python)
+│   ├── install.test.js             # Installer tests (Node)
+│   └── test_gates.py               # Gate tests (Python)
 └── .github/workflows/
 ```
 
-Pacote npm: [@luizsantiago/agentic-harness](https://www.npmjs.com/package/@luizsantiago/agentic-harness)
+npm package: [@luizsantiago/agentic-harness](https://www.npmjs.com/package/@luizsantiago/agentic-harness)
 
-## Desenvolvimento
+## Development
 
 ```bash
 git clone https://github.com/luizssantiago92/spec-driven-harness.git
 cd spec-driven-harness
-npm test              # instalador + gates
+npm test              # installer + gates
 npm run test:node
 npm run test:gates
 node index.js install
 ```
 
-### Publicar no npm (mantenedores)
+### Publishing to npm (maintainers)
 
-1. Token em [npmjs.com/settings/luizsantiago/tokens](https://www.npmjs.com/settings/luizsantiago/tokens)
-2. Secret `NPM_TOKEN` no GitHub (Settings → Secrets → Actions)
-3. **Actions → Publish to npm → Run workflow** → `patch`, `minor` ou `major`
+1. Token at [npmjs.com/settings/luizsantiago/tokens](https://www.npmjs.com/settings/luizsantiago/tokens)
+2. `NPM_TOKEN` secret on GitHub (Settings → Secrets → Actions)
+3. **Actions → Publish to npm → Run workflow** → `patch`, `minor` or `major`
 
-## Créditos
+## Credits
 
-Padrões de task graph adaptados de [graph-engineering](https://github.com/codejunkie99/graph-engineering) (MIT).
+Task-graph patterns adapted from [graph-engineering](https://github.com/codejunkie99/graph-engineering) (MIT).
 
-## Licença
+## License
 
 MIT

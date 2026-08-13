@@ -9,7 +9,7 @@ Execute one task at a time: test first, gate, commit, repeat. Always required.
 ## Inputs
 
 - Approved `spec.md`, plus `design.md`, `tasks.md`, `task-graph.md` when they exist
-- `engineering-standards.md` for code quality and locale
+- `engineering-standards.md` for code quality and artifact language
 - `.specs/LESSONS.md` — apply what previous verifications taught
 
 ## Outputs
