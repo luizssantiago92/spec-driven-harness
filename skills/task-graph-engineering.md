@@ -17,7 +17,7 @@ Adapted from task-graph orchestration patterns (MIT). Knowledge-graph content in
 
 | Skill | Role |
 | --- | --- |
-| `agent-architecture.md` | Process — Specify → Verify workflow |
+| `agent-architecture.md` | Process — hub, contract, complexity router |
 | `engineering-standards.md` | Quality — one writer per file, commit format |
 | `security-review.md` | Verification — OWASP checklist for `/verify` |
 | `git-handoff.md` | Persistence — git sync for `.specs/` |
@@ -90,6 +90,33 @@ Rules:
 
 Maps to SDD: `/tasks` → `/loop` (workers) → `/verify` (diamond verify node) → `/handoff` (merge + persist).
 
+## Sub-Agent Delegation
+
+**Trigger** — Count the tasks. Roughly **8 or fewer** fits one batch: execute inline. More than that: offer sub-agents.
+
+**Offer-then-confirm** — Never auto-spawn. Present the proposed split and wait for the owner to accept.
+
+**Batching**
+
+- A **batch** is the execution unit: one or more consecutive whole phases packed to about **7 tasks**.
+- Phases stay the semantic unit — never split a phase across workers.
+- Batches run **sequentially**; a batch starts only after the previous one reports every task complete.
+- Each worker implements → gates → commits each of its tasks in order, then reports a compact summary: tasks done, commit hashes, test counts, deviations.
+- Workers never spawn further sub-agents.
+
+**Verifier** — After the final task, dispatch a fresh verifier regardless of batch count. It is the closing step of Execute, never prompted. See `references/validate.md`.
+
+**Model tier per role** — When the harness allows choosing a model per sub-agent:
+
+| Role | Tier |
+| --- | --- |
+| Mechanical batch (config, wiring, CRUD) | Fast / cost-effective |
+| Core-domain or ambiguous batch | High reasoning |
+| Design phase | High reasoning |
+| Verifier | Mid-to-high — adversarial reasoning, mutant design |
+
+If the harness cannot set a per-agent model, ignore this and invest more care on the heavy steps.
+
 ## Human Gate
 
 Route **irreversible** actions through explicit human approval:
@@ -144,7 +171,9 @@ Skip the task graph for:
 
 ## Related Skills
 
-- `agent-architecture.md` — SDD workflow and complexity router
+- `agent-architecture.md` — SDD hub, contract, complexity router
+- `references/tasks.md` — task schema and the `validate_tasks.py` gate
+- `references/validate.md` — verifier procedure for the diamond verify node
 - `engineering-standards.md` — one writer per file, git hygiene
 - `security-review.md` — security checklist for verify node
 - `git-handoff.md` — commit `task-graph.md` at phase boundaries

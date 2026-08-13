@@ -5,7 +5,11 @@ import path from "node:path";
 import { describe, it } from "node:test";
 
 import {
+  HARNESS_SCRIPTS_DIR,
   LESSONS_HEADER,
+  REFERENCE_ASSETS,
+  REFERENCES_SUBDIR,
+  SCRIPT_ASSETS,
   STATE_HEADER,
 } from "../lib/constants.js";
 import { install } from "../lib/install.js";
@@ -17,6 +21,8 @@ import {
   RULES_FIXTURE,
   SECURITY_FIXTURE,
   SKILL_FIXTURE,
+  SPEC_GATE_FIXTURE,
+  SPECIFY_REFERENCE_FIXTURE,
   TASK_GRAPH_FIXTURE,
 } from "./helpers/mock-server.js";
 
@@ -135,8 +141,83 @@ describe("install harness", () => {
         assert.match(rulesContent, /git-handoff\.md/);
         assert.match(rulesContent, /task-graph-engineering\.md/);
         assert.match(rulesContent, /locale-and-standards\.mdc/);
+        assert.match(rulesContent, /references\//);
+        assert.match(rulesContent, /validate_spec\.py/);
         assert.match(rulesContent, /pt-BR/);
-        assert.match(rulesContent, /Specify → Verify/);
+      } finally {
+        await fs.rm(cwd, { recursive: true, force: true });
+      }
+    });
+  });
+
+  it("installs phase references for both agents", async () => {
+    await withMockServer(async (mockServer) => {
+      const cwd = await createTempDir("harness-references-");
+
+      try {
+        await install({ cwd, repoUrl: mockServer.baseUrl, silent: true });
+
+        for (const dir of [".cursor/skills", ".claude/skills"]) {
+          for (const reference of REFERENCE_ASSETS) {
+            const referencePath = path.join(
+              cwd,
+              dir,
+              REFERENCES_SUBDIR,
+              reference.file,
+            );
+            assert.equal(
+              await pathExists(referencePath),
+              true,
+              `missing ${dir}/${REFERENCES_SUBDIR}/${reference.file}`,
+            );
+          }
+        }
+
+        const specifyReference = path.join(
+          cwd,
+          ".cursor/skills",
+          REFERENCES_SUBDIR,
+          "specify.md",
+        );
+        assert.equal(
+          await fs.readFile(specifyReference, "utf8"),
+          SPECIFY_REFERENCE_FIXTURE,
+        );
+      } finally {
+        await fs.rm(cwd, { recursive: true, force: true });
+      }
+    });
+  });
+
+  it("installs executable gate scripts under .specs/harness/scripts", async () => {
+    await withMockServer(async (mockServer) => {
+      const cwd = await createTempDir("harness-gates-");
+
+      try {
+        await install({ cwd, repoUrl: mockServer.baseUrl, silent: true });
+
+        for (const script of SCRIPT_ASSETS) {
+          const scriptPath = path.join(cwd, HARNESS_SCRIPTS_DIR, script.file);
+          assert.equal(
+            await pathExists(scriptPath),
+            true,
+            `missing gate script ${script.file}`,
+          );
+        }
+
+        const specGate = path.join(
+          cwd,
+          HARNESS_SCRIPTS_DIR,
+          "validate_spec.py",
+        );
+        assert.equal(await fs.readFile(specGate, "utf8"), SPEC_GATE_FIXTURE);
+
+        const mode = (await fs.stat(specGate)).mode & 0o777;
+        assert.equal(
+          (mode & 0o100) !== 0,
+          true,
+          `gate script should be executable, got ${mode.toString(8)}`,
+        );
       } finally {
         await fs.rm(cwd, { recursive: true, force: true });
       }
@@ -201,6 +282,7 @@ describe("install harness", () => {
         assert.match(rulesContent, /git-handoff\.md/);
         assert.match(rulesContent, /task-graph-engineering\.md/);
         assert.match(rulesContent, /locale-and-standards\.mdc/);
+        assert.match(rulesContent, /validate_state\.py/);
         assert.doesNotMatch(rulesContent, /# Old block/);
       } finally {
         await fs.rm(cwd, { recursive: true, force: true });

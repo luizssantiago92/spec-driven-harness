@@ -75,6 +75,8 @@ Confirm tests catch intentional failures:
 2. Skip input validation → test must fail
 3. Return wrong status code on error → test must fail
 
+Inject mutants in an **isolated scratch copy** — a temp worktree or file copies. Never use `git stash` and never mutate the working tree. Discard the scratch afterwards and confirm `git status --porcelain` matches the pre-sensor baseline.
+
 Document mutants tested in `.specs/features/[feature]/validation.md`.
 
 ## Evidence-or-Zero
@@ -85,15 +87,21 @@ Each security requirement from spec must have:
 
 ## Output
 
-Write findings to `.specs/features/[feature]/validation.md`:
+Write findings into the verifier's report at `.specs/features/[feature]/validation.md`, under the Security Review section defined in `references/validate.md`:
 
 ```markdown
 ## Security Review
-- Reviewer: [independent agent]
+- Reviewer: independent agent (clean context)
 - Date: [ISO date]
 - Mutants tested: [list]
-- Findings: [pass/fail per item]
+- Findings: [pass/fail per checklist item]
 - Evidence: [file:line references]
+```
+
+The completion gate reads this file:
+
+```bash
+python3 .specs/harness/scripts/validate_state.py .specs/features/[feature]
 ```
 
 ## Escalation
@@ -105,7 +113,8 @@ If critical vulnerability found:
 
 ## Related Skills
 
-- `agent-architecture.md` — SDD workflow (Specify → Verify)
+- `agent-architecture.md` — SDD hub, execution contract, gates
+- `references/validate.md` — verifier procedure and report schema
 - `engineering-standards.md` — locale, secure coding, commit format
 - `git-handoff.md` — git sync and session handoff for `.specs/`
 - `task-graph-engineering.md` — verify node in diamond pattern

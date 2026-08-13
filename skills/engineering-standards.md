@@ -36,6 +36,8 @@ Apply during **Execute** and **Verify** phases, and whenever writing or reviewin
 ## Code Quality
 
 - **Follow existing conventions** — read surrounding code before adding new patterns.
+- **Surgical changes** — touch only the files the current task requires.
+- **No scope creep** — good ideas outside the task go to `.specs/STATE.md` under Deferred Ideas, never into the diff.
 - **Small, focused diffs** — one logical change per commit; avoid drive-by refactors.
 - **DRY with judgment** — extract duplication when it improves clarity, not prematurely.
 - **Explicit over clever** — readable code beats clever one-liners.
@@ -49,6 +51,7 @@ Apply during **Execute** and **Verify** phases, and whenever writing or reviewin
 - No flaky tests — isolate external dependencies with mocks/fakes.
 - Assert behavior, not implementation details (unless testing internals is intentional).
 - Test names describe scenario and expected outcome in English.
+- **Never weaken a test to make a gate pass** — no skipping, deleting, or loosening assertions.
 
 ## Parallel Work Guardrails
 
@@ -64,10 +67,19 @@ docs(readme): update install instructions
 test(auth): add session expiry edge case
 ```
 
+Validate the message before committing:
+
+```bash
+python3 .specs/harness/scripts/check_commit.py --message "feat(auth): add token refresh"
+```
+
+Optionally wire it as a git `commit-msg` hook so the rule holds without agent involvement.
+
 - One concern per PR when possible.
 - Link to spec requirement IDs (e.g. `REQ-003`) in PR description.
 - Include test evidence (file:line) for each REQ addressed — not just a summary.
 - Never force-push shared branches without coordination.
+- **Blast radius** — `git push`, deploy, and destructive operations require an explicit go-ahead.
 
 ## Logging & Observability
 
@@ -78,7 +90,8 @@ test(auth): add session expiry edge case
 
 ## Related Skills
 
-- `agent-architecture.md` — SDD workflow (Specify → Verify)
+- `agent-architecture.md` — SDD hub, execution contract, gates
+- `references/implement.md` — per-task execution cycle
 - `security-review.md` — deep checklist for `/verify` phase
 - `git-handoff.md` — git sync and session handoff for `.specs/`
 - `task-graph-engineering.md` — task DAG and parallelism rules

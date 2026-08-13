@@ -1,5 +1,9 @@
 node_modules/
 
+# Python
+__pycache__/
+*.py[cod]
+
 # Artefatos gerados pelo instalador (não commitar no repo fonte)
 .cursor/
 .claude/

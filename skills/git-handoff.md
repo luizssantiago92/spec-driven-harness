@@ -10,6 +10,18 @@ Sister skill to `agent-architecture.md` — SDD defines *what* to build; this sk
 - Before switching branches, agents, or human reviewers
 - When `STATE.md` or `.specs/features/` changed materially
 
+## Resume: Reconcile Before Trusting STATE
+
+The handoff snapshot can be stale. At session start, reconcile it against git — **evidence wins**:
+
+```bash
+git branch --show-current
+git status --porcelain
+git log --oneline -10
+```
+
+Compare with `tasks.md` checkboxes. If commits exist for tasks STATE lists as pending, update STATE before doing anything else. Full procedure: `references/memory.md`.
+
 ## Sister Skills (use together)
 
 | Skill | Role |
@@ -27,10 +39,13 @@ Sister skill to `agent-architecture.md` — SDD defines *what* to build; this sk
 ```
 .specs/STATE.md
 .specs/LESSONS.md
+.specs/project/**/*
 .specs/features/**/*
+.specs/quick/**/*
+.specs/harness/scripts/**/*
 ```
 
-Treat `.specs/` as **versioned product documentation**, not ephemeral notes.
+Treat `.specs/` as **versioned product documentation**, not ephemeral notes. The gate scripts under `.specs/harness/scripts/` are committed on purpose — the team and CI run the same gates as the agent.
 
 ### Never commit via handoff
 
@@ -77,7 +92,10 @@ Use this structure in `.specs/STATE.md`:
 
 - Run relevant tests / linters (operational harness — not self-declaration)
 - Ensure no secrets in staged files
-- Commit messages in **English** (Conventional Commits)
+- Commit messages in **English** (Conventional Commits):
+  ```bash
+  python3 .specs/harness/scripts/check_commit.py --message "docs(spec): update STATE handoff for auth"
+  ```
 
 ### 3. Stage and commit
 
@@ -107,9 +125,9 @@ Stop after commit. Human or explicit instruction handles `git push`.
 
 | Event | Git action |
 | --- | --- |
-| Spec approved | Commit `spec.md` (+ tests scaffold if created) |
+| Spec approved | Commit `spec.md` (+ `context.md` when Discuss ran) |
 | Tasks approved | Commit `tasks.md` (+ `task-graph.md` if created) |
-| Verify passed | Commit `validation.md` |
+| Verify passed | Commit `validation.md` after `validate_state.py` passes |
 | Execute loop | Atomic code commits per task (existing Execute rules) |
 | Session ends | `/handoff` — always update STATE + commit `.specs/` |
 
@@ -145,4 +163,11 @@ Report to owner in **pt-BR**; commit messages remain in **English**.
 | --- | --- |
 | `/handoff` | End session — update STATE, commit `.specs/`, no push |
 | `/sync-spec` | Commit current feature spec artifacts only (`spec.md`, `tasks.md`, `task-graph.md`, etc.) |
-| `/verify` | After verify — commit `validation.md` (see `security-review.md`) |
+| `/verify` | After verify — commit `validation.md` (see `references/validate.md`) |
+
+## Related Skills
+
+- `agent-architecture.md` — SDD hub, execution contract, gates
+- `references/memory.md` — STATE semantics, decision log, reconcile protocol
+- `engineering-standards.md` — commit format and blast radius
+- `task-graph-engineering.md` — commit `task-graph.md` at phase boundaries

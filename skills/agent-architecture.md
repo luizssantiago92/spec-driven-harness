@@ -1,183 +1,157 @@
-# Agent Architecture Skill
+---
+name: agent-architecture
+description: Spec-Driven Development hub for AI-assisted engineering. Five adaptive phases (Specify, Design, Tasks, Execute, Verify) with deterministic Python gates, independent verifier, discrimination sensor, evidence-or-zero, and persistent .specs/ memory. Triggers on "specify feature", "design", "break into tasks", "implement", "verify", "quick fix", "resume work", "handoff".
+---
+
+# Agent Architecture (Hub)
 
 Spec-Driven Development (SDD) harness for AI-assisted software engineering.
-Replaces "Vibe Coding" with a structured 5-phase workflow backed by persistent memory and operational sensors.
+Replaces "Vibe Coding" with adaptive phases backed by persistent memory, sister skills, and gates enforced by code.
 
-## When to Use This Skill
+This file is the contract and the map. Phase procedures live in `references/`; cross-cutting concerns live in sister skills.
 
-Activate this skill when:
+## Critical Rules (read before acting)
 
-- Starting a new feature or significant change in an existing codebase
-- Planning architecture, specs, or multi-step implementations
-- Handing off work between agent sessions
-- Validating that AI-generated code meets acceptance criteria with evidence
+**Reference files.** Phase procedures live in `references/` next to this file (`.cursor/skills/references/`, `.claude/skills/references/`). Read a reference **completely** before acting on it. Never act on a partial read.
 
-## 5-Phase Workflow
+**Gate scripts.** Structural gates live in `.specs/harness/scripts/` at the project root. Run them with `python3`; never assume a project-local `scripts/` directory belongs to this harness.
+
+**Execution contract — non-negotiable, holds even if no reference file is open:**
+
+1. **Test-First Imperative** — Tests derive from the spec's acceptance criteria and assert spec-defined outcomes. They never mirror the implementation. No production code before spec and derived tests are approved.
+2. **Gate before done** — A task is complete only when the project harness (tests, linter, compiler) passes. The runner decides, never self-assessment.
+3. **One atomic commit per task** — Mark the task complete in `tasks.md` and include that update in the same commit. Never batch tasks; never weaken, skip, or delete tests to make them pass.
+4. **Author ≠ Verificador** — After the last task, `/verify` runs with a fresh, clean context that never wrote the code. It is mandatory, not prompted.
+5. **Blast radius** — Approving a spec or tasks authorizes local implementation and local commits only. `git push`, force-push, deploy, production data changes, and other externally visible or destructive operations require an explicit go-ahead for that specific action.
+
+## Deterministic Gates
+
+Structural gates run **before** owner review, so they cannot drift when the model forgets a step.
+
+| When | Command |
+| --- | --- |
+| Before confirming a spec | `python3 .specs/harness/scripts/validate_spec.py .specs/features/[feature]/spec.md` |
+| Before presenting tasks for approval | `python3 .specs/harness/scripts/validate_tasks.py .specs/features/[feature]/tasks.md` |
+| On each commit | `python3 .specs/harness/scripts/check_commit.py --message "<message>"` |
+| Before declaring a feature done | `python3 .specs/harness/scripts/validate_state.py .specs/features/[feature]` |
+
+A **non-zero exit means STOP** — fix the artifact, then re-run the gate. Never continue past a failing gate.
+
+**Degraded mode.** If Python 3 or shell execution is unavailable, say so once, then perform the same checks by reading the artifact against the reference checklist. Degraded mode never lowers the standard; it only changes who runs the check.
+
+## Phase Map
 
 ```
 SPECIFY → DESIGN (optional) → TASKS (optional) → EXECUTE (loop) → VERIFY
 ```
 
-| Phase | Required | Purpose |
-| --- | --- | --- |
-| **Specify** | Yes | Map requirements to unique spec IDs; define out-of-scope |
-| **Design** | No | Architecture, reuse, risks — skip for simple changes |
-| **Tasks** | No | Atomic breakdown with binary success criteria and parallelism |
-| **Execute** | Yes | Test-guided implementation in loops with atomic commits |
-| **Verify** | Yes | Independent validation by a specialized sub-agent |
-
-### Phase Details
-
-#### 1. Specify (`/specify`)
-
-Create `.specs/features/[feature]/spec.md` with:
-
-- Unique requirement IDs (e.g. `REQ-001`)
-- Acceptance criteria per requirement (testable, binary pass/fail)
-- Explicit out-of-scope items
-- User/business goals
-
-Do not write implementation code until spec and derived tests are approved.
+| Phase | Required | Reference | Sister skill | Gate |
+| --- | --- | --- | --- | --- |
+| **Specify** | Yes | `references/specify.md` | — | `validate_spec.py` |
+| **Discuss** | Conditional | `references/discuss.md` | — | — |
+| **Design** | No | `references/design.md` | — | — |
+| **Tasks** | No | `references/tasks.md` | `task-graph-engineering.md` | `validate_tasks.py` |
+| **Execute** | Yes | `references/implement.md` | `engineering-standards.md` | `check_commit.py` |
+| **Verify** | Yes | `references/validate.md` | `security-review.md` | `validate_state.py` |
+| **Handoff** | Yes | `references/memory.md` | `git-handoff.md` | — |
+| **Quick** | Alternative | `references/quick-mode.md` | — | `check_commit.py` |
 
 ## Complexity Router
 
-Pick the path before starting — do not run every phase on every change:
+Complexity determines depth. Do not run every phase on every change.
 
-| Tier | Examples | Path |
+| Tier | Scope | Path |
 | --- | --- | --- |
-| **Trivial** | Typo, copy, single-file bug | Minimal Specify → Execute → Verify |
+| **Quick** | ≤3 files, no design decisions, no new dependencies | `references/quick-mode.md` — describe, implement, verify, commit |
 | **Simple** | 2–5 files, localized change | Specify → Execute → Verify |
-| **Medium** | New feature, multiple modules | Specify → Tasks → Execute → Verify |
-| **Complex** | New architecture, API surface, infra | Specify → Design → Tasks → Execute → Verify |
-| **Parallel** | Splittable work, multi-agent | Above + `/task-graph` per `task-graph-engineering.md` |
+| **Medium** | New feature, <10 tasks | Specify → Tasks → Execute → Verify |
+| **Complex** | New architecture, API surface, infra | Specify → Discuss → Design → Tasks → Execute → Verify |
+| **Parallel** | Splittable work, multiple agents | Above + `/task-graph` per `task-graph-engineering.md` |
+
+**Rules**
+
+- **Specify and Verify are always required** — you must know WHAT was asked and prove it was delivered.
+- **Design is skipped** when there are no architectural decisions and no new patterns.
+- **Tasks is skipped** when there are ≤3 obvious steps.
+- **Discuss is triggered inside Specify** when the feature touches persistence, external calls, auth, payments, concurrency, or state transitions, or when the owner's intent is ambiguous.
+- **Safety valve** — Even when Tasks is skipped, Execute starts by listing atomic steps inline. If that listing reveals more than 5 steps or real dependencies, STOP and create a formal `tasks.md`; the Tasks phase was skipped in error.
 
 When in doubt, start at **Medium** and drop phases only with owner approval.
 
-## Session Resume Protocol
-
-At every session start:
-
-1. Read `.specs/STATE.md` — active feature, phase, next step
-2. Run harness (tests/lint) before writing new code
-3. Confirm the "Next step" with the owner if ambiguous or stale
-4. Resume the correct SDD phase — do not restart from scratch unless STATE says so
-
-At session end: run `/handoff` per `git-handoff.md`.
-
-#### 2. Design (`/plan`) — optional
-
-Create `.specs/features/[feature]/design.md` with:
-
-- Architecture decisions and trade-offs
-- Reuse of existing components
-- Risk assessment and mitigations
-
-Skip for trivial changes (bug fixes, copy updates, single-file edits).
-
-#### 3. Tasks (`/tasks`) — optional
-
-Create `.specs/features/[feature]/tasks.md` with:
-
-- Atomic tasks with binary done criteria
-- Dependencies and parallelization hints
-- Links back to spec requirement IDs
-
-Apply **fake-edge** and **stop-rule** checks from `task-graph-engineering.md`.
-For 3+ tasks or parallel work, create `task-graph.md` via `/task-graph` before `/loop`.
-
-#### 4. Execute (`/loop`)
-
-Implementation rules:
-
-- **Test-First Imperative**: Write tests derived from acceptance criteria before production code
-- **Engineering Standards**: Apply `.cursor/skills/engineering-standards.md` (locale, security, code quality)
-- Work in loops: implement → run harness (tests, linter, compiler) → fix → repeat
-- Atomic commits per logical unit of work
-- Maximum 3 correction loops before escalating to a human
-
-**Change control** — if requirements change mid-loop:
-
-1. Stop the loop
-2. Update `spec.md` and record the change in `STATE.md`
-3. Re-derive affected tests from updated acceptance criteria
-4. Resume only after owner approves the spec delta
-
-#### 5. Verify (`/verify`)
-
-Independent verification rules:
-
-- **Author ≠ Verificador**: The verifier must have a clean context and never be the code author
-- **Diamond pattern**: For parallel work, verify in a separate context per `task-graph-engineering.md`
-- **Security Review**: Run checklist in `.cursor/skills/security-review.md`
-- **Discrimination Sensor**: Inject deliberate failures (mutants) to confirm tests detect errors
-- **Evidence-or-Zero**: A requirement is "done" only with evidence (file + line) of an assertive test passing
-- Write results to `.specs/features/[feature]/validation.md`
-
-## Execution Contract (Critical Rules)
-
-1. **Test-First Imperative** — No production code before spec and acceptance-derived tests are approved.
-2. **Author ≠ Verificador** — Independent verifier with clean context after the last task.
-3. **Discrimination Sensor** — Verifier injects mutants to validate test sensitivity.
-4. **Evidence-or-Zero** — Requirements need test evidence, not AI self-declaration.
-
 ## Persistent Memory (`.specs/`)
 
-Combat session amnesia with these artifacts:
-
-| File | Purpose |
+| Path | Purpose |
 | --- | --- |
-| `.specs/STATE.md` | Technical decisions and progress snapshot for handoff |
-| `.specs/LESSONS.md` | Continuous learning playbook — verification failures become local lessons |
+| `.specs/STATE.md` | Decision log (`AD-NNN`) and handoff snapshot |
+| `.specs/LESSONS.md` | Lessons playbook — verification failures become local rules |
+| `.specs/project/PROJECT.md` | Vision, stack, constraints (when the project defines them) |
+| `.specs/project/ROADMAP.md` | Milestones and feature status |
+| `.specs/quick/NNN-slug/` | Quick-mode tasks and summaries |
 | `.specs/features/[feature]/spec.md` | Requirements and acceptance criteria |
-| `.specs/features/[feature]/design.md` | Architecture (when applicable) |
+| `.specs/features/[feature]/context.md` | Owner decisions for gray areas (only when Discuss ran) |
+| `.specs/features/[feature]/design.md` | Architecture (Complex tier) |
 | `.specs/features/[feature]/tasks.md` | Atomic task breakdown |
-| `.specs/features/[feature]/task-graph.md` | DAG of jobs and parallelism (when applicable) |
+| `.specs/features/[feature]/task-graph.md` | Job DAG and parallel groups (when applicable) |
 | `.specs/features/[feature]/validation.md` | Independent verification report |
+| `.specs/harness/scripts/` | Deterministic gate scripts |
 
-Always read `STATE.md` at session start. Update it at session end with decisions and progress. Run `/handoff` per `git-handoff.md` to commit `.specs/` to git.
+**Create artifacts lazily.** Write a file only when its phase actually produces content. Never scaffold an empty `design.md`, `tasks.md`, or `context.md` — an empty file claims a phase ran when it did not. Absence is the correct state for a skipped phase.
+
+Read `STATE.md` at session start; update it at session end. See `references/memory.md` and `git-handoff.md`.
 
 ## Loop Engineering & Harness
 
-Unlike isolated prompts, this skill operates in autonomous loops:
-
-- **Correction Loop**: If the harness (test runner, linter, compiler) fails, fix and retest up to 3 times before calling a human.
-- **Operational Harness**: Quality is enforced by external tools (test runners, linters, compilers), not by AI self-declaration.
+- **Correction Loop** — If the harness fails, fix and retest up to 3 times before escalating to the owner.
+- **Operational Harness** — Quality is enforced by test runners, linters, and compilers, never by AI self-declaration.
+- **Fix → re-verify** — Gaps found in Verify become fix tasks; the loop is bounded to 3 iterations before escalating.
 
 ## Knowledge Verification Chain
 
-When making any technical decision, follow this order strictly:
+Follow in strict order when making any technical decision:
 
-1. **Codebase** — Check conventions and patterns already in use
-2. **Docs** — Read README and `.specs/STATE.md`
-3. **MCP/Context** — Consult up-to-date documentation via external tools
-4. **Web Search** — Community patterns and official sources
-5. **Uncertainty** — If not found, say "I don't know". Never invent APIs or behaviors.
+1. **Codebase** — Conventions and patterns already in use
+2. **Project docs** — README, `docs/`, `.specs/STATE.md` decisions
+3. **MCP / Context** — Up-to-date library documentation via tools
+4. **Web search** — Official docs and community patterns
+5. **Uncertainty** — Say "I don't know" and flag it. Never invent APIs or behaviors.
+
+Never skip to step 5 while steps 1–4 are available. Fabrication cascades through design, tasks, and implementation.
+
+## Output Behavior
+
+- **Do the work; do not narrate the machinery.** Produce the artifact instead of announcing the phase.
+- **Match effort to the work.** Heavy reasoning for design and ambiguity; fast execution for mechanical tasks.
+- **Write artifacts in a plain, decided voice.** Lead with the verdict; cut filler and hedging.
+- **Locale** — Chat with the owner in pt-BR; all project artifacts in English (see `engineering-standards.md`).
 
 ## Model Selection
 
-- **Planning phases** (Specify, Design, Tasks): High-reasoning models (Opus, GPT-4o)
-- **Execution loop**: Fast/cost-effective models (Sonnet, Composer)
+- **Planning** (Specify, Discuss, Design, Tasks): high-reasoning models
+- **Execution loop**: fast, cost-effective models
+- **Verifier**: mid-to-high tier — it performs adversarial reasoning and designs mutants
 
-## Related Skills
+## Sister Skills
 
-| Skill | Purpose |
+| Skill | Layer |
 | --- | --- |
-| `engineering-standards.md` | Locale policy (pt-BR chat, English artifacts), secure coding, git hygiene |
-| `security-review.md` | OWASP-oriented checklist for `/verify` |
-| `git-handoff.md` | Git sync at phase boundaries and session handoff |
-| `task-graph-engineering.md` | Task DAG, parallelism, diamond verify pattern |
+| `task-graph-engineering.md` | Topology — task DAG, parallelism, diamond verify |
+| `engineering-standards.md` | Quality — locale, secure coding, one writer per file |
+| `security-review.md` | Verification — OWASP checklist for `/verify` |
+| `git-handoff.md` | Persistence — git sync, STATE template, session handoff |
 
 Project rules: `.cursor/rules/locale-and-standards.mdc` (always applied in Cursor).
 
-## Available Commands
+## Commands
 
-| Command | Action |
-| --- | --- |
-| `/specify` | Define requirements and spec IDs |
-| `/plan` | Create technical design and architecture |
-| `/tasks` | Atomic task breakdown |
-| `/task-graph` | Draw or revise task DAG in `task-graph.md` |
-| `/loop` | Start autonomous implementation loop |
-| `/verify` | Trigger independent technical validation |
-| `/handoff` | Update STATE, commit `.specs/` to git (no push) |
-| `/sync-spec` | Commit current feature spec artifacts only (no full handoff) |
+| Command | Reference | Action |
+| --- | --- | --- |
+| `/specify` | `references/specify.md` | Define requirements and spec IDs |
+| `/discuss` | `references/discuss.md` | Resolve gray areas into `context.md` |
+| `/plan` | `references/design.md` | Create technical design |
+| `/tasks` | `references/tasks.md` | Atomic task breakdown |
+| `/task-graph` | `task-graph-engineering.md` | Draw or revise the job DAG |
+| `/loop` | `references/implement.md` | Autonomous implementation loop |
+| `/verify` | `references/validate.md` | Independent technical validation |
+| `/quick` | `references/quick-mode.md` | Express lane for ≤3-file changes |
+| `/handoff` | `references/memory.md` | Update STATE, commit `.specs/`, no push |
+| `/sync-spec` | `git-handoff.md` | Commit current feature artifacts only |
