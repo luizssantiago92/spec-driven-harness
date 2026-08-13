@@ -1,6 +1,6 @@
 {
   "name": "@luizsantiago/agentic-harness",
-  "version": "0.2.5",
+  "version": "0.2.6",
   "description": "Agentic framework combining Spec-Driven Development, Loop and Harness Engineering. SDD hub, 5 sister skills, per-phase references and deterministic Python gates. .specs/ memory, .cursorrules contract, Specify→Verify with an independent verifier, test-first, STATE.md and LESSONS.md.",
   "type": "module",
   "bin": {
