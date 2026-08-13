@@ -17,7 +17,8 @@
   },
   "files": [
     "index.js",
-    "lib/"
+    "lib/",
+    "LICENSE"
   ],
   "repository": {
     "type": "git",
