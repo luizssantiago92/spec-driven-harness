@@ -21,16 +21,59 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Run tests
-        run: npm test
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
 
-      - name: Verify skill file exists
-        run: test -f skills/agent-architecture.md
+      - name: Run installer tests
+        run: npm run test:node
 
-      - name: Verify additional skills and rules exist
+      - name: Run gate tests
+        run: npm run test:gates
+
+      - name: Verify hub and sister skills exist
         run: |
+          test -f skills/agent-architecture.md
           test -f skills/engineering-standards.md
           test -f skills/security-review.md
           test -f skills/git-handoff.md
           test -f skills/task-graph-engineering.md
           test -f rules/locale-and-standards.mdc
+
+      - name: Verify phase references exist
+        run: |
+          test -f skills/references/specify.md
+          test -f skills/references/discuss.md
+          test -f skills/references/design.md
+          test -f skills/references/tasks.md
+          test -f skills/references/implement.md
+          test -f skills/references/validate.md
+          test -f skills/references/memory.md
+          test -f skills/references/quick-mode.md
+
+      - name: Verify gate scripts exist and compile
+        run: |
+          test -f scripts/_common.py
+          test -f scripts/validate_spec.py
+          test -f scripts/validate_tasks.py
+          test -f scripts/validate_state.py
+          test -f scripts/check_commit.py
+          python3 -m compileall -q scripts
+
+  gates-matrix:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Run gate tests
+        run: python3 test/test_gates.py

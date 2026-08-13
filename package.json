@@ -1,6 +1,6 @@
 {
   "name": "@luizsantiago/agentic-harness",
-  "version": "0.1.5",
+  "version": "0.2.0",
   "description": "Framework agêntico que une Spec-Driven Development, Loop e Harness Engineering. 5 skills irmãs (SDD, task graphs, engenharia, segurança, git handoff), regras pt-BR/EN, memória .specs/, contrato .cursorrules. Specify→Verify com verificador independente, test-first, STATE.md e LESSONS.md.",
   "type": "module",
   "bin": {
@@ -10,7 +10,9 @@
     "node": ">=18"
   },
   "scripts": {
-    "test": "node --test test/install.test.js",
+    "test": "npm run test:node && npm run test:gates",
+    "test:node": "node --test test/install.test.js",
+    "test:gates": "python3 test/test_gates.py",
     "prepublishOnly": "npm test"
   },
   "files": [

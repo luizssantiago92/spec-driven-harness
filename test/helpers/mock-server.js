@@ -27,6 +27,22 @@ alwaysApply: true
 # Locale Policy (test fixture)
 `;
 
+export const SPECIFY_REFERENCE_FIXTURE = `# Specify (test fixture)
+Requirements with REQ IDs and binary acceptance criteria
+`;
+
+export const VALIDATE_REFERENCE_FIXTURE = `# Validate (test fixture)
+Independent verifier, discrimination sensor, evidence-or-zero
+`;
+
+export const SPEC_GATE_FIXTURE = `#!/usr/bin/env python3
+"""validate_spec (test fixture)"""
+`;
+
+export const COMMIT_GATE_FIXTURE = `#!/usr/bin/env python3
+"""check_commit (test fixture)"""
+`;
+
 /** @type {Record<string, string>} */
 export const DEFAULT_FIXTURES = {
   "/skills/agent-architecture.md": SKILL_FIXTURE,
@@ -34,6 +50,10 @@ export const DEFAULT_FIXTURES = {
   "/skills/security-review.md": SECURITY_FIXTURE,
   "/skills/git-handoff.md": GIT_HANDOFF_FIXTURE,
   "/skills/task-graph-engineering.md": TASK_GRAPH_FIXTURE,
+  "/skills/references/specify.md": SPECIFY_REFERENCE_FIXTURE,
+  "/skills/references/validate.md": VALIDATE_REFERENCE_FIXTURE,
+  "/scripts/validate_spec.py": SPEC_GATE_FIXTURE,
+  "/scripts/check_commit.py": COMMIT_GATE_FIXTURE,
   "/rules/locale-and-standards.mdc": RULES_FIXTURE,
 };
 
