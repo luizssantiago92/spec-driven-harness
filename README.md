@@ -78,6 +78,12 @@ Opcional — travar o formato de commit sem depender do agente:
 python3 .specs/harness/scripts/check_commit.py --file "$1"
 ```
 
+Os scripts são commitados junto com `.specs/` — time e CI rodam os mesmos gates que o agente. Ignore apenas o bytecode:
+
+```gitignore
+.specs/harness/scripts/__pycache__/
+```
+
 ## Fluxo Spec-Driven
 
 ```
