@@ -66,11 +66,13 @@ A non-zero exit means stop, fix the artifact, and re-run.
 
 | Gate | Rejects |
 | --- | --- |
-| `validate_spec` | Missing `Requirements` / `Assumptions` / `Out of Scope`, a criterion without `SHALL` or `MUST`, malformed IDs, a requirement without acceptance criteria, unfilled template placeholders |
+| `validate_spec` | Missing `Requirements` / `Assumptions` / `Out of Scope`, a criterion without `SHALL` or `MUST`, malformed IDs, a requirement without acceptance criteria, unfilled template placeholders outside fenced samples |
 | `validate_tasks` | Missing required field (`Requirement`, `Depends on`, `Tests`, `Gate`), unknown or forward dependency, dependency on a later phase, dependency cycle, a title on the vague-phrase list |
 | `check_commit` | Non-Conventional header, unknown type, header over 72 characters, trailing period |
-| `validate_state` | Missing `validation.md`, verdict other than PASS, no `file:line` evidence, open task |
-| `lessons` | Add without `--source`, source other than `validation.md`, corrupt `lessons.json` |
+| `validate_state` | Missing `validation.md`, verdict other than exact `PASS`/`PASSED` (`PASS WITH GAPS` fails), no **test** `file:line` evidence, open task |
+| `lessons` | Add without `--source`, source other than `validation.md`, source outside `.specs/`, corrupt `lessons.json` (missing `title`/`rule`) |
+
+Fenced code samples and markdown tables are documentation, not criteria or tasks. `Depends on: REQ-T100` is a requirement id, not task `T100`. Evidence-or-zero accepts paths such as `test/auth/token.test.ts:41`, not `config.yaml:12`.
 
 To enforce the commit format without involving the agent:
 
@@ -136,7 +138,7 @@ Even when Tasks is skipped, Execute opens by listing the atomic steps. More than
 - **Spec-anchored check** — every criterion has a test asserting the outcome the spec defines
 - **Discrimination sensor** — mutants injected into an isolated scratch copy, never `git stash`; a surviving mutant becomes a fix task
 - **Security review** — OWASP checklist, with a documented lightweight path for changes with no auth or API surface
-- **Evidence-or-zero** — a requirement is done only with a `file:line` reference to a passing assertive test
+- **Evidence-or-zero** — a requirement is done only with a `file:line` reference to a passing assertive **test** (`test/auth/token.test.ts:41`). A config or production source path is not evidence. The verdict must be exactly `PASS` or `PASSED` — `PASS WITH GAPS` is FAIL.
 - **Bounded loop** — fix and re-verify at most three times, then escalate
 
 ## Memory
@@ -188,6 +190,7 @@ Run `npx @luizsantiago/agentic-harness install` again. Existing memory and edite
 
 | Coming from | Manual step |
 | --- | --- |
+| A version before `0.5.4` | Re-run the gates. `PASS WITH GAPS` is no longer a pass; evidence must cite a test path; fenced samples and markdown tables are not criteria. `lessons.py --source` must live under `.specs/` |
 | A version before `0.5.0` | Default install no longer downloads from GitHub. Forks keep using `HARNESS_REPO_URL`. No artifact migration |
 | A version before `0.4.0` | `LESSONS.md` is now generated. Do not hand-edit it. Existing entries are not imported — re-record grounded ones with `lessons.py add --source` pointing at the original `validation.md` |
 | A version before `0.3.0` | Specs must include `## Assumptions` (use `- none` when nothing was inferred) and every acceptance criterion must use `SHALL` or `MUST`. Re-run `validate_spec` after upgrading — this is a breaking gate change |
@@ -210,10 +213,12 @@ spec-driven-harness/
 │   ├── security-review.md
 │   └── git-handoff.md
 ├── rules/engineering-baseline.mdc
-├── scripts/                        # Gate scripts (Python)
+├── scripts/                        # Gate scripts (Python; npm ships *.py only)
 ├── test/
 │   ├── install.test.js             # Installer and CLI (Node)
-│   └── test_gates.py               # Gates (Python)
+│   ├── test_gates.py               # Gates (Python)
+│   └── test_lessons.py             # Lessons engine (Python)
+├── .npmignore                      # Keep bytecode out of the published pack
 └── .github/workflows/
 ```
 
@@ -227,8 +232,10 @@ cd spec-driven-harness
 npm test              # installer and gates
 npm run test:node
 npm run test:gates
-node index.js install
+node index.js install # dogfood: skills, rules, gates, .specs/, .cursorrules
 ```
+
+Installer output (`.cursor/`, `.claude/`, `.specs/`, `.cursorrules`) is gitignored in this repository so the published package stays the source of truth. Use it locally to run the same hub the package installs.
 
 Publishing is automated: **Actions → Publish to npm → Run workflow**, choosing `patch`, `minor` or `major`. The workflow bumps the version, runs both suites, and publishes the package (skills, rules and gates included).
 
