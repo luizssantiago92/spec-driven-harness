@@ -76,4 +76,4 @@ jobs:
           python-version: ${{ matrix.python-version }}
 
       - name: Run gate tests
-        run: python3 test/test_gates.py
+        run: npm run test:gates

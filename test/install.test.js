@@ -18,7 +18,7 @@ import {
 import { install } from "../lib/install.js";
 import {
   createMockAssetServer,
-  createMockSkillServer,
+  createFailingAssetServer,
   ENGINEERING_FIXTURE,
   GIT_HANDOFF_FIXTURE,
   RULES_FIXTURE,
@@ -44,10 +44,7 @@ async function pathExists(filePath) {
 
 async function withMockServer(fn, options) {
   if (options?.statusCode && options.statusCode !== 200) {
-    const mockServer = await createMockSkillServer(
-      options.body ?? "",
-      options.statusCode,
-    );
+    const mockServer = await createFailingAssetServer(options.statusCode);
     try {
       await fn(mockServer);
     } finally {
@@ -321,7 +318,7 @@ describe("install harness", () => {
           await fs.rm(cwd, { recursive: true, force: true });
         }
       },
-      { statusCode: 404, body: "" },
+      { statusCode: 404 },
     );
   });
 
