@@ -12,12 +12,13 @@
   "scripts": {
     "test": "npm run test:node && npm run test:gates",
     "test:node": "node --test test/install.test.js",
-    "test:gates": "python3 test/test_gates.py",
+    "test:gates": "node test/run-gate-tests.mjs",
     "prepublishOnly": "npm test"
   },
   "files": [
     "index.js",
-    "lib/"
+    "lib/",
+    "LICENSE"
   ],
   "repository": {
     "type": "git",

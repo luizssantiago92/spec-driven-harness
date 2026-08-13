@@ -31,8 +31,11 @@ REQUIREMENT_HEADING = re.compile(
 )
 ANY_HEADING = re.compile(r"^(?P<level>#{1,6})\s+\S", re.MULTILINE)
 MALFORMED_ID = re.compile(r"^#{2,6}\s*(REQ|req)[\s_]*(\d{1,4})\b", re.MULTILINE)
-ACCEPTANCE_LABEL = re.compile(
-    r"(acceptance criteri|criteri[ao] de aceite|\bAC\b)", re.IGNORECASE
+ACCEPTANCE_LABEL = re.compile(r"(acceptance criteri|\bAC\b)", re.IGNORECASE)
+METADATA_KEY = re.compile(
+    r"^\*{0,2}(owner|priority|status|estimate|risk|risks|files|file|notes|note|"
+    r"tags|links|link|related|depends on|reuses|source|epic|milestone)\*{0,2}\s*:",
+    re.IGNORECASE,
 )
 EARS_SHAPE = re.compile(
     r"\b(WHEN|IF|WHILE|WHERE)\b.*\bTHEN\b.*\b(SHALL|MUST)\b",
@@ -89,6 +92,8 @@ def acceptance_lines(body: str) -> list[str]:
         if line.startswith(("-", "*", "|")) or re.match(r"^\d+\.", line):
             cleaned = line.lstrip("-*| ").strip()
             if cleaned and not cleaned.startswith("---"):
+                if METADATA_KEY.match(cleaned):
+                    continue
                 lines.append(cleaned)
                 continue
 

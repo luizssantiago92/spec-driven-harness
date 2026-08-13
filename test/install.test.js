@@ -5,17 +5,20 @@ import path from "node:path";
 import { describe, it } from "node:test";
 
 import {
+  assertSafeAssetBase,
   HARNESS_SCRIPTS_DIR,
   LESSONS_HEADER,
+  PINNED_REF,
   REFERENCE_ASSETS,
   REFERENCES_SUBDIR,
+  resolveAssetUrl,
   SCRIPT_ASSETS,
   STATE_HEADER,
 } from "../lib/constants.js";
 import { install } from "../lib/install.js";
 import {
   createMockAssetServer,
-  createMockSkillServer,
+  createFailingAssetServer,
   ENGINEERING_FIXTURE,
   GIT_HANDOFF_FIXTURE,
   RULES_FIXTURE,
@@ -41,10 +44,7 @@ async function pathExists(filePath) {
 
 async function withMockServer(fn, options) {
   if (options?.statusCode && options.statusCode !== 200) {
-    const mockServer = await createMockSkillServer(
-      options.body ?? "",
-      options.statusCode,
-    );
+    const mockServer = await createFailingAssetServer(options.statusCode);
     try {
       await fn(mockServer);
     } finally {
@@ -318,7 +318,7 @@ describe("install harness", () => {
           await fs.rm(cwd, { recursive: true, force: true });
         }
       },
-      { statusCode: 404, body: "" },
+      { statusCode: 404 },
     );
   });
 
@@ -347,5 +347,71 @@ describe("install harness", () => {
         await fs.rm(cwd, { recursive: true, force: true });
       }
     });
+  });
+});
+
+describe("asset source safety", () => {
+  it("pins downloads to the released tag by default", () => {
+    const url = resolveAssetUrl("skills/agent-architecture.md");
+
+    assert.match(url, /\/spec-driven-harness\/v\d+\.\d+\.\d+\//);
+    assert.ok(url.startsWith("https://"), `expected https, got ${url}`);
+    assert.ok(
+      url.includes(`/${PINNED_REF}/`),
+      `expected the pinned ref ${PINNED_REF} in ${url}`,
+    );
+  });
+
+  it("rejects plain HTTP sources outside localhost", () => {
+    assert.throws(
+      () => assertSafeAssetBase("http://evil.example.com/assets"),
+      /only HTTPS sources are allowed/,
+    );
+  });
+
+  it("allows HTTP against a local host so the suite can serve fixtures", () => {
+    assert.equal(
+      assertSafeAssetBase("http://127.0.0.1:8080/"),
+      "http://127.0.0.1:8080",
+    );
+  });
+
+  it("rejects malformed asset bases", () => {
+    assert.throws(
+      () => assertSafeAssetBase("not-a-url"),
+      /Invalid harness asset URL/,
+    );
+  });
+
+  it("warns before installing from an overridden source", async () => {
+    const mockServer = await createMockAssetServer();
+    const cwd = await createTempDir("harness-override-");
+    const logs = [];
+    const originalOverride = process.env.HARNESS_REPO_URL;
+    process.env.HARNESS_REPO_URL = mockServer.baseUrl;
+
+    try {
+      const originalLog = console.log;
+      console.log = (message) => logs.push(String(message));
+
+      try {
+        await install({ cwd });
+      } finally {
+        console.log = originalLog;
+      }
+
+      assert.ok(
+        logs.some((line) => line.includes("HARNESS_REPO_URL is set")),
+        `expected an override warning, got:\n${logs.join("\n")}`,
+      );
+    } finally {
+      if (originalOverride === undefined) {
+        delete process.env.HARNESS_REPO_URL;
+      } else {
+        process.env.HARNESS_REPO_URL = originalOverride;
+      }
+      await fs.rm(cwd, { recursive: true, force: true });
+      await mockServer.close();
+    }
   });
 });
