@@ -209,20 +209,55 @@ def read_artifact(raw_path: str, report_gate: str) -> tuple[Path, str]:
     return path, text
 
 
+def mask_fenced_blocks(text: str) -> str:
+    """Blank out fenced code so structural regexes ignore sample snippets.
+
+    Fence marker lines and their interiors become empty lines, so line numbers
+    stay aligned with the original document.
+    """
+
+    masked: list[str] = []
+    in_fence = False
+
+    for line in text.splitlines(keepends=True):
+        stripped = line.lstrip()
+        if stripped.startswith("```"):
+            in_fence = not in_fence
+            masked.append("\n" if line.endswith("\n") else "")
+            continue
+        if in_fence:
+            masked.append("\n" if line.endswith("\n") else "")
+            continue
+        masked.append(line)
+
+    return "".join(masked)
+
+
 def find_placeholders(text: str) -> list[str]:
-    """Return unresolved placeholder tokens found in the artifact."""
+    """Return unresolved placeholder tokens found outside fenced code."""
 
     found: list[str] = []
+    in_fence = False
 
     for line_number, line in enumerate(text.splitlines(), start=1):
         stripped = line.strip()
-        if stripped.startswith("<!--") or stripped.startswith("```"):
+        if stripped.startswith("```"):
+            in_fence = not in_fence
             continue
+        if in_fence or stripped.startswith("<!--"):
+            continue
+        is_heading = stripped.startswith("#")
         for pattern in PLACEHOLDER_PATTERNS:
             match = pattern.search(line)
-            if match:
-                found.append(f"line {line_number}: {match.group(0)}")
-                break
+            if not match:
+                continue
+            token = match.group(0)
+            # Task titles such as "Fix TODO later" describe the work; TBD and
+            # template holes in a heading are still unfilled and must block.
+            if is_heading and token.upper() in {"TODO", "FIXME"}:
+                continue
+            found.append(f"line {line_number}: {token}")
+            break
 
     return found
 

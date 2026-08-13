@@ -24,7 +24,7 @@ import argparse
 import re
 import sys
 
-from _common import Report, find_placeholders, resolve_artifact
+from _common import Report, find_placeholders, mask_fenced_blocks, resolve_artifact
 
 GATE = "validate-tasks"
 
@@ -36,7 +36,9 @@ FIELD = re.compile(
     r"^\s*[-*]?\s*\*{0,2}(?P<key>[A-Za-z][A-Za-z ]+?)\*{0,2}\s*:\s*(?P<value>.+?)\s*$",
     re.MULTILINE,
 )
-TASK_REF = re.compile(r"\bT(\d{1,6})\b", re.IGNORECASE)
+# Do not treat REQ-T100 as task T100: a hyphen glued to a letter is not a
+# task-id boundary. Still matches T1, T12, and "see T3".
+TASK_REF = re.compile(r"(?<![A-Za-z0-9-])T(\d{1,6})\b", re.IGNORECASE)
 PHASE_HEADING = re.compile(
     r"^#{1,6}\s*Phase\s+(?P<number>\d+)\b", re.MULTILINE | re.IGNORECASE
 )
@@ -154,7 +156,8 @@ def detect_cycle(graph: dict[str, list[str]]) -> list[str] | None:
 
 def build_report(target: str, text: str) -> Report:
     report = Report(gate=GATE, target=target)
-    tasks = split_tasks(text)
+    visible = mask_fenced_blocks(text)
+    tasks = split_tasks(visible)
 
     if not tasks:
         report.error("no tasks found - use '### T1: Short imperative title'")
@@ -193,7 +196,7 @@ def build_report(target: str, text: str) -> Report:
 
         graph[task_id] = parse_dependencies(fields.get("depends on", ""))
 
-    phases = task_phases(text)
+    phases = task_phases(visible)
     if phases:
         report.ok(f"{len(set(phases.values()))} execution phase(s) detected")
 

@@ -25,7 +25,7 @@ import re
 import sys
 from pathlib import Path
 
-from _common import Report, find_placeholders, resolve_feature_dir
+from _common import Report, find_placeholders, mask_fenced_blocks, resolve_feature_dir
 
 GATE = "validate-state"
 
@@ -41,12 +41,20 @@ EVIDENCE = re.compile(r"[\w./\\-]+\.[A-Za-z][A-Za-z0-9]{0,9}:\d{1,6}\b")
 URL = re.compile(r"\b[a-z][a-z0-9+.-]*://\S+", re.IGNORECASE)
 SENSOR = re.compile(r"(discrimination sensor|mutant)", re.IGNORECASE)
 OPEN_TASK = re.compile(r"^\s*[-*]\s*\[ \]\s+(?P<label>.+)$", re.MULTILINE)
+# evidence-or-zero requires a test path, not an arbitrary file:line such as config.yaml:12
+TEST_EVIDENCE = re.compile(
+    r"(?:^|/)(?:tests?|__tests__|spec)(?:/|$)|[._-](?:test|spec)\.|test_[^/]+\.",
+    re.IGNORECASE,
+)
+PASS_VERDICTS = {"PASS", "PASSED"}
+FAIL_VERDICTS = {"FAIL", "FAILED"}
 
 
 def find_evidence(text: str) -> list[str]:
-    """Return file:line references, ignoring URLs that merely carry a port."""
+    """Return test file:line references, ignoring URLs that merely carry a port."""
 
-    return EVIDENCE.findall(URL.sub(" ", text))
+    hits = EVIDENCE.findall(URL.sub(" ", text))
+    return [hit for hit in hits if TEST_EVIDENCE.search(hit.replace("\\", "/"))]
 
 
 def build_report(feature_dir: Path) -> Report:
@@ -77,14 +85,16 @@ def build_report(feature_dir: Path) -> Report:
             "validation.md has no verdict - add 'Verdict: PASS' or 'Verdict: FAIL'"
         )
     else:
-        verdict = verdict_match.group("value").strip().upper()
-        verdict_word = verdict.split()[0]
-        if verdict_word in {"PASS", "PASSED"}:
+        verdict = re.sub(r"\s+", " ", verdict_match.group("value").strip().upper())
+        if verdict in PASS_VERDICTS:
             report.ok("verifier verdict is PASS")
-        elif verdict_word in {"FAIL", "FAILED"}:
+        elif verdict in FAIL_VERDICTS:
             report.error("verifier verdict is FAIL - resolve gaps and re-verify")
         else:
-            report.error(f"verifier verdict is not filled: '{verdict}'")
+            report.error(
+                f"verifier verdict is not PASS: '{verdict}' - "
+                "write PASS only with no remaining gaps"
+            )
 
     evidence = find_evidence(validation)
     if evidence:
@@ -104,7 +114,9 @@ def build_report(feature_dir: Path) -> Report:
 
     tasks_path = feature_dir / "tasks.md"
     if tasks_path.exists():
-        open_tasks = OPEN_TASK.findall(tasks_path.read_text(encoding="utf-8"))
+        open_tasks = OPEN_TASK.findall(
+            mask_fenced_blocks(tasks_path.read_text(encoding="utf-8"))
+        )
         if open_tasks:
             for label in open_tasks[:10]:
                 report.error(f"open task remains: {label.strip()}")

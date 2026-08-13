@@ -27,7 +27,13 @@ import argparse
 import re
 import sys
 
-from _common import Report, find_placeholders, has_section, resolve_artifact
+from _common import (
+    Report,
+    find_placeholders,
+    has_section,
+    mask_fenced_blocks,
+    resolve_artifact,
+)
 
 GATE = "validate-spec"
 
@@ -80,27 +86,49 @@ def split_requirements(text: str) -> list[tuple[str, str, str]]:
     return requirements
 
 
+def _split_criterion_label(cleaned: str) -> str | None:
+    """Return the criterion text after an Acceptance Criteria / AC label.
+
+    List markers are already stripped. Split on a colon, en-dash, em-dash, or a
+    space-hyphen-space so `- **Acceptance Criteria** - WHEN ...` still works
+    without treating the leading `-` of a bullet as a separator.
+    """
+
+    remainder = re.split(r"[:\u2013\u2014]|\s+-\s+", cleaned, maxsplit=1)
+    if len(remainder) == 2 and remainder[1].strip():
+        return remainder[1].strip()
+    return None
+
+
 def acceptance_lines(body: str) -> list[str]:
     """Collect candidate acceptance-criteria lines from a requirement body."""
 
     lines: list[str] = []
     in_labeled_block = False
+    in_fence = False
 
     for raw_line in body.splitlines():
         line = raw_line.strip()
-        if not line:
+        if line.startswith("```"):
+            in_fence = not in_fence
+            continue
+        if in_fence or not line:
+            continue
+
+        # Markdown tables are documentation, not criteria.
+        if line.startswith("|"):
             continue
 
         if ACCEPTANCE_LABEL.search(line):
             in_labeled_block = True
             cleaned = line.lstrip("-* ").strip()
-            remainder = re.split(r"[:\u2013\u2014]", cleaned, maxsplit=1)
-            if len(remainder) == 2 and remainder[1].strip():
-                lines.append(remainder[1].strip())
+            remainder = _split_criterion_label(cleaned)
+            if remainder:
+                lines.append(remainder)
             continue
 
-        if line.startswith(("-", "*", "|")) or re.match(r"^\d+\.", line):
-            cleaned = line.lstrip("-*| ").strip()
+        if line.startswith(("-", "*")) or re.match(r"^\d+\.", line):
+            cleaned = line.lstrip("-* ").strip()
             if cleaned and not cleaned.startswith("---"):
                 if METADATA_KEY.match(cleaned):
                     continue
@@ -115,14 +143,15 @@ def acceptance_lines(body: str) -> list[str]:
 
 def build_report(target: str, text: str) -> Report:
     report = Report(gate=GATE, target=target)
+    visible = mask_fenced_blocks(text)
 
     for section in REQUIRED_SECTIONS:
-        if has_section(text, section):
+        if has_section(visible, section):
             report.ok(f"section present: {section}")
         else:
             report.error(f"missing required section: ## {section}")
 
-    requirements = split_requirements(text)
+    requirements = split_requirements(visible)
 
     if not requirements:
         report.error(
@@ -164,7 +193,7 @@ def build_report(target: str, text: str) -> Report:
             if len(item.split()) < 4:
                 report.warn(f"{requirement_id}: criterion looks too vague: '{excerpt}'")
 
-    for malformed in MALFORMED_ID.finditer(text):
+    for malformed in MALFORMED_ID.finditer(visible):
         raw = malformed.group(0).lstrip("# ").strip()
         if not REQUIREMENT_HEADING.match(f"### {raw}"):
             report.error(f"malformed requirement ID: '{raw}' - expected REQ-001 style")

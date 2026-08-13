@@ -559,7 +559,14 @@ describe("packaged assets", () => {
     const pkg = JSON.parse(
       await fs.readFile(new URL("../package.json", import.meta.url), "utf8"),
     );
-    for (const entry of ["index.js", "lib/", "skills/", "rules/", "scripts/", "LICENSE"]) {
+    for (const entry of [
+      "index.js",
+      "lib/",
+      "skills/",
+      "rules/",
+      "scripts/*.py",
+      "LICENSE",
+    ]) {
       assert.ok(pkg.files.includes(entry), `package.json files missing ${entry}`);
     }
   });

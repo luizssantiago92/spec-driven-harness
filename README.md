@@ -52,6 +52,7 @@ Setting `HARNESS_REPO_URL` overrides the source (a fork, or the test suite) and 
 | Before approving tasks | `validate_tasks.py [feature]` |
 | On each commit | `check_commit.py --message "feat: ..."` |
 | Before closing a feature | `validate_state.py [feature]` |
+| After a FAIL verdict | `lessons.py add --source .specs/features/[feature]/validation.md` |
 
 Scripts live in `.specs/harness/scripts/`. Pass a feature name, a feature directory, or a path to the artifact. With no argument the gate auto-detects when the project has exactly one feature.
 

@@ -201,6 +201,35 @@ class SpecGateTest(unittest.TestCase):
             any("no trigger" in warning for warning in report.warnings)
         )
 
+    def test_fenced_code_is_not_acceptance_criteria(self):
+        spec = VALID_SPEC.replace(
+            "- WHEN a user submits invalid credentials THEN the system SHALL "
+            "return 401 with code AUTH_INVALID\n",
+            "- WHEN a user submits invalid credentials THEN the system SHALL "
+            "return 401 with code AUTH_INVALID\n"
+            "\n```ts\n// TODO: example snippet, not a hole\nconst x = 1\n```\n",
+        )
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertTrue(report.passed, report.errors)
+
+    def test_markdown_table_rows_are_not_acceptance_criteria(self):
+        spec = VALID_SPEC.replace(
+            "### REQ-001: Email login\n",
+            "### REQ-001: Email login\n\n| Field | Value |\n| --- | --- |\n| Owner | platform |\n",
+        )
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertTrue(report.passed, report.errors)
+
+    def test_hyphen_acceptance_criteria_separator_is_accepted(self):
+        spec = VALID_SPEC.replace(
+            "- **Acceptance Criteria**: WHEN a user submits valid credentials "
+            "THEN the system SHALL create a session",
+            "- **Acceptance Criteria** - WHEN a user submits valid credentials "
+            "THEN the system SHALL create a session",
+        )
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertTrue(report.passed, report.errors)
+
 
 class TasksGateTest(unittest.TestCase):
     def test_valid_tasks_pass(self):
@@ -355,6 +384,26 @@ class TasksGateTest(unittest.TestCase):
         self.assertFalse(report.passed)
         self.assertTrue(any("from phase" in error for error in report.errors))
 
+    def test_requirement_id_is_not_parsed_as_a_task_dependency(self):
+        tasks = VALID_TASKS.replace("- **Depends on**: T1", "- **Depends on**: REQ-T100", 1)
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertTrue(report.passed, report.errors)
+        self.assertFalse(any("T100" in error for error in report.errors))
+
+    def test_fenced_task_heading_is_ignored(self):
+        report = validate_tasks.build_report(
+            "tasks.md", VALID_TASKS + "\n```md\n### T99: Fake fenced task\n```\n"
+        )
+        self.assertTrue(report.passed, report.errors)
+        self.assertFalse(any("T99" in error for error in report.errors))
+
+    def test_todo_in_a_task_title_is_not_a_placeholder(self):
+        tasks = VALID_TASKS.replace(
+            "Create session token module", "Fix TODO later in tokens"
+        )
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertTrue(report.passed, report.errors)
+
 
 class StateGateTest(unittest.TestCase):
     def _feature_dir(self, validation: str | None = VALID_VALIDATION, tasks: str | None = None):
@@ -435,7 +484,25 @@ class StateGateTest(unittest.TestCase):
             self._feature_dir(VALID_VALIDATION.replace("PASS", "PASSING"))
         )
         self.assertFalse(report.passed)
-        self.assertTrue(any("not filled" in e for e in report.errors))
+        self.assertTrue(any("not PASS" in e or "not filled" in e for e in report.errors))
+
+    def test_pass_with_gaps_is_not_a_pass_verdict(self):
+        report = validate_state.build_report(
+            self._feature_dir(VALID_VALIDATION.replace("PASS", "PASS WITH GAPS"))
+        )
+        self.assertFalse(report.passed)
+        self.assertTrue(any("WITH GAPS" in e or "not PASS" in e for e in report.errors))
+
+    def test_config_file_line_is_not_test_evidence(self):
+        report = validate_state.build_report(
+            self._feature_dir(
+                "# V\n- Verdict: PASS\n## Coverage\n"
+                "- REQ-001 - config.yaml:12\n"
+                "## Discrimination Sensor\n- mutant killed\n"
+            )
+        )
+        self.assertFalse(report.passed)
+        self.assertTrue(any("evidence" in e for e in report.errors))
 
 
 @contextmanager
