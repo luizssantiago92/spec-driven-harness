@@ -40,8 +40,9 @@ Structural gates live in `.specs/harness/scripts/` and require Python 3. A non-z
 | Before approving tasks | `python3 .specs/harness/scripts/validate_tasks.py [feature]` |
 | On each commit | `python3 .specs/harness/scripts/check_commit.py --message "<message>"` |
 | Before declaring done | `python3 .specs/harness/scripts/validate_state.py [feature]` |
+| After a grounded verify FAIL | `python3 .specs/harness/scripts/lessons.py add --source .specs/features/[feature]/validation.md` |
 
-Gates accept a feature name, a feature directory, or a path to the artifact. With no argument they auto-detect when the project has exactly one feature.
+Gates accept a feature name, a feature directory, or a path to the artifact. With no argument they auto-detect when the project has exactly one feature; with several they list candidates and exit 2.
 
 If Python is unavailable, perform the same checks by reading the artifact against the reference checklist.
 
