@@ -274,6 +274,29 @@ class LessonsEngineTest(unittest.TestCase):
         self.assertIn("candidate", output)
         self.assertRegex(output, r"candidate\s+1")
 
+    def test_source_outside_specs_is_rejected(self):
+        outside = self.root / "validation.md"
+        outside.write_text(VALIDATION, encoding="utf-8")
+        code, output = self._add(source=str(outside))
+        self.assertEqual(code, 1)
+        self.assertIn(".specs", output)
+
+    def test_missing_title_in_store_is_corrupt(self):
+        self._add()
+        store_path = self.root / ".specs" / "lessons.json"
+        payload = json.loads(store_path.read_text())
+        del payload["lessons"][0]["title"]
+        store_path.write_text(json.dumps(payload), encoding="utf-8")
+        code, output = _run(["status"])
+        self.assertEqual(code, 1)
+        self.assertIn("corrupt", output)
+
+    def test_infer_feature_accepts_backslash_paths(self):
+        feature = lessons.infer_feature(
+            Path(r"proj\features\billing\validation.md"), None
+        )
+        self.assertEqual(feature, "billing")
+
 
 if __name__ == "__main__":
     unittest.main()

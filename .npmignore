@@ -1,0 +1,5 @@
+# Bytecode must never ship inside the published package, even when a
+# local compileall run leaves __pycache__ under scripts/.
+__pycache__/
+*.py[cod]
+*.pyo

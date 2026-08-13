@@ -17,8 +17,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
+import tempfile
 import unicodedata
 from datetime import date, datetime, timedelta
 from pathlib import Path
@@ -73,11 +75,26 @@ def infer_feature(source: Path, explicit: str | None) -> str:
     if explicit:
         return explicit.strip()
 
-    match = FEATURE_IN_PATH.search(source.as_posix())
+    # Path.as_posix() does not convert backslashes that were part of the original
+    # string on POSIX, so normalize both separators before matching.
+    normalized = str(source).replace("\\", "/")
+    match = FEATURE_IN_PATH.search(normalized)
     if match:
         return match.group("name")
 
     return source.parent.name or "unknown"
+
+
+def _under_specs(path: Path) -> bool:
+    """Return True when `path` resolves inside `.specs/` of the current project."""
+
+    try:
+        resolved = path.expanduser().resolve()
+        specs = SPECS_DIR.expanduser().resolve()
+        resolved.relative_to(specs)
+        return True
+    except (OSError, ValueError):
+        return False
 
 
 def validate_source(raw: str) -> tuple[Path, str] | int:
@@ -95,6 +112,9 @@ def validate_source(raw: str) -> tuple[Path, str] | int:
             f"source must be a validation.md (got {path.name}) - "
             "lessons are distilled from /verify, not from opinion"
         )
+
+    if not _under_specs(path):
+        return fail("source must live under .specs/")
 
     if not path.read_text(encoding="utf-8").strip():
         return fail(f"source is empty: {path}")
@@ -117,6 +137,13 @@ def load_store() -> dict | int:
 
     if not isinstance(payload, dict) or not isinstance(payload.get("lessons"), list):
         return fail("lessons.json is corrupt: expected an object with a lessons array")
+
+    for index, item in enumerate(payload["lessons"]):
+        if not isinstance(item, dict):
+            return fail(f"lessons.json is corrupt: lesson {index} is not an object")
+        if not str(item.get("title") or "").strip() or not str(item.get("rule") or "").strip():
+            identity = item.get("id") or f"index {index}"
+            return fail(f"lessons.json is corrupt: {identity} is missing title or rule")
 
     return payload
 
@@ -162,10 +189,10 @@ def render_markdown(store: dict) -> str:
         return "\n".join(lines)
 
     for lesson in confirmed:
-        lines.append(f"### {lesson['id']}: {lesson['title']}")
+        lines.append(f"### {lesson.get('id', '?')}: {lesson.get('title', '')}")
         if lesson.get("trigger"):
             lines.append(f"- **Trigger**: {lesson['trigger']}")
-        lines.append(f"- **Rule**: {lesson['rule']}")
+        lines.append(f"- **Rule**: {lesson.get('rule', '')}")
         features = ", ".join(lesson.get("features") or [])
         if features:
             lines.append(f"- **Features**: {features}")
@@ -175,12 +202,31 @@ def render_markdown(store: dict) -> str:
     return "\n".join(lines)
 
 
+def atomic_write(path: Path, text: str) -> None:
+    """Write `text` via a same-directory tempfile so a crash cannot truncate the store."""
+
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp_name = tempfile.mkstemp(
+        prefix=f".{path.name}.", suffix=".tmp", dir=str(path.parent)
+    )
+    try:
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(text)
+        Path(tmp_name).replace(path)
+    except Exception:
+        try:
+            os.unlink(tmp_name)
+        except OSError:
+            pass
+        raise
+
+
 def save_store(store: dict) -> None:
     SPECS_DIR.mkdir(parents=True, exist_ok=True)
-    STORE_PATH.write_text(
-        json.dumps(store, indent=2, ensure_ascii=False) + "\n", encoding="utf-8"
+    atomic_write(
+        STORE_PATH, json.dumps(store, indent=2, ensure_ascii=False) + "\n"
     )
-    MARKDOWN_PATH.write_text(render_markdown(store), encoding="utf-8")
+    atomic_write(MARKDOWN_PATH, render_markdown(store))
 
 
 def find_duplicate(store: dict, title: str, rule: str) -> dict | None:
@@ -271,8 +317,8 @@ def cmd_list(args: argparse.Namespace) -> int:
     print(f"[{GATE}] {len(rows)} {wanted} lesson(s)")
     for lesson in rows:
         trigger = f" — {lesson['trigger']}" if lesson.get("trigger") else ""
-        print(f"  {lesson['id']}  {lesson.get('status', '?'):<12} {lesson['title']}{trigger}")
-        print(f"           {lesson['rule']}")
+        print(f"  {lesson.get('id', '?')}  {lesson.get('status', '?'):<12} {lesson.get('title', '')}{trigger}")
+        print(f"           {lesson.get('rule', '')}")
     return EXIT_OK
 
 
@@ -295,7 +341,10 @@ def cmd_penalize(args: argparse.Namespace) -> int:
             f"{lesson_id} is {lesson.get('status')} - only confirmed lessons can be penalized"
         )
 
-    lesson["penalties"] = int(lesson.get("penalties") or 0) + 1
+    try:
+        lesson["penalties"] = int(lesson.get("penalties") or 0) + 1
+    except (TypeError, ValueError):
+        return fail(f"{lesson_id} has a corrupt penalties field")
     lesson["updated"] = today_iso()
     lesson["source"] = source[1]
 

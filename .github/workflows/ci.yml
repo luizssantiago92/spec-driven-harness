@@ -63,6 +63,10 @@ jobs:
           test -f scripts/check_commit.py
           test -f scripts/lessons.py
           python3 -m compileall -q scripts
+          if npm pack --dry-run 2>&1 | grep -E '__pycache__|\.pyc'; then
+            echo "bytecode must not ship in the npm package" >&2
+            exit 1
+          fi
 
   gates-matrix:
     runs-on: ubuntu-latest
