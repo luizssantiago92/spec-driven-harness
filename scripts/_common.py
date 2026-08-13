@@ -21,13 +21,28 @@ EXIT_OK = 0
 EXIT_FAILED = 1
 EXIT_USAGE = 2
 
+# Angle brackets are ambiguous: `<fill me>` is an unfilled template, but
+# `Promise<void>` and `List<User>` are types a real acceptance criterion may
+# name. Only flag bracketed text that reads like prose (contains a space) or
+# matches a known template token, so typed specs are not rejected.
+ANGLE_TEMPLATE_TOKEN = (
+    r"tbd|todo|fixme|xxx|placeholder|fill[ -]?(?:me|in|this)?|"
+    r"your[ -][a-z0-9 _-]+|insert[ -][a-z0-9 _-]+"
+)
+
 PLACEHOLDER_PATTERNS = (
     re.compile(r"\bTBD\b", re.IGNORECASE),
     re.compile(r"\bTODO\b"),
     re.compile(r"\bFIXME\b"),
     re.compile(r"\bXXX\b"),
-    re.compile(r"<[a-z][a-z0-9 _-]*>", re.IGNORECASE),
-    re.compile(r"\[(?:feature|name|description|fill me|placeholder)\]", re.IGNORECASE),
+    re.compile(rf"<\s*(?:{ANGLE_TEMPLATE_TOKEN})\s*>", re.IGNORECASE),
+    re.compile(r"<[a-z][a-z0-9_-]*(?:[ ][a-z0-9_-]+)+>", re.IGNORECASE),
+    # `[name]` style templates, but never a markdown link such as `[label](url)`
+    # and never a task checkbox such as `- [x]`.
+    re.compile(
+        r"\[(?:feature|name|description|fill me|placeholder)\](?!\()",
+        re.IGNORECASE,
+    ),
 )
 
 
@@ -127,30 +142,3 @@ def has_section(text: str, heading: str) -> bool:
 
     pattern = re.compile(rf"^#{{1,6}}\s+{re.escape(heading)}\s*$", re.IGNORECASE | re.MULTILINE)
     return bool(pattern.search(text))
-
-
-def section_body(text: str, heading: str) -> str:
-    """Return the raw body under a heading, up to the next heading of same/higher level."""
-
-    lines = text.splitlines()
-    start = None
-    level = 0
-
-    for index, line in enumerate(lines):
-        match = re.match(rf"^(#{{1,6}})\s+{re.escape(heading)}\s*$", line.strip(), re.IGNORECASE)
-        if match:
-            start = index + 1
-            level = len(match.group(1))
-            break
-
-    if start is None:
-        return ""
-
-    body: list[str] = []
-    for line in lines[start:]:
-        heading_match = re.match(r"^(#{1,6})\s+", line)
-        if heading_match and len(heading_match.group(1)) <= level:
-            break
-        body.append(line)
-
-    return "\n".join(body)

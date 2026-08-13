@@ -15,6 +15,8 @@ import {
   SCRIPT_ASSETS,
   STATE_HEADER,
 } from "../lib/constants.js";
+import { injectCursorRules } from "../lib/cursorrules.js";
+import { runGate } from "../lib/gates.js";
 import { install } from "../lib/install.js";
 import {
   createMockAssetServer,
@@ -412,6 +414,58 @@ describe("asset source safety", () => {
       }
       await fs.rm(cwd, { recursive: true, force: true });
       await mockServer.close();
+    }
+  });
+});
+
+describe("cursorrules maintenance", () => {
+  it("preserves user formatting when upgrading the harness block", async () => {
+    const cwd = await createTempDir("harness-cursorrules-format-");
+    const rulesPath = path.join(cwd, ".cursorrules");
+    const userContent = "# My rules\n\n\n\nSection A\n\n\n\nSection B\n";
+
+    try {
+      await fs.writeFile(rulesPath, userContent, "utf8");
+      await injectCursorRules(cwd);
+
+      const withStaleBlock = (await fs.readFile(rulesPath, "utf8")).replace(
+        /<!-- AGENTIC-HARNESS:BEGIN -->[\s\S]*?<!-- AGENTIC-HARNESS:END -->/,
+        "<!-- AGENTIC-HARNESS:BEGIN -->\n# old\n<!-- AGENTIC-HARNESS:END -->",
+      );
+      await fs.writeFile(rulesPath, withStaleBlock, "utf8");
+
+      await injectCursorRules(cwd);
+      await injectCursorRules(cwd);
+
+      const content = await fs.readFile(rulesPath, "utf8");
+
+      assert.ok(
+        content.includes("\n\n\n\nSection A"),
+        "user blank lines outside the harness block must survive an upgrade",
+      );
+      assert.equal(
+        (content.match(/AGENTIC-HARNESS:BEGIN/g) ?? []).length,
+        1,
+        "repeated runs must not duplicate the harness block",
+      );
+      assert.match(content, /validate_spec\.py/);
+    } finally {
+      await fs.rm(cwd, { recursive: true, force: true });
+    }
+  });
+});
+
+describe("gate execution", () => {
+  it("explains how to install when the gate script is missing", async () => {
+    const cwd = await createTempDir("harness-missing-gate-");
+
+    try {
+      await assert.rejects(
+        () => runGate("validate-spec", ["spec.md"], { cwd }),
+        /Run `npx @luizsantiago\/agentic-harness install`/,
+      );
+    } finally {
+      await fs.rm(cwd, { recursive: true, force: true });
     }
   });
 });
