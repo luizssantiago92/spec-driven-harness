@@ -155,8 +155,3 @@ Project rules: `.cursor/rules/locale-and-standards.mdc` (always applied in Curso
 | `/quick` | `references/quick-mode.md` | Express lane for ≤3-file changes |
 | `/handoff` | `references/memory.md` | Update STATE, commit `.specs/`, no push |
 | `/sync-spec` | `git-handoff.md` | Commit current feature artifacts only |
-
-## Credits
-
-Deterministic-gate approach, auto-sizing, and gray-area discussion adapted from
-[Tech Lead's Club Spec-Driven](https://github.com/tech-leads-club/agent-skills) (CC-BY-4.0).

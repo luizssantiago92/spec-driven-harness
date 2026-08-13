@@ -261,8 +261,6 @@ node index.js install
 
 ## Créditos
 
-Gates determinísticos, auto-sizing, discussão de gray areas e delegação por batches adaptados de
-[Tech Lead's Club Spec-Driven](https://github.com/tech-leads-club/agent-skills) (CC-BY-4.0), de Felipe Rodrigues.
 Padrões de task graph adaptados de [graph-engineering](https://github.com/codejunkie99/graph-engineering) (MIT).
 
 ## Licença

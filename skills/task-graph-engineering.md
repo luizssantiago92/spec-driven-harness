@@ -181,4 +181,3 @@ Skip the task graph for:
 ## Credits
 
 Task-graph patterns adapted under MIT license from [graph-engineering](https://github.com/codejunkie99/graph-engineering) (task-graph half only).
-Batching and offer-then-confirm delegation adapted from [Tech Lead's Club Spec-Driven](https://github.com/tech-leads-club/agent-skills) (CC-BY-4.0).

@@ -8,10 +8,6 @@ Exit codes:
     0 - gate passed (warnings may still be printed)
     1 - gate failed; fix the artifact before proceeding
     2 - usage error (missing file, bad arguments)
-
-Inspired by the deterministic-gate approach of Tech Lead's Club Spec-Driven
-(CC-BY-4.0, github.com/tech-leads-club/agent-skills). Implementation is original
-and targets this harness's `.specs/` layout.
 """
 
 from __future__ import annotations
