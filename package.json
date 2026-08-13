@@ -1,7 +1,7 @@
 {
   "name": "@luizsantiago/agentic-harness",
   "version": "0.5.4",
-  "description": "Agentic framework combining Spec-Driven Development, Loop and Harness Engineering. SDD hub, 4 sister skills, per-phase references and deterministic Python gates. .specs/ memory, .cursorrules contract, Specify→Verify with an independent verifier, test-first, STATE.md and LESSONS.md.",
+  "description": "Spec-driven harness for AI coding agents. SDD hub, 4 sister skills (task graphs, engineering, security, git handoff), per-phase procedures, and Python gates that stop incomplete work. Specify→Verify with an independent verifier, test-first, test-path evidence, .specs/ memory, grounded lessons, .cursorrules.",
   "type": "module",
   "bin": {
     "agentic-harness": "./index.js"
