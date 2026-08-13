@@ -15,6 +15,7 @@ import {
   SCRIPT_ASSETS,
   STATE_HEADER,
 } from "../lib/constants.js";
+import { packagedAssetPath, resolveInstallSource } from "../lib/assets.js";
 import { injectCursorRules } from "../lib/cursorrules.js";
 import { runGate } from "../lib/gates.js";
 import { install } from "../lib/install.js";
@@ -226,6 +227,87 @@ describe("install harness", () => {
     });
   });
 
+  it("installs from packaged assets without a network fetch", async () => {
+    const cwd = await createTempDir("harness-offline-");
+    const originalOverride = process.env.HARNESS_REPO_URL;
+    delete process.env.HARNESS_REPO_URL;
+
+    try {
+      await install({ cwd, silent: true });
+
+      const hub = await fs.readFile(
+        path.join(cwd, ".cursor/skills/agent-architecture.md"),
+        "utf8",
+      );
+      assert.match(hub, /# Agent Architecture/);
+      assert.doesNotMatch(hub, /test fixture/);
+
+      const specGate = await fs.readFile(
+        path.join(cwd, HARNESS_SCRIPTS_DIR, "validate_spec.py"),
+        "utf8",
+      );
+      assert.match(specGate, /SHALL or MUST/);
+
+      const lessonsEngine = await fs.readFile(
+        path.join(cwd, HARNESS_SCRIPTS_DIR, "lessons.py"),
+        "utf8",
+      );
+      assert.match(lessonsEngine, /def cmd_add/);
+
+      const contextLimits = await fs.readFile(
+        path.join(cwd, ".cursor/skills", REFERENCES_SUBDIR, "context-limits.md"),
+        "utf8",
+      );
+      assert.match(contextLimits, /# Context Limits/);
+    } finally {
+      if (originalOverride === undefined) {
+        delete process.env.HARNESS_REPO_URL;
+      } else {
+        process.env.HARNESS_REPO_URL = originalOverride;
+      }
+      await fs.rm(cwd, { recursive: true, force: true });
+    }
+  });
+
+  it("offline reinstall refreshes skills but keeps memory and edited rules", async () => {
+    const cwd = await createTempDir("harness-offline-rerun-");
+    const originalOverride = process.env.HARNESS_REPO_URL;
+    delete process.env.HARNESS_REPO_URL;
+
+    try {
+      await install({ cwd, silent: true });
+
+      const lessonsFile = path.join(cwd, ".specs/LESSONS.md");
+      const stateFile = path.join(cwd, ".specs/STATE.md");
+      const baselineRule = path.join(
+        cwd,
+        ".cursor/rules/engineering-baseline.mdc",
+      );
+      await fs.writeFile(lessonsFile, "# Custom lessons\n", "utf8");
+      await fs.writeFile(stateFile, "# Custom state\n", "utf8");
+      await fs.writeFile(baselineRule, "# Custom rules\n", "utf8");
+
+      await install({ cwd, silent: true });
+
+      assert.equal(await fs.readFile(lessonsFile, "utf8"), "# Custom lessons\n");
+      assert.equal(await fs.readFile(stateFile, "utf8"), "# Custom state\n");
+      assert.equal(await fs.readFile(baselineRule, "utf8"), "# Custom rules\n");
+
+      const hub = await fs.readFile(
+        path.join(cwd, ".cursor/skills/agent-architecture.md"),
+        "utf8",
+      );
+      assert.match(hub, /# Agent Architecture/);
+    } finally {
+      if (originalOverride === undefined) {
+        delete process.env.HARNESS_REPO_URL;
+      } else {
+        process.env.HARNESS_REPO_URL = originalOverride;
+      }
+      await fs.rm(cwd, { recursive: true, force: true });
+    }
+  });
+
   it("does not overwrite existing STATE.md, LESSONS.md, or project rules on re-run", async () => {
     await withMockServer(async (mockServer) => {
       const cwd = await createTempDir("harness-idempotent-");
@@ -353,7 +435,7 @@ describe("install harness", () => {
 });
 
 describe("asset source safety", () => {
-  it("pins downloads to the released tag by default", () => {
+  it("pins remote asset URLs to the released tag", () => {
     const url = resolveAssetUrl("skills/agent-architecture.md");
 
     assert.match(url, /\/spec-driven-harness\/v\d+\.\d+\.\d+\//);
@@ -467,6 +549,41 @@ describe("gate execution", () => {
     } finally {
       await fs.rm(cwd, { recursive: true, force: true });
     }
+  });
+});
+
+describe("packaged assets", () => {
+  it("declares skills, rules and scripts in the npm package files list", async () => {
+    const pkg = JSON.parse(
+      await fs.readFile(new URL("../package.json", import.meta.url), "utf8"),
+    );
+    for (const entry of ["index.js", "lib/", "skills/", "rules/", "scripts/", "LICENSE"]) {
+      assert.ok(pkg.files.includes(entry), `package.json files missing ${entry}`);
+    }
+  });
+
+  it("resolves install to the package when no override is set", () => {
+    const original = process.env.HARNESS_REPO_URL;
+    delete process.env.HARNESS_REPO_URL;
+    try {
+      assert.deepEqual(resolveInstallSource(), { mode: "package" });
+      assert.equal(
+        resolveInstallSource("https://example.com/raw").mode,
+        "remote",
+      );
+    } finally {
+      if (original === undefined) {
+        delete process.env.HARNESS_REPO_URL;
+      } else {
+        process.env.HARNESS_REPO_URL = original;
+      }
+    }
+  });
+
+  it("ships the hub skill inside the package", async () => {
+    const hub = packagedAssetPath("skills/agent-architecture.md");
+    const content = await fs.readFile(hub, "utf8");
+    assert.match(content, /# Agent Architecture/);
   });
 });
 
