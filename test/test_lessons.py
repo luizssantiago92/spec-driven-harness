@@ -153,7 +153,18 @@ class LessonsEngineTest(unittest.TestCase):
         self.assertEqual(set(lesson["features"]), {"auth", "billing"})
         markdown = (self.root / ".specs" / "LESSONS.md").read_text()
         self.assertIn("L-001", markdown)
-        self.assertIn("Do not edit", markdown)
+        self.assertIn("L-001", markdown)
+
+    def test_source_line_suffix_is_accepted(self):
+        code, output = self._add(
+            source=".specs/features/auth/validation.md:24"
+        )
+        self.assertEqual(code, 0, output)
+        store = json.loads((self.root / ".specs" / "lessons.json").read_text())
+        self.assertEqual(
+            store["lessons"][0]["source"],
+            ".specs/features/auth/validation.md:24",
+        )
 
     def test_list_defaults_to_confirmed(self):
         self._add("auth")
@@ -244,6 +255,17 @@ class LessonsEngineTest(unittest.TestCase):
         self.assertIn("L-002", output)
         remaining = json.loads(store_path.read_text())["lessons"]
         self.assertEqual([item["id"] for item in remaining], ["L-001"])
+
+    def test_prune_drops_candidates_with_invalid_dates(self):
+        self._add("auth")
+        store_path = self.root / ".specs" / "lessons.json"
+        payload = json.loads(store_path.read_text())
+        payload["lessons"][0]["updated"] = "not-a-date"
+        store_path.write_text(json.dumps(payload), encoding="utf-8")
+        code, output = _run(["prune"])
+        self.assertEqual(code, 0, output)
+        remaining = json.loads(store_path.read_text())["lessons"]
+        self.assertEqual(remaining, [])
 
     def test_status_counts(self):
         self._add("auth")

@@ -13,7 +13,7 @@ Use alongside `agent-architecture.md` and `engineering-standards.md`.
 
 For changes with **no** auth, API, user input, payments, or infrastructure impact (e.g. copy, docs, pure UI styling):
 
-1. Verifier still uses clean context (Author ≠ Verificador)
+1. Verifier still uses clean context (Author ≠ verifier)
 2. Run discrimination sensor on affected tests
 3. Document in `validation.md`:
 

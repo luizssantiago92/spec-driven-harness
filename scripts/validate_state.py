@@ -12,7 +12,7 @@ Checks:
   * validation.md exists and was written by the independent verifier
   * the verdict is filled and reads PASS
   * the report cites file:line evidence (evidence-or-zero)
-  * the discrimination sensor result is recorded
+  * the discrimination sensor result is recorded (warning if missing; `--strict` blocks)
   * open task checkboxes in tasks.md block completion
 
 Exit codes: 0 pass, 1 blocking issues, 2 usage error.
@@ -25,7 +25,7 @@ import re
 import sys
 from pathlib import Path
 
-from _common import EXIT_FAILED, Report, find_placeholders, resolve_feature_dir
+from _common import Report, find_placeholders, resolve_feature_dir
 
 GATE = "validate-state"
 
@@ -78,9 +78,10 @@ def build_report(feature_dir: Path) -> Report:
         )
     else:
         verdict = verdict_match.group("value").strip().upper()
-        if verdict.startswith("PASS"):
+        verdict_word = verdict.split()[0]
+        if verdict_word in {"PASS", "PASSED"}:
             report.ok("verifier verdict is PASS")
-        elif verdict.startswith("FAIL"):
+        elif verdict_word in {"FAIL", "FAILED"}:
             report.error("verifier verdict is FAIL - resolve gaps and re-verify")
         else:
             report.error(f"verifier verdict is not filled: '{verdict}'")
@@ -136,8 +137,7 @@ def main(argv: list[str] | None = None) -> int:
 
     feature_dir = resolve_feature_dir(args.feature, GATE)
     report = build_report(feature_dir)
-    result = report.emit(strict=args.strict)
-    return result if result == 0 else EXIT_FAILED
+    return report.emit(strict=args.strict)
 
 
 if __name__ == "__main__":
