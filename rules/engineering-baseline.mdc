@@ -24,7 +24,7 @@ Chat language is a personal preference. Set it in your own agent settings if you
 | Skill | Purpose |
 | --- | --- |
 | `.cursor/skills/agent-architecture.md` | SDD hub — contract, phases, gates, complexity router |
-| `.cursor/skills/references/` | Phase procedures (specify, discuss, design, tasks, implement, validate, memory, quick-mode, context-limits) |
+| `.cursor/skills/references/` | Phase procedures (specify, discuss, design, tasks, implement, validate, memory, quick-mode, context-limits, lessons) |
 | `.cursor/skills/task-graph-engineering.md` | Task DAG, parallelism, verify topology |
 | `.cursor/skills/engineering-standards.md` | Code quality, secure coding, git hygiene |
 | `.cursor/skills/security-review.md` | Security checklist for verification |
@@ -45,4 +45,4 @@ Gates accept a feature name, a feature directory, or a path to the artifact. Wit
 
 If Python is unavailable, perform the same checks by reading the artifact against the reference checklist.
 
-Persistent state: `.specs/STATE.md` (decisions/handoff), `.specs/LESSONS.md` (lessons learned). Commit `.specs/` via `/handoff` — see `git-handoff.md`.
+Persistent state: `.specs/STATE.md` (decisions/handoff), `.specs/lessons.json` (canonical lessons), `.specs/LESSONS.md` (generated playbook). Commit `.specs/` via `/handoff` — see `git-handoff.md`.

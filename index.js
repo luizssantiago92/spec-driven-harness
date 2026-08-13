@@ -11,6 +11,7 @@ Commands:
   validate-tasks [tasks.md|feature]  Granularity gate for a task breakdown
   validate-state [feature]           Completion gate before declaring a feature done
   check-commit --message "<msg>"     Conventional Commits gate
+  lessons <add|list|penalize|prune|status>  Lessons engine
 `;
 
 const [, , command, ...args] = process.argv;

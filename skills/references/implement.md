@@ -10,7 +10,7 @@ Execute one task at a time: test first, gate, commit, repeat. Always required.
 
 - Approved `spec.md`, plus `design.md`, `tasks.md`, `task-graph.md` when they exist
 - `engineering-standards.md` for code quality and artifact language
-- `.specs/LESSONS.md` — apply what previous verifications taught
+- `.specs/LESSONS.md` — apply confirmed lessons (`lessons.py list --status confirmed`)
 - `context-limits.md` — load only this feature and the files the current task names
 
 ## Outputs

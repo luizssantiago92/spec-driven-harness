@@ -19,9 +19,13 @@ if (!python) {
   process.exit(1);
 }
 
-const suite = path.join(path.dirname(fileURLToPath(import.meta.url)), "test_gates.py");
+const suiteDir = path.dirname(fileURLToPath(import.meta.url));
 
-const child = spawn(python, [suite], { stdio: "inherit" });
+const child = spawn(
+  python,
+  ["-m", "unittest", "discover", "-s", suiteDir, "-p", "test_*.py"],
+  { stdio: "inherit" },
+);
 child.on("error", (err) => {
   console.error(`Failed to run gate tests: ${err.message}`);
   process.exit(1);

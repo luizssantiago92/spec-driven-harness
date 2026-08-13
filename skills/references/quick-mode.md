@@ -50,7 +50,7 @@ Announce the switch — do not silently expand a quick task into a feature.
    python3 .specs/harness/scripts/check_commit.py --message "fix(theme): persist dark mode preference"
    ```
 7. **Write `SUMMARY.md`** with the commit hash and the evidence line.
-8. **Record a lesson** in `.specs/LESSONS.md` if the defect revealed a gap that will recur.
+8. **Record a lesson** with `lessons.py add --source` if the defect revealed a gap that will recur and a `validation.md` exists. Quick-mode copy fixes usually record nothing.
 
 ## Verification Standard
 

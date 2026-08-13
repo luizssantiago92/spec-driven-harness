@@ -14,7 +14,8 @@ Project memory that survives session amnesia: decisions, handoff, and resume.
 | File | Owner | Purpose |
 | --- | --- | --- |
 | `.specs/STATE.md` | Agent + owner | Decision log (`AD-NNN`) and handoff snapshot |
-| `.specs/LESSONS.md` | Agent | Lessons distilled from verification failures |
+| `.specs/lessons.json` | `lessons.py` | Canonical lessons store |
+| `.specs/LESSONS.md` | `lessons.py` | Generated playbook of confirmed lessons |
 | `.specs/project/PROJECT.md` | Owner | Vision, stack, constraints |
 | `.specs/project/ROADMAP.md` | Owner | Milestones and feature status |
 
@@ -39,7 +40,7 @@ Run at every session start, before writing any code:
 Run at session end or at a phase milestone:
 
 1. Refresh every section of `STATE.md` (template below).
-2. Append to `LESSONS.md` if verification failed or a mistake was corrected.
+2. Append a grounded lesson with `lessons.py add` if verification failed. Never hand-edit `LESSONS.md`.
 3. Run the relevant gates and tests — never hand off a red tree silently.
 4. Commit `.specs/` per `git-handoff.md`. **Never auto-push.**
 
@@ -79,15 +80,12 @@ Run at session end or at a phase milestone:
 
 ## Lessons Rules
 
-- A lesson is recorded only from a **grounded failure**: a surviving mutant, an imprecise acceptance criterion, a failed requirement, or a spec deviation.
-- A clean PASS records nothing. Lessons are not a changelog.
-- Each lesson states the trigger, the rule to apply next time, and the feature it came from.
+Lessons are owned by `lessons.py`, not by hand. See `lessons.md`.
 
-```markdown
-## L-003: Assert error codes, not just status
-- **Trigger**: mutant returning 403 instead of 401 survived (auth, 2026-08)
-- **Rule**: acceptance criteria must name the error code, and tests must assert it
-```
+- Record only from a **grounded failure** in `validation.md`: a surviving mutant, an imprecise acceptance criterion, a failed requirement, or a spec deviation.
+- A clean PASS records nothing.
+- `--source` is mandatory. Candidates are not guidance; only `list --status confirmed` is.
+- Do not edit `LESSONS.md`. The engine generates it from `lessons.json`.
 
 ## Rules
 

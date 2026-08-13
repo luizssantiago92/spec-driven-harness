@@ -155,7 +155,7 @@ An unjustified lightweight path is a gap.
 
 - FAIL verdict → gaps become fix tasks; return to `implement.md`.
 - The fix → re-verify loop is bounded to **3 iterations**, then escalate to the owner with the blocking gap.
-- Every grounded failure — surviving mutant, imprecise spec, failed criterion — is recorded in `.specs/LESSONS.md`. A clean PASS records nothing.
+- Every grounded failure — surviving mutant, imprecise spec, failed criterion — is recorded with `lessons.py add --source` pointing at this `validation.md`. A clean PASS records nothing. See `lessons.md`.
 
 ## Interactive UAT
 

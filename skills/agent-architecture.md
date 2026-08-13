@@ -58,8 +58,9 @@ SPECIFY → DESIGN (optional) → TASKS (optional) → EXECUTE (loop) → VERIFY
 | **Handoff** | Yes | `references/memory.md` | `git-handoff.md` | — |
 | **Quick** | Alternative | `references/quick-mode.md` | — | `check_commit.py` |
 | **Context** | Always | `references/context-limits.md` | — | — |
+| **Lessons** | On FAIL | `references/lessons.md` | — | `lessons.py` |
 
-Context is a load rule, not a pipeline phase. Read it when the session is long or the feature has more than a handful of tasks.
+Context is a load rule, not a pipeline phase. Read it when the session is long or the feature has more than a handful of tasks. Lessons is a FAIL-path step, not a sequential phase — see `references/lessons.md`.
 
 ## Complexity Router
 
@@ -88,7 +89,8 @@ When in doubt, start at **Medium** and drop phases only with owner approval.
 | Path | Purpose |
 | --- | --- |
 | `.specs/STATE.md` | Decision log (`AD-NNN`) and handoff snapshot |
-| `.specs/LESSONS.md` | Lessons playbook — verification failures become local rules |
+| `.specs/lessons.json` | Canonical lessons store, owned by `lessons.py` |
+| `.specs/LESSONS.md` | Generated playbook of confirmed lessons — read, never write |
 | `.specs/project/PROJECT.md` | Vision, stack, constraints (when the project defines them) |
 | `.specs/project/ROADMAP.md` | Milestones and feature status |
 | `.specs/quick/NNN-slug/` | Quick-mode tasks and summaries |
@@ -160,3 +162,4 @@ Project rules: `.cursor/rules/engineering-baseline.mdc` (always applied in Curso
 | `/quick` | `references/quick-mode.md` | Express lane for ≤3-file changes |
 | `/handoff` | `references/memory.md` | Update STATE, commit `.specs/`, no push |
 | `/sync-spec` | `git-handoff.md` | Commit current feature artifacts only |
+| `/lessons` | `references/lessons.md` | Record or load grounded lessons |
