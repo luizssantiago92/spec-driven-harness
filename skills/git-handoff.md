@@ -140,12 +140,15 @@ Ensure target projects **do not** ignore `.specs/`:
 # DO NOT add: .specs/
 ```
 
-Agent tooling may stay ignored:
+Agent tooling and Python bytecode stay ignored:
 
 ```gitignore
 .cursor/skills/
 .claude/skills/
+.specs/harness/scripts/__pycache__/
 ```
+
+The gate scripts themselves are committed; only their compiled bytecode is ignored.
 
 ## Evidence-or-Zero for Handoff
 
