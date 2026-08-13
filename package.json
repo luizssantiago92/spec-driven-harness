@@ -1,6 +1,6 @@
 {
   "name": "@luizsantiago/agentic-harness",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Framework agêntico que une Spec-Driven Development, Loop e Harness Engineering. 5 skills irmãs (SDD, task graphs, engenharia, segurança, git handoff), regras pt-BR/EN, memória .specs/, contrato .cursorrules. Specify→Verify com verificador independente, test-first, STATE.md e LESSONS.md.",
   "type": "module",
   "bin": {
