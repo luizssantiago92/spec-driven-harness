@@ -5,12 +5,18 @@ Run before confirming a spec with the project owner:
 
     python3 validate_spec.py .specs/features/auth/spec.md
 
+The feature can be named instead of pathed:
+
+    python3 validate_spec.py auth
+    python3 validate_spec.py            # when the project has a single feature
+
 Checks:
-  * required sections are present (Requirements, Out of Scope)
+  * required sections are present (Requirements, Assumptions, Out of Scope)
   * at least one well-formed requirement ID (REQ-001 style)
   * every requirement carries at least one acceptance criterion
+  * every criterion states a required outcome (SHALL or MUST)
   * no unresolved placeholders (TBD, TODO, <fill me>)
-  * acceptance criteria are testable; EARS shape is reported as a warning
+  * EARS shape (WHEN ... THEN ...) is reported as a warning
 
 Exit codes: 0 pass, 1 blocking issues, 2 usage error.
 """
@@ -21,7 +27,7 @@ import argparse
 import re
 import sys
 
-from _common import Report, find_placeholders, has_section, read_artifact
+from _common import Report, find_placeholders, has_section, resolve_artifact
 
 GATE = "validate-spec"
 
@@ -37,11 +43,14 @@ METADATA_KEY = re.compile(
     r"tags|links|link|related|depends on|reuses|source|epic|milestone)\*{0,2}\s*:",
     re.IGNORECASE,
 )
-EARS_SHAPE = re.compile(
-    r"\b(WHEN|IF|WHILE|WHERE)\b.*\bTHEN\b.*\b(SHALL|MUST)\b",
-    re.IGNORECASE | re.DOTALL,
+# A criterion without a normative verb states an intention, not an outcome a test
+# can assert, so it blocks. The EARS lead keyword sharpens it further and is
+# reported as a warning.
+NORMATIVE_VERB = re.compile(r"\b(SHALL|MUST)\b", re.IGNORECASE)
+EARS_LEAD = re.compile(
+    r"\b(WHEN|IF|WHILE|WHERE)\b.*\bTHEN\b", re.IGNORECASE | re.DOTALL
 )
-REQUIRED_SECTIONS = ("Requirements", "Out of Scope")
+REQUIRED_SECTIONS = ("Requirements", "Assumptions", "Out of Scope")
 
 
 def split_requirements(text: str) -> list[tuple[str, str, str]]:
@@ -135,15 +144,24 @@ def build_report(target: str, text: str) -> Report:
             report.error(f"{requirement_id}: no acceptance criteria found")
             continue
 
-        if not any(EARS_SHAPE.search(item) for item in criteria):
-            report.warn(
-                f"{requirement_id}: no EARS-shaped criterion "
-                "(WHEN/IF ... THEN ... SHALL) - acceptable if criteria are binary"
-            )
+        for item in criteria:
+            excerpt = item if len(item) <= 70 else f"{item[:67]}..."
 
-        vague = [item for item in criteria if len(item.split()) < 4]
-        for item in vague:
-            report.warn(f"{requirement_id}: criterion looks too vague: '{item}'")
+            if not NORMATIVE_VERB.search(item):
+                report.error(
+                    f"{requirement_id}: criterion is not testable, it states no "
+                    f"required outcome (add SHALL or MUST): '{excerpt}'"
+                )
+                continue
+
+            if not EARS_LEAD.search(item):
+                report.warn(
+                    f"{requirement_id}: criterion has SHALL/MUST but no trigger "
+                    f"(WHEN/IF ... THEN ...): '{excerpt}'"
+                )
+
+            if len(item.split()) < 4:
+                report.warn(f"{requirement_id}: criterion looks too vague: '{excerpt}'")
 
     for malformed in MALFORMED_ID.finditer(text):
         raw = malformed.group(0).lstrip("# ").strip()
@@ -162,7 +180,11 @@ def build_report(target: str, text: str) -> Report:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Validate a feature spec.md")
-    parser.add_argument("spec", help="path to .specs/features/[feature]/spec.md")
+    parser.add_argument(
+        "spec",
+        nargs="?",
+        help="feature name, feature directory, or path to spec.md",
+    )
     parser.add_argument(
         "--strict",
         action="store_true",
@@ -170,7 +192,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    path, text = read_artifact(args.spec, GATE)
+    path, text = resolve_artifact(args.spec, "spec.md", GATE)
     report = build_report(str(path), text)
     return report.emit(strict=args.strict)
 

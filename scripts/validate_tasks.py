@@ -4,11 +4,14 @@
 Run before presenting a task breakdown for approval:
 
     python3 validate_tasks.py .specs/features/auth/tasks.md
+    python3 validate_tasks.py auth
+    python3 validate_tasks.py            # when the project has a single feature
 
 Checks:
   * at least one task with a well-formed ID (T1, T2, ...)
   * every task carries Requirement, Depends on, Tests and Gate fields
   * dependencies reference existing tasks, never forward, never self
+  * a task never depends on a task in a later `### Phase N` group
   * dependency graph is acyclic
   * vague task titles are flagged as granularity smells
 
@@ -21,7 +24,7 @@ import argparse
 import re
 import sys
 
-from _common import Report, find_placeholders, read_artifact
+from _common import Report, find_placeholders, resolve_artifact
 
 GATE = "validate-tasks"
 
@@ -34,6 +37,9 @@ FIELD = re.compile(
     re.MULTILINE,
 )
 TASK_REF = re.compile(r"\bT(\d{1,6})\b", re.IGNORECASE)
+PHASE_HEADING = re.compile(
+    r"^#{2,5}\s*Phase\s+(?P<number>\d+)\b", re.MULTILINE | re.IGNORECASE
+)
 REQUIREMENT_REF = re.compile(r"\b[A-Z][A-Z0-9]{1,9}-\d{2,4}\b")
 NONE_VALUES = {"-", "—", "–", "none", "n/a", "na", "nenhum", "nenhuma", "no"}
 
@@ -72,6 +78,31 @@ def split_tasks(text: str) -> list[tuple[str, str, str]]:
         )
 
     return tasks
+
+
+def task_phases(text: str) -> dict[str, int]:
+    """Map each task ID to the phase it sits under, or 0 when phases are unused."""
+
+    marks = [
+        (match.start(), int(match.group("number")))
+        for match in PHASE_HEADING.finditer(text)
+    ]
+
+    if not marks:
+        return {}
+
+    phases: dict[str, int] = {}
+
+    for match in TASK_HEADING.finditer(text):
+        current = 0
+        for position, number in marks:
+            if position < match.start():
+                current = number
+            else:
+                break
+        phases[match.group("id").upper()] = current
+
+    return phases
 
 
 def parse_dependencies(value: str) -> list[str]:
@@ -162,6 +193,10 @@ def build_report(target: str, text: str) -> Report:
 
         graph[task_id] = parse_dependencies(fields.get("depends on", ""))
 
+    phases = task_phases(text)
+    if phases:
+        report.ok(f"{len(set(phases.values()))} execution phase(s) detected")
+
     for task_id, dependencies in graph.items():
         for dependency in dependencies:
             if dependency == task_id:
@@ -172,6 +207,12 @@ def build_report(target: str, text: str) -> Report:
                 report.error(
                     f"{task_id}: forward dependency on {dependency} "
                     "- reorder tasks so dependencies come first"
+                )
+            elif phases.get(dependency, 0) > phases.get(task_id, 0):
+                report.error(
+                    f"{task_id} (phase {phases.get(task_id, 0)}): depends on "
+                    f"{dependency} from phase {phases[dependency]} "
+                    "- a phase never depends on a later one"
                 )
 
     cycle = detect_cycle(graph)
@@ -199,7 +240,11 @@ def build_report(target: str, text: str) -> Report:
 
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description="Validate a feature tasks.md")
-    parser.add_argument("tasks", help="path to .specs/features/[feature]/tasks.md")
+    parser.add_argument(
+        "tasks",
+        nargs="?",
+        help="feature name, feature directory, or path to tasks.md",
+    )
     parser.add_argument(
         "--strict",
         action="store_true",
@@ -207,7 +252,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    path, text = read_artifact(args.tasks, GATE)
+    path, text = resolve_artifact(args.tasks, "tasks.md", GATE)
     report = build_report(str(path), text)
     return report.emit(strict=args.strict)
 

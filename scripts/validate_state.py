@@ -4,6 +4,8 @@
 Run before declaring a feature done:
 
     python3 validate_state.py .specs/features/auth
+    python3 validate_state.py auth
+    python3 validate_state.py            # when the project has a single feature
 
 Checks:
   * spec.md exists
@@ -23,7 +25,7 @@ import re
 import sys
 from pathlib import Path
 
-from _common import EXIT_FAILED, EXIT_USAGE, Report, find_placeholders
+from _common import EXIT_FAILED, Report, find_placeholders, resolve_feature_dir
 
 GATE = "validate-state"
 
@@ -120,7 +122,11 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Validate that a feature is ready to be declared done"
     )
-    parser.add_argument("feature", help="path to .specs/features/[feature]")
+    parser.add_argument(
+        "feature",
+        nargs="?",
+        help="feature name or path to .specs/features/[feature]",
+    )
     parser.add_argument(
         "--strict",
         action="store_true",
@@ -128,18 +134,7 @@ def main(argv: list[str] | None = None) -> int:
     )
     args = parser.parse_args(argv)
 
-    feature_dir = Path(args.feature).expanduser()
-
-    if not feature_dir.exists():
-        print(f"[{GATE}] FAIL - {feature_dir}")
-        print(f"  error   feature directory not found: {feature_dir}")
-        return EXIT_USAGE
-
-    if not feature_dir.is_dir():
-        print(f"[{GATE}] FAIL - {feature_dir}")
-        print(f"  error   expected a directory, got a file: {feature_dir}")
-        return EXIT_USAGE
-
+    feature_dir = resolve_feature_dir(args.feature, GATE)
     report = build_report(feature_dir)
     result = report.emit(strict=args.strict)
     return result if result == 0 else EXIT_FAILED

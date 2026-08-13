@@ -94,6 +94,86 @@ class Report:
         return EXIT_OK
 
 
+FEATURES_DIR = Path(".specs/features")
+
+
+def _fail_usage(gate: str, target: str, message: str) -> None:
+    print(f"[{gate}] FAIL - {target}")
+    print(f"  error   {message}")
+    sys.exit(EXIT_USAGE)
+
+
+def list_features(root: Path = Path(".")) -> list[Path]:
+    """Return every feature directory under `.specs/features`, sorted by name."""
+
+    base = root / FEATURES_DIR
+
+    if not base.is_dir():
+        return []
+
+    return sorted(path for path in base.iterdir() if path.is_dir())
+
+
+def resolve_feature_dir(
+    raw: str | None, gate: str, root: Path = Path(".")
+) -> Path:
+    """Resolve a feature directory from a path, a bare feature name, or context.
+
+    Accepts `.specs/features/auth/spec.md`, `.specs/features/auth`, `auth`, or
+    nothing at all when the project has exactly one feature.
+    """
+
+    if raw:
+        candidate = Path(raw).expanduser()
+
+        if candidate.is_file():
+            return candidate.parent
+
+        if candidate.is_dir():
+            return candidate
+
+        named = root / FEATURES_DIR / raw
+        if named.is_dir():
+            return named
+
+        _fail_usage(gate, raw, f"no such feature or path: {raw}")
+
+    features = list_features(root)
+
+    if len(features) == 1:
+        return features[0]
+
+    if not features:
+        _fail_usage(
+            gate,
+            str(root / FEATURES_DIR),
+            "no features found - create .specs/features/[feature]/ first",
+        )
+
+    listed = "\n".join(f"            {path.name}" for path in features)
+    _fail_usage(
+        gate,
+        str(root / FEATURES_DIR),
+        f"{len(features)} features found - name the one to check:\n{listed}",
+    )
+
+    raise AssertionError("unreachable")
+
+
+def resolve_artifact(
+    raw: str | None, filename: str, gate: str, root: Path = Path(".")
+) -> tuple[Path, str]:
+    """Read `filename` from a feature resolved by path, name, or auto-detection."""
+
+    if raw:
+        candidate = Path(raw).expanduser()
+        if candidate.is_file():
+            return read_artifact(str(candidate), gate)
+
+    feature_dir = resolve_feature_dir(raw, gate, root)
+    return read_artifact(str(feature_dir / filename), gate)
+
+
 def read_artifact(raw_path: str, report_gate: str) -> tuple[Path, str]:
     """Resolve and read a required artifact, exiting with EXIT_USAGE on problems."""
 

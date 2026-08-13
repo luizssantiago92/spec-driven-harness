@@ -6,11 +6,11 @@ import { install } from "./lib/install.js";
 const USAGE = `Usage: agentic-harness <command> [args]
 
 Commands:
-  install                          Install skills, references, gates and .specs/ memory
-  validate-spec <spec.md>          Closure gate for a feature spec
-  validate-tasks <tasks.md>        Granularity gate for a task breakdown
-  validate-state <feature-dir>     Completion gate before declaring a feature done
-  check-commit --message "<msg>"   Conventional Commits gate
+  install                            Install skills, references, gates and .specs/ memory
+  validate-spec [spec.md|feature]    Closure gate for a feature spec
+  validate-tasks [tasks.md|feature]  Granularity gate for a task breakdown
+  validate-state [feature]           Completion gate before declaring a feature done
+  check-commit --message "<msg>"     Conventional Commits gate
 `;
 
 const [, , command, ...args] = process.argv;

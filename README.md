@@ -48,15 +48,15 @@ Because gate scripts are written to disk and marked executable, the source is tr
 
 | Stage | Command |
 | --- | --- |
-| Before confirming a spec | `validate_spec.py .specs/features/X/spec.md` |
-| Before approving tasks | `validate_tasks.py .specs/features/X/tasks.md` |
+| Before confirming a spec | `validate_spec.py [feature]` |
+| Before approving tasks | `validate_tasks.py [feature]` |
 | On each commit | `check_commit.py --message "feat: ..."` |
-| Before closing a feature | `validate_state.py .specs/features/X` |
+| Before closing a feature | `validate_state.py [feature]` |
 
-Scripts live in `.specs/harness/scripts/`. Run them with `python3`, or through the CLI to skip the paths:
+Scripts live in `.specs/harness/scripts/`. Pass a feature name, a feature directory, or a path to the artifact. With no argument the gate auto-detects when the project has exactly one feature.
 
 ```bash
-npx @luizsantiago/agentic-harness validate-spec .specs/features/auth/spec.md
+npx @luizsantiago/agentic-harness validate-spec auth
 npx @luizsantiago/agentic-harness check-commit --message "feat(auth): add token refresh"
 ```
 
@@ -64,8 +64,8 @@ A non-zero exit means stop, fix the artifact, and re-run.
 
 | Gate | Rejects |
 | --- | --- |
-| `validate_spec` | Missing sections, malformed IDs, a requirement without acceptance criteria, unfilled template placeholders |
-| `validate_tasks` | Missing required field, unknown or forward dependency, dependency cycle, non-atomic title |
+| `validate_spec` | Missing `Requirements` / `Assumptions` / `Out of Scope`, a criterion without `SHALL` or `MUST`, malformed IDs, a requirement without acceptance criteria, unfilled template placeholders |
+| `validate_tasks` | Missing required field, unknown or forward dependency, dependency on a later phase, dependency cycle, non-atomic title |
 | `check_commit` | Non-Conventional header, unknown type, header over 72 characters, trailing period |
 | `validate_state` | Missing `validation.md`, verdict other than PASS, no `file:line` evidence, open task |
 
@@ -180,6 +180,7 @@ Run `npx @luizsantiago/agentic-harness install` again. Existing memory and edite
 
 | Coming from | Manual step |
 | --- | --- |
+| A version before `0.3.0` | Specs must include `## Assumptions` (use `- none` when nothing was inferred) and every acceptance criterion must use `SHALL` or `MUST`. Re-run `validate_spec` after upgrading — this is a breaking gate change |
 | A version with `locale-and-standards.mdc` | Delete that file; it was replaced by `engineering-baseline.mdc` and still carries a chat-language rule |
 | A version before `0.2.0` | `STATE.md` keeps its old shape — copy the sections from `references/memory.md` if you want the decision log and handoff template |
 
