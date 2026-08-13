@@ -21,7 +21,7 @@ This file is the contract and the map. Phase procedures live in `references/`; c
 1. **Test-First Imperative** — Tests derive from the spec's acceptance criteria and assert spec-defined outcomes. They never mirror the implementation. No production code before spec and derived tests are approved.
 2. **Gate before done** — A task is complete only when the project harness (tests, linter, compiler) passes. The runner decides, never self-assessment.
 3. **One atomic commit per task** — Mark the task complete in `tasks.md` and include that update in the same commit. Never batch tasks; never weaken, skip, or delete tests to make them pass.
-4. **Author ≠ Verificador** — After the last task, `/verify` runs with a fresh, clean context that never wrote the code. It is mandatory, not prompted.
+4. **Author ≠ verifier** — After the last task, `/verify` runs with a fresh, clean context that never wrote the code. It is mandatory, not prompted.
 5. **Blast radius** — Approving a spec or tasks authorizes local implementation and local commits only. `git push`, force-push, deploy, production data changes, and other externally visible or destructive operations require an explicit go-ahead for that specific action.
 
 ## Deterministic Gates
@@ -44,7 +44,7 @@ A **non-zero exit means STOP** — fix the artifact, then re-run the gate. Never
 ## Phase Map
 
 ```
-SPECIFY → DESIGN (optional) → TASKS (optional) → EXECUTE (loop) → VERIFY
+SPECIFY → DISCUSS (conditional) → DESIGN (optional) → TASKS (optional) → EXECUTE (loop) → VERIFY
 ```
 
 | Phase | Required | Reference | Sister skill | Gate |

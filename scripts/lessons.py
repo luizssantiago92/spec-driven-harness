@@ -322,10 +322,8 @@ def cmd_prune(args: argparse.Namespace) -> int:
 
     for lesson in store["lessons"]:
         updated = parse_iso_date(str(lesson.get("updated") or ""))
-        stale_candidate = (
-            lesson.get("status") == "candidate"
-            and updated is not None
-            and updated < cutoff
+        stale_candidate = lesson.get("status") == "candidate" and (
+            updated is None or updated <= cutoff
         )
         if stale_candidate:
             removed.append(lesson.get("id", "?"))

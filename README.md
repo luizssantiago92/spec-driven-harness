@@ -66,7 +66,7 @@ A non-zero exit means stop, fix the artifact, and re-run.
 | Gate | Rejects |
 | --- | --- |
 | `validate_spec` | Missing `Requirements` / `Assumptions` / `Out of Scope`, a criterion without `SHALL` or `MUST`, malformed IDs, a requirement without acceptance criteria, unfilled template placeholders |
-| `validate_tasks` | Missing required field, unknown or forward dependency, dependency on a later phase, dependency cycle, non-atomic title |
+| `validate_tasks` | Missing required field (`Requirement`, `Depends on`, `Tests`, `Gate`), unknown or forward dependency, dependency on a later phase, dependency cycle, a title on the vague-phrase list |
 | `check_commit` | Non-Conventional header, unknown type, header over 72 characters, trailing period |
 | `validate_state` | Missing `validation.md`, verdict other than PASS, no `file:line` evidence, open task |
 | `lessons` | Add without `--source`, source other than `validation.md`, corrupt `lessons.json` |
@@ -103,6 +103,8 @@ SPECIFY → DISCUSS (conditional) → DESIGN (optional) → TASKS (optional) →
 | Quick | `/quick` | `references/quick-mode.md` | — | `check_commit.py` |
 | Context | — | `references/context-limits.md` | — | — |
 | Lessons | `/lessons` | `references/lessons.md` | — | `lessons.py` |
+
+Context is a load rule and Lessons is a FAIL-path step — neither is a sequential pipeline phase.
 
 `/task-graph` draws the job DAG before `/loop`; `/sync-spec` commits the current feature's artifacts without a full handoff.
 

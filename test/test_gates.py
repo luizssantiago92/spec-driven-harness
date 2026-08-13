@@ -169,8 +169,20 @@ class SpecGateTest(unittest.TestCase):
         )
         report = validate_spec.build_report("spec.md", spec)
         self.assertFalse(report.passed)
+        self.assertTrue(
+            any("SHALL or MUST" in error for error in report.errors)
+        )
 
-    def test_must_is_accepted_as_normative_verb(self):
+    def test_multiline_acceptance_criteria_pass(self):
+        spec = VALID_SPEC.replace(
+            "- **Acceptance Criteria**: WHEN a user submits valid credentials THEN the system SHALL create a session\n"
+            "- WHEN a user submits invalid credentials THEN the system SHALL return 401 with code AUTH_INVALID\n",
+            "- **Acceptance Criteria**:\n"
+            "  WHEN a user submits valid credentials THEN the system SHALL create a session\n"
+            "  WHEN a user submits invalid credentials THEN the system SHALL return 401 with code AUTH_INVALID\n",
+        )
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertTrue(report.passed, report.errors)
         spec = VALID_SPEC.replace("SHALL", "MUST")
         report = validate_spec.build_report("spec.md", spec)
         self.assertTrue(report.passed, report.errors)
@@ -245,6 +257,7 @@ class TasksGateTest(unittest.TestCase):
             for i in (1, 2, 3)
         )
         report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertFalse(report.passed)
         self.assertTrue(any("cycle" in error for error in report.errors))
 
     def test_task_ids_beyond_t999_are_parsed(self):
@@ -318,6 +331,29 @@ class TasksGateTest(unittest.TestCase):
         self.assertFalse(
             any("forward dependency" in error for error in report.errors)
         )
+
+    def test_h1_phase_headings_are_recognized(self):
+        tasks = """# Tasks
+
+# Phase 2
+
+### T2: Add login endpoint handler
+- **Requirement**: REQ-001
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+
+# Phase 1
+
+### T1: Create session token module
+- **Requirement**: REQ-001
+- **Depends on**: T2
+- **Tests**: t.ts
+- **Gate**: npm test
+"""
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("from phase" in error for error in report.errors))
 
 
 class StateGateTest(unittest.TestCase):
@@ -393,6 +429,13 @@ class StateGateTest(unittest.TestCase):
         )
         self.assertFalse(report.passed)
         self.assertTrue(any("open task" in e for e in report.errors))
+
+    def test_passing_is_not_a_pass_verdict(self):
+        report = validate_state.build_report(
+            self._feature_dir(VALID_VALIDATION.replace("PASS", "PASSING"))
+        )
+        self.assertFalse(report.passed)
+        self.assertTrue(any("not filled" in e for e in report.errors))
 
 
 @contextmanager
@@ -489,6 +532,16 @@ class FeatureResolveTest(unittest.TestCase):
         )
         self.assertEqual(code, _common.EXIT_USAGE)
         self.assertIn("no such feature or path", output)
+
+    def test_wrong_artifact_filename_is_a_usage_error(self):
+        feature = self._write_feature("auth", tasks=VALID_TASKS)
+        code, output = _capture_exit(
+            lambda: _common.resolve_artifact(
+                str(feature / "tasks.md"), "spec.md", "validate-spec", root=self.root
+            )
+        )
+        self.assertEqual(code, _common.EXIT_USAGE)
+        self.assertIn("expected spec.md", output)
 
     def test_validate_spec_main_auto_detects_from_cwd(self):
         self._write_feature("auth")

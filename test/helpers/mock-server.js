@@ -1,5 +1,12 @@
 import http from "node:http";
 
+import {
+  REFERENCE_ASSETS,
+  RULE_ASSETS,
+  SCRIPT_ASSETS,
+  SKILL_ASSETS,
+} from "../../lib/constants.js";
+
 export const SKILL_FIXTURE = `# Agent Architecture Skill (test fixture)
 Workflow: Specify → Design → Tasks → Execute → Verify
 `;
@@ -43,8 +50,23 @@ export const COMMIT_GATE_FIXTURE = `#!/usr/bin/env python3
 """check_commit (test fixture)"""
 `;
 
+function catalogFixtures() {
+  /** @type {Record<string, string>} */
+  const fixtures = {};
+  for (const asset of [
+    ...SKILL_ASSETS,
+    ...REFERENCE_ASSETS,
+    ...SCRIPT_ASSETS,
+    ...RULE_ASSETS,
+  ]) {
+    fixtures[`/${asset.remotePath}`] = `# mock fixture for ${asset.file}\n`;
+  }
+  return fixtures;
+}
+
 /** @type {Record<string, string>} */
 export const DEFAULT_FIXTURES = {
+  ...catalogFixtures(),
   "/skills/agent-architecture.md": SKILL_FIXTURE,
   "/skills/engineering-standards.md": ENGINEERING_FIXTURE,
   "/skills/security-review.md": SECURITY_FIXTURE,
@@ -62,7 +84,12 @@ export const DEFAULT_FIXTURES = {
  */
 export function createMockAssetServer(fixtures = DEFAULT_FIXTURES) {
   const server = http.createServer((req, res) => {
-    const body = fixtures[req.url ?? ""] ?? "# mock fixture\n";
+    const body = fixtures[req.url ?? ""];
+    if (body === undefined) {
+      res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
+      res.end("not found");
+      return;
+    }
     res.writeHead(200, { "Content-Type": "text/plain; charset=utf-8" });
     res.end(body);
   });
