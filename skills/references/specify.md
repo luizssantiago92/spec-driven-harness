@@ -15,7 +15,7 @@ Capture WHAT to build as testable, traceable requirements. Always required.
 
 - Owner's request, in their own words
 - `.specs/STATE.md` decisions (`AD-NNN`) relevant to this area
-- `.specs/LESSONS.md` entries that apply
+- `.specs/LESSONS.md` entries that apply — load them with `python3 .specs/harness/scripts/lessons.py list --status confirmed`
 - Existing codebase conventions
 - `context-limits.md` — this feature only; do not load sibling specs
 
@@ -26,15 +26,16 @@ Capture WHAT to build as testable, traceable requirements. Always required.
 ## Procedure
 
 1. **Act as a thinking partner, not an interviewer.** Challenge vagueness; restate the goal in one sentence and confirm it.
-2. **Detect gray areas.** If the feature touches persistence, external calls, auth, payments, concurrency, or state transitions — or if intent is ambiguous — run `discuss.md` before finalizing.
-3. **Write requirements with stable IDs.** `REQ-001`, `AUTH-002` — prefix plus a zero-padded number. IDs never change once approved; retire them instead.
-4. **Write binary acceptance criteria.** Every criterion is objectively pass or fail. The gate **blocks** a criterion that does not state a required outcome with `SHALL` or `MUST`. EARS shape is the recommended form and is reported as a warning when missing:
+2. **Load confirmed lessons.** Run `python3 .specs/harness/scripts/lessons.py list --status confirmed` and apply every rule that matches this work. Candidates are not guidance.
+3. **Detect gray areas.** If the feature touches persistence, external calls, auth, payments, concurrency, or state transitions — or if intent is ambiguous — run `discuss.md` before finalizing.
+4. **Write requirements with stable IDs.** `REQ-001`, `AUTH-002` — prefix plus a zero-padded number. IDs never change once approved; retire them instead.
+5. **Write binary acceptance criteria.** Every criterion is objectively pass or fail. The gate **blocks** a criterion that does not state a required outcome with `SHALL` or `MUST`. EARS shape is the recommended form and is reported as a warning when missing:
    `WHEN <trigger> THEN the system SHALL <observable outcome>`
    Soft verbs (`should`, `will`, `can`, `may`) are not testable — rewrite them before confirming.
-5. **State out of scope explicitly.** This is what prevents scope creep during Execute.
-6. **Record assumptions.** Anything inferred rather than confirmed goes under `## Assumptions`. The section is required; write `- none` only when nothing was inferred.
-7. **Run the gate.** Fix every blocking issue before showing the spec to the owner.
-8. **Get approval.** Do not write implementation code until the spec and derived tests are approved.
+6. **State out of scope explicitly.** This is what prevents scope creep during Execute.
+7. **Record assumptions.** Anything inferred rather than confirmed goes under `## Assumptions`. The section is required; write `- none` only when nothing was inferred.
+8. **Run the gate.** Fix every blocking issue before showing the spec to the owner.
+9. **Get approval.** Do not write implementation code until the spec and derived tests are approved.
 
 ## Gate
 

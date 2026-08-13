@@ -108,7 +108,7 @@ python3 .specs/harness/scripts/validate_state.py .specs/features/[feature]
 
 If critical vulnerability found:
 1. Do not merge
-2. Log lesson in `.specs/LESSONS.md`
+2. Record the lesson with `lessons.py add --source` pointing at `validation.md`
 3. Notify the project owner with severity and remediation steps
 
 ## Related Skills

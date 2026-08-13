@@ -39,6 +39,7 @@ Compare with `tasks.md` checkboxes. If commits exist for tasks STATE lists as pe
 ```
 .specs/STATE.md
 .specs/LESSONS.md
+.specs/lessons.json
 .specs/project/**/*
 .specs/features/**/*
 .specs/quick/**/*
@@ -86,7 +87,7 @@ Use this structure in `.specs/STATE.md`:
 ```
 
 - Refresh all sections above each handoff
-- Append to `.specs/LESSONS.md` if verification failed or a mistake was corrected
+- Record a grounded lesson with `lessons.py add` if verification failed. Never hand-edit `LESSONS.md`.
 
 ### 2. Validate before commit
 

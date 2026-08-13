@@ -12,7 +12,7 @@ Treat context as a working set, not an archive. Prefer a complete read of a smal
 | --- | --- | --- |
 | Contract | Hub + the current phase reference + the sister skill that table names | The other phase references |
 | Feature | This feature's `spec.md`; `context.md` / `design.md` / `tasks.md` only when that phase ran | Sibling feature specs |
-| Memory | `STATE.md` Next Step, Blockers, and `AD-NNN` that constrain this area; lessons that apply to this work | The full `LESSONS.md` history, other features' `validation.md` |
+| Memory | `STATE.md` Next Step, Blockers, and `AD-NNN` that constrain this area; `lessons.py list --status confirmed` | Candidates, quarantined entries, other features' `validation.md` |
 | Code | Files named on the current task | The rest of the module "for orientation" |
 | Verify | Spec + diff range + the tests the spec names | The author's session notes |
 

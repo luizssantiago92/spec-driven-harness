@@ -20,6 +20,7 @@ Skipping Design is the default for Simple and Medium tiers.
 - Approved `spec.md`
 - `context.md` when Discuss ran
 - `.specs/STATE.md` decisions (`AD-NNN`)
+- Confirmed lessons: `python3 .specs/harness/scripts/lessons.py list --status confirmed`
 - Existing codebase structure and conventions
 - `context-limits.md` — this feature only
 
@@ -30,12 +31,13 @@ Skipping Design is the default for Simple and Medium tiers.
 ## Procedure
 
 1. **Map what already exists.** List the components you will reuse before proposing new ones. Reuse beats invention.
-2. **Follow the Knowledge Verification Chain** for anything unfamiliar: codebase → project docs → MCP/Context → web search → flag uncertainty. Never fabricate an API.
-3. **Choose an approach and state it definitively.** Record the alternatives you rejected and why — that is the part future readers need.
-4. **Draw the shape.** A small mermaid diagram of components and data flow beats three paragraphs.
-5. **Name the risks** and the mitigation for each. A risk without a mitigation is a blocker.
-6. **Link every component back to requirement IDs.** Anything that serves no `REQ` is scope creep.
-7. **Promote project-wide decisions** to `STATE.md` as `AD-NNN` (see `memory.md`).
+2. **Load confirmed lessons** that constrain this design (`lessons.py list --status confirmed`).
+3. **Follow the Knowledge Verification Chain** for anything unfamiliar: codebase → project docs → MCP/Context → web search → flag uncertainty. Never fabricate an API.
+4. **Choose an approach and state it definitively.** Record the alternatives you rejected and why — that is the part future readers need.
+5. **Draw the shape.** A small mermaid diagram of components and data flow beats three paragraphs.
+6. **Name the risks** and the mitigation for each. A risk without a mitigation is a blocker.
+7. **Link every component back to requirement IDs.** Anything that serves no `REQ` is scope creep.
+8. **Promote project-wide decisions** to `STATE.md` as `AD-NNN` (see `memory.md`).
 
 ## Template
 
