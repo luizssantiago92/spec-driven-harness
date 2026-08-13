@@ -27,7 +27,7 @@ Re-running refreshes skills, references and gate scripts, and upgrades the harne
 | Artifact | Purpose |
 | --- | --- |
 | `.cursor/skills/agent-architecture.md` | Hub — execution contract, phase map, complexity router |
-| `.cursor/skills/references/*.md` | Per-phase procedures (8 files) |
+| `.cursor/skills/references/*.md` | Per-phase procedures (9 files) |
 | `.cursor/skills/task-graph-engineering.md` | Task DAG, parallelism, diamond verify, sub-agent batches |
 | `.cursor/skills/engineering-standards.md` | Secure coding, code quality, one writer per file |
 | `.cursor/skills/security-review.md` | OWASP checklist for `/verify` |
@@ -99,6 +99,7 @@ SPECIFY → DISCUSS (conditional) → DESIGN (optional) → TASKS (optional) →
 | Verify | `/verify` | `references/validate.md` | `security-review` | `validate_state.py` |
 | Handoff | `/handoff` | `references/memory.md` | `git-handoff` | — |
 | Quick | `/quick` | `references/quick-mode.md` | — | `check_commit.py` |
+| Context | — | `references/context-limits.md` | — | — |
 
 `/task-graph` draws the job DAG before `/loop`; `/sync-spec` commits the current feature's artifacts without a full handoff.
 
@@ -194,7 +195,7 @@ spec-driven-harness/
 ├── lib/                            # Installer and Python bridge
 ├── skills/
 │   ├── agent-architecture.md       # Hub
-│   ├── references/                 # 8 phase procedures
+│   ├── references/                 # 9 phase procedures
 │   ├── task-graph-engineering.md
 │   ├── engineering-standards.md
 │   ├── security-review.md
