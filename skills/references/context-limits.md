@@ -50,7 +50,7 @@ These are authoring limits, not gate checks. The gates cannot count lines; you c
 - **Do not reload a reference you already followed** in this session unless a gate failed and you need the checklist again.
 - **Search is not loading.** A grep hit is a pointer; read the file only when the current task names it or the spec cites it.
 - **Sub-agents get a subset.** A worker receives the task, the spec IDs it serves, and its `Files` list — not the whole hub and not sibling tasks.
-- **Verify starts empty.** The verifier does not inherit the author's working set. That is the point of Author ≠ Verificador.
+- **Verify starts empty.** The verifier does not inherit the author's working set. That is the point of Author ≠ verifier.
 
 ## When the budget is already blown
 

@@ -9,7 +9,7 @@ Independent verification of the delivered feature. Always required, never prompt
 
 ## Who Runs It
 
-A **fresh verifier context that never wrote the code**. Author ≠ Verificador is non-negotiable. The verifier re-derives coverage from the spec instead of inheriting the author's mental model.
+A **fresh verifier context that never wrote the code**. Author ≠ verifier is non-negotiable. The verifier re-derives coverage from the spec instead of inheriting the author's mental model.
 
 When sub-agents are available, dispatch the verifier as a separate agent (see `task-graph-engineering.md`). Without sub-agents, start a clean context and run this file as a fresh-eyes pass.
 
@@ -104,7 +104,7 @@ python3 .specs/harness/scripts/validate_state.py [feature]
 python3 .specs/harness/scripts/validate_state.py          # single-feature projects
 ```
 
-Checks that the report exists, the verdict is filled to PASS, evidence cites `file:line`, the sensor ran, and no task remains open. Non-zero exit means the feature is not done.
+Checks that the report exists, the verdict is filled to PASS, evidence cites `file:line`, and no task remains open. A missing discrimination sensor is a warning (`--strict` makes it blocking). Non-zero exit means the feature is not done.
 
 The gate cannot judge whether a cited test actually asserts the criterion. That judgment is the verifier's; a green gate with a weak assertion is still a FAIL in the report.
 

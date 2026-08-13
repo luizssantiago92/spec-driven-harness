@@ -38,7 +38,7 @@ FIELD = re.compile(
 )
 TASK_REF = re.compile(r"\bT(\d{1,6})\b", re.IGNORECASE)
 PHASE_HEADING = re.compile(
-    r"^#{2,5}\s*Phase\s+(?P<number>\d+)\b", re.MULTILINE | re.IGNORECASE
+    r"^#{1,6}\s*Phase\s+(?P<number>\d+)\b", re.MULTILINE | re.IGNORECASE
 )
 REQUIREMENT_REF = re.compile(r"\b[A-Z][A-Z0-9]{1,9}-\d{2,4}\b")
 NONE_VALUES = {"-", "—", "–", "none", "n/a", "na", "nenhum", "nenhuma", "no"}

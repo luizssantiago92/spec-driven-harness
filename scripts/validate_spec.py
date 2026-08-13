@@ -93,7 +93,8 @@ def acceptance_lines(body: str) -> list[str]:
 
         if ACCEPTANCE_LABEL.search(line):
             in_labeled_block = True
-            remainder = re.split(r"[:\-–]", line, maxsplit=1)
+            cleaned = line.lstrip("-* ").strip()
+            remainder = re.split(r"[:\u2013\u2014]", cleaned, maxsplit=1)
             if len(remainder) == 2 and remainder[1].strip():
                 lines.append(remainder[1].strip())
             continue

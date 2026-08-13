@@ -12,7 +12,9 @@ import {
   REFERENCE_ASSETS,
   REFERENCES_SUBDIR,
   resolveAssetUrl,
+  RULE_ASSETS,
   SCRIPT_ASSETS,
+  SKILL_ASSETS,
   STATE_HEADER,
 } from "../lib/constants.js";
 import { packagedAssetPath, resolveInstallSource } from "../lib/assets.js";
@@ -571,6 +573,10 @@ describe("packaged assets", () => {
         resolveInstallSource("https://example.com/raw").mode,
         "remote",
       );
+      assert.throws(
+        () => resolveInstallSource("http://evil.example.com/assets"),
+        /only HTTPS sources are allowed/,
+      );
     } finally {
       if (original === undefined) {
         delete process.env.HARNESS_REPO_URL;
@@ -580,10 +586,15 @@ describe("packaged assets", () => {
     }
   });
 
-  it("ships the hub skill inside the package", async () => {
-    const hub = packagedAssetPath("skills/agent-architecture.md");
-    const content = await fs.readFile(hub, "utf8");
-    assert.match(content, /# Agent Architecture/);
+  it("ships every catalogued asset inside the package", async () => {
+    for (const asset of [
+      ...SKILL_ASSETS,
+      ...REFERENCE_ASSETS,
+      ...SCRIPT_ASSETS,
+      ...RULE_ASSETS,
+    ]) {
+      await fs.access(packagedAssetPath(asset.remotePath));
+    }
   });
 });
 

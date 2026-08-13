@@ -168,6 +168,12 @@ def resolve_artifact(
     if raw:
         candidate = Path(raw).expanduser()
         if candidate.is_file():
+            if candidate.name != filename:
+                _fail_usage(
+                    gate,
+                    raw,
+                    f"expected {filename}, got {candidate.name}",
+                )
             return read_artifact(str(candidate), gate)
 
     feature_dir = resolve_feature_dir(raw, gate, root)
@@ -175,7 +181,11 @@ def resolve_artifact(
 
 
 def read_artifact(raw_path: str, report_gate: str) -> tuple[Path, str]:
-    """Resolve and read a required artifact, exiting with EXIT_USAGE on problems."""
+    """Resolve and read a required artifact.
+
+    Missing paths and directories exit with EXIT_USAGE. An empty file exits
+    with EXIT_FAILED — the path is valid, the artifact is not ready.
+    """
 
     path = Path(raw_path).expanduser()
 

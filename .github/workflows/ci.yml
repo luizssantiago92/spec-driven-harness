@@ -51,6 +51,8 @@ jobs:
           test -f skills/references/validate.md
           test -f skills/references/memory.md
           test -f skills/references/quick-mode.md
+          test -f skills/references/context-limits.md
+          test -f skills/references/lessons.md
 
       - name: Verify gate scripts exist and compile
         run: |
@@ -59,6 +61,7 @@ jobs:
           test -f scripts/validate_tasks.py
           test -f scripts/validate_state.py
           test -f scripts/check_commit.py
+          test -f scripts/lessons.py
           python3 -m compileall -q scripts
 
   gates-matrix:
