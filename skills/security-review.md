@@ -109,12 +109,12 @@ python3 .specs/harness/scripts/validate_state.py .specs/features/[feature]
 If critical vulnerability found:
 1. Do not merge
 2. Log lesson in `.specs/LESSONS.md`
-3. Notify project owner in pt-BR with severity and remediation steps
+3. Notify the project owner with severity and remediation steps
 
 ## Related Skills
 
 - `agent-architecture.md` — SDD hub, execution contract, gates
 - `references/validate.md` — verifier procedure and report schema
-- `engineering-standards.md` — locale, secure coding, commit format
+- `engineering-standards.md` — secure coding, commit format, artifact language
 - `git-handoff.md` — git sync and session handoff for `.specs/`
 - `task-graph-engineering.md` — verify node in diamond pattern

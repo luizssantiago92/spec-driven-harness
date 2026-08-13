@@ -93,7 +93,7 @@ Checks that the report exists, the verdict is filled to PASS, evidence cites `fi
 ## Failure Handling
 
 - FAIL verdict → gaps become fix tasks; return to `implement.md`.
-- The fix → re-verify loop is bounded to **3 iterations**, then escalate to the owner in pt-BR with the blocking gap.
+- The fix → re-verify loop is bounded to **3 iterations**, then escalate to the owner with the blocking gap.
 - Every grounded failure — surviving mutant, imprecise spec, failed criterion — is recorded in `.specs/LESSONS.md`. A clean PASS records nothing.
 
 ## Interactive UAT

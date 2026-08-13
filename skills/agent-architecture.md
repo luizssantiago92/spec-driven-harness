@@ -122,7 +122,7 @@ Never skip to step 5 while steps 1–4 are available. Fabrication cascades throu
 - **Do the work; do not narrate the machinery.** Produce the artifact instead of announcing the phase.
 - **Match effort to the work.** Heavy reasoning for design and ambiguity; fast execution for mechanical tasks.
 - **Write artifacts in a plain, decided voice.** Lead with the verdict; cut filler and hedging.
-- **Locale** — Chat with the owner in pt-BR; all project artifacts in English (see `engineering-standards.md`).
+- **Artifacts in English** — code, tests, commits, and `.specs/` documents (see `engineering-standards.md`). Chat language is the owner's personal setting, not a harness rule.
 
 ## Model Selection
 
@@ -135,11 +135,11 @@ Never skip to step 5 while steps 1–4 are available. Fabrication cascades throu
 | Skill | Layer |
 | --- | --- |
 | `task-graph-engineering.md` | Topology — task DAG, parallelism, diamond verify |
-| `engineering-standards.md` | Quality — locale, secure coding, one writer per file |
+| `engineering-standards.md` | Quality — secure coding, one writer per file, artifact language |
 | `security-review.md` | Verification — OWASP checklist for `/verify` |
 | `git-handoff.md` | Persistence — git sync, STATE template, session handoff |
 
-Project rules: `.cursor/rules/locale-and-standards.mdc` (always applied in Cursor).
+Project rules: `.cursor/rules/engineering-baseline.mdc` (always applied in Cursor).
 
 ## Commands
 

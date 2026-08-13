@@ -56,7 +56,7 @@ Also trigger when the owner's request has more than one reasonable interpretatio
 
 ## Rules
 
-- Ask in **pt-BR**; write `context.md` in **English** (see `engineering-standards.md`).
+- Write `context.md` in **English**, whatever language the conversation happens in (see `engineering-standards.md`).
 - Never invent an answer to keep momentum. An unanswered gray area is a blocker, not a detail.
 - If the owner defers a decision, record it as an open question in `STATE.md` under Blockers.
 - Project-wide decisions graduate to `STATE.md` as `AD-NNN` (see `memory.md`).

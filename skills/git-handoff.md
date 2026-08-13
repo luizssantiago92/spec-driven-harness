@@ -27,7 +27,7 @@ Compare with `tasks.md` checkboxes. If commits exist for tasks STATE lists as pe
 | Skill | Role |
 | --- | --- |
 | `agent-architecture.md` | Process — Specify → Verify workflow |
-| `engineering-standards.md` | Quality — locale, secure coding, commit format |
+| `engineering-standards.md` | Quality — secure coding, commit format, artifact language |
 | `security-review.md` | Verification — OWASP checklist for `/verify` |
 | `task-graph-engineering.md` | Topology — task DAG and parallelism |
 | **`git-handoff.md`** | **Persistence — git sync for `.specs/` and handoff** |
@@ -158,7 +158,7 @@ A handoff is complete only when:
 2. `git log -1` shows the handoff commit
 3. Staged files were reviewed (no secrets)
 
-Report to owner in **pt-BR**; commit messages remain in **English**.
+Commit messages and every `.specs/` artifact are written in **English**.
 
 ## Related Commands
 

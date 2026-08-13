@@ -93,9 +93,9 @@ describe("install harness", () => {
           cwd,
           ".claude/skills/agent-architecture.md",
         );
-        const localeRule = path.join(
+        const baselineRule = path.join(
           cwd,
-          ".cursor/rules/locale-and-standards.mdc",
+          ".cursor/rules/engineering-baseline.mdc",
         );
         const stateFile = path.join(cwd, ".specs/STATE.md");
         const lessonsFile = path.join(cwd, ".specs/LESSONS.md");
@@ -108,7 +108,7 @@ describe("install harness", () => {
         assert.equal(await pathExists(gitHandoffSkill), true);
         assert.equal(await pathExists(taskGraphSkill), true);
         assert.equal(await pathExists(claudeSkill), true);
-        assert.equal(await pathExists(localeRule), true);
+        assert.equal(await pathExists(baselineRule), true);
         assert.equal(await pathExists(featuresDir), true);
         assert.equal(await pathExists(cursorRules), true);
 
@@ -130,7 +130,7 @@ describe("install harness", () => {
           TASK_GRAPH_FIXTURE,
         );
         assert.equal(await fs.readFile(claudeSkill, "utf8"), SKILL_FIXTURE);
-        assert.equal(await fs.readFile(localeRule, "utf8"), RULES_FIXTURE);
+        assert.equal(await fs.readFile(baselineRule, "utf8"), RULES_FIXTURE);
         assert.equal(await fs.readFile(stateFile, "utf8"), STATE_HEADER);
         assert.equal(await fs.readFile(lessonsFile, "utf8"), LESSONS_HEADER);
 
@@ -140,10 +140,10 @@ describe("install harness", () => {
         assert.match(rulesContent, /security-review\.md/);
         assert.match(rulesContent, /git-handoff\.md/);
         assert.match(rulesContent, /task-graph-engineering\.md/);
-        assert.match(rulesContent, /locale-and-standards\.mdc/);
+        assert.match(rulesContent, /engineering-baseline\.mdc/);
         assert.match(rulesContent, /references\//);
         assert.match(rulesContent, /validate_spec\.py/);
-        assert.match(rulesContent, /pt-BR/);
+        assert.doesNotMatch(rulesContent, /pt-BR/);
       } finally {
         await fs.rm(cwd, { recursive: true, force: true });
       }
@@ -233,14 +233,14 @@ describe("install harness", () => {
 
         const stateFile = path.join(cwd, ".specs/STATE.md");
         const lessonsFile = path.join(cwd, ".specs/LESSONS.md");
-        const localeRule = path.join(
+        const baselineRule = path.join(
           cwd,
-          ".cursor/rules/locale-and-standards.mdc",
+          ".cursor/rules/engineering-baseline.mdc",
         );
 
         await fs.writeFile(stateFile, "# Custom state\n", "utf8");
         await fs.writeFile(lessonsFile, "# Custom lessons\n", "utf8");
-        await fs.writeFile(localeRule, "# Custom rules\n", "utf8");
+        await fs.writeFile(baselineRule, "# Custom rules\n", "utf8");
 
         await install({ cwd, repoUrl: mockServer.baseUrl, silent: true });
 
@@ -249,7 +249,7 @@ describe("install harness", () => {
           await fs.readFile(lessonsFile, "utf8"),
           "# Custom lessons\n",
         );
-        assert.equal(await fs.readFile(localeRule, "utf8"), "# Custom rules\n");
+        assert.equal(await fs.readFile(baselineRule, "utf8"), "# Custom rules\n");
       } finally {
         await fs.rm(cwd, { recursive: true, force: true });
       }
@@ -281,7 +281,7 @@ describe("install harness", () => {
         assert.match(rulesContent, /security-review\.md/);
         assert.match(rulesContent, /git-handoff\.md/);
         assert.match(rulesContent, /task-graph-engineering\.md/);
-        assert.match(rulesContent, /locale-and-standards\.mdc/);
+        assert.match(rulesContent, /engineering-baseline\.mdc/);
         assert.match(rulesContent, /validate_state\.py/);
         assert.doesNotMatch(rulesContent, /# Old block/);
       } finally {
