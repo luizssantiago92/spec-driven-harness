@@ -40,9 +40,9 @@ Re-running refreshes skills, references and gate scripts, and upgrades the harne
 
 ### Asset provenance
 
-The npm package ships only the CLI. Skills, references and gate scripts are downloaded at install time from the git tag matching the installed CLI version, so upgrading the package is what changes the harness — a later push to the default branch cannot alter an install that already happened. If a freshly published tag is not visible yet, the installer warns and falls back to the default branch for that run.
+The npm package ships the CLI, skills, references, project rules and gate scripts. Install copies them from the package, so a later push to the default branch cannot change an install that already happened — upgrading the package is what changes the harness.
 
-Because gate scripts are written to disk and marked executable, the source is treated as a trust boundary: HTTPS only (plain HTTP is accepted against `localhost` for the test suite), a 30s request timeout, and a 2 MB cap per asset. Setting `HARNESS_REPO_URL` overrides the source and is announced before anything is written.
+Setting `HARNESS_REPO_URL` overrides the source (a fork, or the test suite) and is announced before anything is written. Remote fetches stay a trust boundary: HTTPS only (plain HTTP is accepted against `localhost` for the test suite), a 30s request timeout, and a 2 MB cap per asset.
 
 ## Gates
 
@@ -185,6 +185,7 @@ Run `npx @luizsantiago/agentic-harness install` again. Existing memory and edite
 
 | Coming from | Manual step |
 | --- | --- |
+| A version before `0.5.0` | Default install no longer downloads from GitHub. Forks keep using `HARNESS_REPO_URL`. No artifact migration |
 | A version before `0.4.0` | `LESSONS.md` is now generated. Do not hand-edit it. Existing entries are not imported — re-record grounded ones with `lessons.py add --source` pointing at the original `validation.md` |
 | A version before `0.3.0` | Specs must include `## Assumptions` (use `- none` when nothing was inferred) and every acceptance criterion must use `SHALL` or `MUST`. Re-run `validate_spec` after upgrading — this is a breaking gate change |
 | A version with `locale-and-standards.mdc` | Delete that file; it was replaced by `engineering-baseline.mdc` and still carries a chat-language rule |
@@ -226,7 +227,7 @@ npm run test:gates
 node index.js install
 ```
 
-Publishing is automated: **Actions → Publish to npm → Run workflow**, choosing `patch`, `minor` or `major`. The workflow bumps the version, runs both suites, publishes, and pushes the tag the installer pins to.
+Publishing is automated: **Actions → Publish to npm → Run workflow**, choosing `patch`, `minor` or `major`. The workflow bumps the version, runs both suites, and publishes the package (skills, rules and gates included).
 
 ## Credits
 
