@@ -31,9 +31,16 @@ VERDICT = re.compile(
     r"^\s*[-*]?\s*\*{0,2}(?:verdict|result|status)\*{0,2}\s*:\s*\*{0,2}(?P<value>[A-Za-z ]+)",
     re.IGNORECASE | re.MULTILINE,
 )
-EVIDENCE = re.compile(r"[\w./\\-]+\.[A-Za-z0-9]{1,10}:\d+")
+EVIDENCE = re.compile(r"[\w./\\-]+\.[A-Za-z][A-Za-z0-9]{0,9}:\d{1,6}\b")
+URL = re.compile(r"\b[a-z][a-z0-9+.-]*://\S+", re.IGNORECASE)
 SENSOR = re.compile(r"(discrimination sensor|mutant)", re.IGNORECASE)
 OPEN_TASK = re.compile(r"^\s*[-*]\s*\[ \]\s+(?P<label>.+)$", re.MULTILINE)
+
+
+def find_evidence(text: str) -> list[str]:
+    """Return file:line references, ignoring URLs that merely carry a port."""
+
+    return EVIDENCE.findall(URL.sub(" ", text))
 
 
 def build_report(feature_dir: Path) -> Report:
@@ -72,12 +79,13 @@ def build_report(feature_dir: Path) -> Report:
         else:
             report.error(f"verifier verdict is not filled: '{verdict}'")
 
-    evidence = EVIDENCE.findall(validation)
+    evidence = find_evidence(validation)
     if evidence:
         report.ok(f"{len(evidence)} file:line evidence reference(s)")
     else:
         report.error(
-            "no file:line evidence found - evidence-or-zero requires test references"
+            "no file:line evidence found - evidence-or-zero requires test references "
+            "such as test/auth/token.test.ts:41 (a URL is not evidence)"
         )
 
     if SENSOR.search(validation):

@@ -82,27 +82,29 @@ export function createMockAssetServer(fixtures = DEFAULT_FIXTURES) {
   });
 }
 
-/** @deprecated Use createMockAssetServer */
-export function createMockSkillServer(body = SKILL_FIXTURE, statusCode = 200) {
-  if (statusCode !== 200) {
-    const server = http.createServer((_req, res) => {
-      res.writeHead(statusCode);
-      res.end(body);
-    });
-    return new Promise((resolve, reject) => {
-      server.listen(0, "127.0.0.1", () => {
-        const { port } = server.address();
-        resolve({
-          url: `http://127.0.0.1:${port}/skills/agent-architecture.md`,
-          baseUrl: `http://127.0.0.1:${port}`,
-          close: () =>
-            new Promise((closeResolve, closeReject) => {
-              server.close((err) => (err ? closeReject(err) : closeResolve()));
-            }),
-        });
+/**
+ * Serves the given status for every asset, so the installer's failure path can
+ * be exercised.
+ *
+ * @param {number} statusCode
+ */
+export function createFailingAssetServer(statusCode) {
+  const server = http.createServer((_req, res) => {
+    res.writeHead(statusCode);
+    res.end("");
+  });
+
+  return new Promise((resolve, reject) => {
+    server.listen(0, "127.0.0.1", () => {
+      const { port } = server.address();
+      resolve({
+        baseUrl: `http://127.0.0.1:${port}`,
+        close: () =>
+          new Promise((closeResolve, closeReject) => {
+            server.close((err) => (err ? closeReject(err) : closeResolve()));
+          }),
       });
-      server.on("error", reject);
     });
-  }
-  return createMockAssetServer({ "/skills/agent-architecture.md": body });
+    server.on("error", reject);
+  });
 }

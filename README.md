@@ -84,6 +84,18 @@ The scripts are committed alongside `.specs/`, so the team and CI run the same g
 .specs/harness/scripts/__pycache__/
 ```
 
+## Where the assets come from
+
+The npm package ships only the CLI. Skills, references and gate scripts are downloaded at install time from the **git tag matching the installed CLI version**, so upgrading the package is what changes the harness — a later push to the default branch cannot alter an install that already happened.
+
+Because the gate scripts are written to disk and marked executable, the source is treated as a trust boundary:
+
+- Only **HTTPS** sources are accepted (plain HTTP is allowed against `localhost` for the test suite).
+- Downloads have a 30s timeout and a 2 MB per-asset cap.
+- Setting `HARNESS_REPO_URL` overrides the source. The installer announces the override before writing anything — do not point it at a host you do not control.
+
+If the tag for a freshly published version is not visible yet, the installer warns and falls back to the default branch for that run.
+
 ## The Spec-Driven flow
 
 ```
