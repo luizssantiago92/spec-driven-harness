@@ -12,7 +12,7 @@ This file is the contract and the map. Phase procedures live in `references/`; c
 
 ## Critical Rules (read before acting)
 
-**Reference files.** Phase procedures live in `references/` next to this file (`.cursor/skills/references/`, `.claude/skills/references/`). Read a reference **completely** before acting on it. Never act on a partial read.
+**Reference files.** Phase procedures live in `references/` next to this file (`.cursor/skills/references/`, `.claude/skills/references/`). Read a reference **completely** before acting on it. Never act on a partial read. Load the working set per `references/context-limits.md` — one feature at a time, current phase only.
 
 **Gate scripts.** Structural gates live in `.specs/harness/scripts/` at the project root. Run them with `python3`; never assume a project-local `scripts/` directory belongs to this harness.
 
@@ -57,6 +57,9 @@ SPECIFY → DESIGN (optional) → TASKS (optional) → EXECUTE (loop) → VERIFY
 | **Verify** | Yes | `references/validate.md` | `security-review.md` | `validate_state.py` |
 | **Handoff** | Yes | `references/memory.md` | `git-handoff.md` | — |
 | **Quick** | Alternative | `references/quick-mode.md` | — | `check_commit.py` |
+| **Context** | Always | `references/context-limits.md` | — | — |
+
+Context is a load rule, not a pipeline phase. Read it when the session is long or the feature has more than a handful of tasks.
 
 ## Complexity Router
 

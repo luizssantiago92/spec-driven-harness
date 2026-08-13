@@ -24,7 +24,7 @@ Chat language is a personal preference. Set it in your own agent settings if you
 | Skill | Purpose |
 | --- | --- |
 | `.cursor/skills/agent-architecture.md` | SDD hub — contract, phases, gates, complexity router |
-| `.cursor/skills/references/` | Phase procedures (specify, discuss, design, tasks, implement, validate, memory, quick-mode) |
+| `.cursor/skills/references/` | Phase procedures (specify, discuss, design, tasks, implement, validate, memory, quick-mode, context-limits) |
 | `.cursor/skills/task-graph-engineering.md` | Task DAG, parallelism, verify topology |
 | `.cursor/skills/engineering-standards.md` | Code quality, secure coding, git hygiene |
 | `.cursor/skills/security-review.md` | Security checklist for verification |
@@ -36,10 +36,12 @@ Structural gates live in `.specs/harness/scripts/` and require Python 3. A non-z
 
 | When | Command |
 | --- | --- |
-| Before confirming a spec | `python3 .specs/harness/scripts/validate_spec.py .specs/features/[feature]/spec.md` |
-| Before approving tasks | `python3 .specs/harness/scripts/validate_tasks.py .specs/features/[feature]/tasks.md` |
+| Before confirming a spec | `python3 .specs/harness/scripts/validate_spec.py [feature]` |
+| Before approving tasks | `python3 .specs/harness/scripts/validate_tasks.py [feature]` |
 | On each commit | `python3 .specs/harness/scripts/check_commit.py --message "<message>"` |
-| Before declaring done | `python3 .specs/harness/scripts/validate_state.py .specs/features/[feature]` |
+| Before declaring done | `python3 .specs/harness/scripts/validate_state.py [feature]` |
+
+Gates accept a feature name, a feature directory, or a path to the artifact. With no argument they auto-detect when the project has exactly one feature.
 
 If Python is unavailable, perform the same checks by reading the artifact against the reference checklist.
 

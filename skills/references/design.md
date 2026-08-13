@@ -21,6 +21,7 @@ Skipping Design is the default for Simple and Medium tiers.
 - `context.md` when Discuss ran
 - `.specs/STATE.md` decisions (`AD-NNN`)
 - Existing codebase structure and conventions
+- `context-limits.md` — this feature only
 
 ## Output
 

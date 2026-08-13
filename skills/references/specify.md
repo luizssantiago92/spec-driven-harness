@@ -17,6 +17,7 @@ Capture WHAT to build as testable, traceable requirements. Always required.
 - `.specs/STATE.md` decisions (`AD-NNN`) relevant to this area
 - `.specs/LESSONS.md` entries that apply
 - Existing codebase conventions
+- `context-limits.md` — this feature only; do not load sibling specs
 
 ## Output
 

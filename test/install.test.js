@@ -469,3 +469,13 @@ describe("gate execution", () => {
     }
   });
 });
+
+describe("reference catalog", () => {
+  it("includes context-limits next to the phase procedures", () => {
+    assert.equal(
+      REFERENCE_ASSETS.some((asset) => asset.file === "context-limits.md"),
+      true,
+    );
+    assert.equal(REFERENCE_ASSETS.length, 9);
+  });
+});

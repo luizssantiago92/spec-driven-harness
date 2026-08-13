@@ -31,7 +31,7 @@ Run at every session start, before writing any code:
    ```
    Compare with `tasks.md` checkboxes. If commits exist for tasks that STATE says are pending, git is right — update STATE.
 3. **Run the project harness** (tests, lint) before adding new code, so you know the starting baseline.
-4. **Load only what this step needs** — the current feature's spec, plus `context.md` or `design.md` when relevant. Never load two feature specs at once.
+4. **Load only what this step needs** — the current feature's spec, plus `context.md` or `design.md` when relevant. Never load two feature specs at once. See `context-limits.md`.
 5. **Propose the reconciled next step** and confirm it with the owner when it is ambiguous or stale.
 
 ## Pause / Handoff Protocol
