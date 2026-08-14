@@ -204,6 +204,7 @@ Run `npx @luizsantiago/agentic-harness install` again. Existing memory and edite
 
 | Coming from | Manual step |
 | --- | --- |
+| A version before `0.7.2` | Gaps placeholders accept markdown emphasis (`- **none**`, `- *none*`) |
 | A version before `0.7.0` | Stability baseline: shared path/markdown helpers, adversarial matrix in CI, skill PASS language aligned with gates. Free-form audits need a failing matrix case before a gate PR. Read `prd/gate-stability.md` |
 | A version before `0.6.8` | Evidence inside fences or HTML comments does not count. `Files` overlap is case-insensitive and unwraps markdown links. `PASS` with open `Gaps` or Security Review `Result: fail` fails |
 | A version before `0.6.7` | Requirement IDs only under `## Requirements`. Quoted/`../` `Files` paths normalize for overlap. `killed`/`survived` must sit in the sensor section or on a mutant line. Conflicting preamble vs `## Verdict` fails |
