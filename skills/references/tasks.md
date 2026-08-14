@@ -29,10 +29,10 @@ Break the work into atomic tasks with real dependencies and binary done criteria
 1. **Write one task per deliverable.** A task is something you would hand to a single agent and check in one commit.
 2. **Give every task the full field set.** Authoring and the gate require all six:
    - `Requirement` — the spec ID it serves (gated)
-   - `Files` — where the change lands (gated; required; overlap across independent tasks blocks)
+   - `Files` — where the change lands (gated; required; `none` / `—` rejected; overlap across independent tasks blocks)
    - `Depends on` — real dependencies only, or `—` (gated; `—` means none)
    - `Tests` — the test file that proves it (gated; `none` / `—` rejected)
-   - `Gate` — the command that must pass (gated)
+   - `Gate` — the command that must pass (gated; `none` / `—` rejected)
    - `Done when` — binary criterion (gated; `none` / `—` rejected)
 3. **Delete fake edges.** For every "and then", ask whether the next task actually reads the previous task's output. If not, the edge is fake — remove it and the tasks can run in parallel. See `task-graph-engineering.md`.
 4. **Order tasks so dependencies come first.** Forward dependencies fail the gate. When grouping under `### Phase N`, a task must not depend on a task in a later phase.
@@ -49,9 +49,9 @@ python3 .specs/harness/scripts/validate_tasks.py [feature]
 python3 .specs/harness/scripts/validate_tasks.py          # single-feature projects
 ```
 
-Checks task IDs, required fields (including `Files` and `Done when`), dependency direction, later-phase dependencies, cycles, granularity smells, **spec requirement coverage**, and **Files overlap** across independent tasks. `Tests: none` and `Done when: —` fail. Non-zero exit means STOP.
+Checks task IDs, required fields (including `Files` and `Done when`), dependency direction, later-phase dependencies, cycles, granularity smells, **spec requirement coverage**, and **Files overlap** across independent tasks. `Files`/`Tests`/`Gate`/`Done when` set to `none` or `—` fail. Non-zero exit means STOP.
 
-When a sibling `spec.md` exists, every requirement heading ID must appear in at least one task `Requirement` field. Independent tasks (no dependency path either way) must not share a path in `Files`.
+When a sibling `spec.md` exists, every requirement heading ID outside `## Out of Scope` must appear in at least one task `Requirement` field. Independent tasks (no dependency path either way) must not share a path in `Files` (`./path`, `/path`, and `path` count as one).
 
 The gate does not check that `Done when` is philosophically binary — you do. A passing gate is necessary, not sufficient.
 

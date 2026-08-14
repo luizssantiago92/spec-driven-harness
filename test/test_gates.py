@@ -450,6 +450,18 @@ class TasksGateTest(unittest.TestCase):
         self.assertFalse(report.passed)
         self.assertTrue(any("Tests" in error for error in report.errors))
 
+    def test_files_none_fails(self):
+        tasks = VALID_TASKS.replace("src/auth/token.ts", "none", 1)
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("Files" in error for error in report.errors))
+
+    def test_gate_none_fails(self):
+        tasks = VALID_TASKS.replace("- **Gate**: npm test\n", "- **Gate**: none\n", 1)
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("Gate" in error for error in report.errors))
+
     def test_dot_slash_file_paths_count_as_overlap(self):
         tasks = """# Tasks
 
@@ -473,8 +485,47 @@ class TasksGateTest(unittest.TestCase):
         self.assertFalse(report.passed)
         self.assertTrue(any("both write" in error for error in report.errors))
 
+    def test_leading_slash_file_paths_count_as_overlap(self):
+        tasks = """# Tasks
+
+### T1: Create session token module
+- **Requirement**: REQ-001
+- **Files**: /src/auth/token.ts
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+- **Done when**: tokens sign
+
+### T2: Add login endpoint handler
+- **Requirement**: REQ-001
+- **Files**: src/auth/token.ts
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+- **Done when**: endpoint returns 200
+"""
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("both write" in error for error in report.errors))
+
+    def test_out_of_scope_requirement_headings_are_ignored(self):
+        spec = VALID_SPEC + "\n### NOTE-001: Future social login\n- deferred\n"
+        report = validate_tasks.build_report(
+            "tasks.md", VALID_TASKS, spec_text=spec
+        )
+        self.assertTrue(report.passed, report.errors)
+        self.assertEqual(
+            _common.requirement_ids(spec),
+            ["REQ-001"],
+        )
+
     def test_uncovered_spec_requirement_fails(self):
-        spec = VALID_SPEC + "\n### REQ-002: Token refresh\n- WHEN refresh THEN the system SHALL rotate\n"
+        spec = VALID_SPEC.replace(
+            "## Assumptions\n",
+            "### REQ-002: Token refresh\n"
+            "- WHEN refresh THEN the system SHALL rotate\n\n"
+            "## Assumptions\n",
+        )
         report = validate_tasks.build_report(
             "tasks.md", VALID_TASKS, spec_text=spec
         )
@@ -703,6 +754,41 @@ class StateGateTest(unittest.TestCase):
         )
         self.assertFalse(report.passed)
         self.assertTrue(any("Medium+" in e for e in report.errors))
+
+    def test_pass_with_survived_mutant_fails(self):
+        report = validate_state.build_report(
+            self._feature_dir(
+                VALID_VALIDATION.replace(
+                    "killed the mutant", "mutant survived"
+                )
+            )
+        )
+        self.assertFalse(report.passed)
+        self.assertTrue(any("survived" in e for e in report.errors))
+
+    def test_medium_plus_pass_requires_killed_not_only_injected(self):
+        tasks = "# Tasks\n\n" + "".join(
+            f"### T{i}: Add module number {i}\n"
+            f"- **Requirement**: REQ-001\n"
+            f"- **Files**: src/mod{i}.ts\n"
+            f"- **Depends on**: —\n"
+            f"- **Tests**: t.ts\n"
+            f"- **Gate**: npm test\n"
+            f"- **Done when**: module {i} works\n"
+            f"- [x] complete\n\n"
+            for i in range(1, 5)
+        )
+        validation = (
+            "# V\n- Verdict: PASS\n## Coverage\n"
+            "- REQ-001 - test/routes/login.test.ts:24\n"
+            "## Discrimination Sensor\n"
+            "- mutant injected for expiry check\n"
+        )
+        report = validate_state.build_report(
+            self._feature_dir(validation=validation, tasks=tasks)
+        )
+        self.assertFalse(report.passed)
+        self.assertTrue(any("killed" in e for e in report.errors))
 
     def test_empty_design_md_does_not_force_medium_plus(self):
         temp_dir = self._feature_dir(
