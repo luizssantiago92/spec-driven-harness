@@ -37,6 +37,10 @@ jobs:
           test -f skills/agent-architecture.md
           test -f skills/engineering-standards.md
           test -f skills/security-review.md
+          test -f skills/appsec.md
+          test -f skills/qa-strategy.md
+          test -f skills/code-simplify.md
+          test -f skills/ship-ready.md
           test -f skills/git-handoff.md
           test -f skills/task-graph-engineering.md
           test -f rules/engineering-baseline.mdc

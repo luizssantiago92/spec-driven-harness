@@ -20,6 +20,7 @@ When sub-agents are available, dispatch the verifier as a separate agent (see `t
 - `security-review.md` for the security checklist
 - `appsec.md` only when Complex or an attack-surface trigger fires — then **drop** it before QA
 - `qa-strategy.md` only when Complex, multi-step UI, or an explicit regression ask — never together with `appsec.md`
+- Do **not** load `ship-ready.md` or `code-simplify.md` during Verify (ship is owner-triggered after PASS; simplify is Execute-side)
 - `context-limits.md` — load the spec, the diff, and the tests the spec names; do not load the author's chat; at most one conditional sister at a time
 
 ## Output

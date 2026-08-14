@@ -22,6 +22,7 @@ Agents are good at generating code and bad at knowing when to stop. The harness 
 4. **Author ≠ verifier** — Verify runs in a clean context with test-path evidence
 5. **Risk-sized Verify** — OWASP checklist always; AppSec / QA / walkthrough only when the feature warrants it
 6. **Clearer specs and jobs** — EARS-shaped criteria, a REQ↔test table on Tasks, a short “may I commit?” check on Execute (guides — not extra Python brakes)
+7. **Optional simplify / ship** — clarity pass or launch checklist only when triggered; still one guide at a time
 
 ## Start here
 
