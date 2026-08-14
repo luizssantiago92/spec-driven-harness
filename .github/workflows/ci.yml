@@ -53,6 +53,7 @@ jobs:
           test -f skills/references/quick-mode.md
           test -f skills/references/context-limits.md
           test -f skills/references/lessons.md
+          test -f skills/references/sub-agents.md
 
       - name: Verify gate scripts exist and compile
         run: |

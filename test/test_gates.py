@@ -282,7 +282,8 @@ class TasksGateTest(unittest.TestCase):
             f"- **Requirement**: REQ-001\n"
             f"- **Depends on**: T{3 if i == 1 else i - 1}\n"
             f"- **Tests**: t.ts\n"
-            f"- **Gate**: npm test\n\n"
+            f"- **Gate**: npm test\n"
+            f"- **Done when**: thing {i} works\n\n"
             for i in (1, 2, 3)
         )
         report = validate_tasks.build_report("tasks.md", tasks)
@@ -294,8 +295,10 @@ class TasksGateTest(unittest.TestCase):
             "# Tasks\n\n### T1000: Add the last module\n"
             "- **Requirement**: REQ-001\n- **Depends on**: —\n"
             "- **Tests**: t.ts\n- **Gate**: npm test\n"
+            "- **Done when**: last module is exported\n"
         )
         report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertTrue(report.passed, report.errors)
         self.assertTrue(any("1 task(s)" in check for check in report.checks))
 
     def test_long_dependency_chain_does_not_exhaust_the_stack(self):
@@ -304,7 +307,8 @@ class TasksGateTest(unittest.TestCase):
             f"- **Requirement**: REQ-001\n"
             f"- **Depends on**: {'—' if i == 1 else f'T{i - 1}'}\n"
             f"- **Tests**: t.ts\n"
-            f"- **Gate**: npm test\n\n"
+            f"- **Gate**: npm test\n"
+            f"- **Done when**: module {i} works\n\n"
             for i in range(1, 3001)
         )
         report = validate_tasks.build_report("tasks.md", tasks)
@@ -320,12 +324,14 @@ class TasksGateTest(unittest.TestCase):
 - **Depends on**: —
 - **Tests**: t.ts
 - **Gate**: npm test
+- **Done when**: tokens sign and verify
 
 ### T2: Add login endpoint handler
 - **Requirement**: REQ-001
 - **Depends on**: T1
 - **Tests**: t.ts
 - **Gate**: npm test
+- **Done when**: endpoint returns 200
 """
         report = validate_tasks.build_report("tasks.md", tasks)
         self.assertTrue(report.passed, report.errors)
@@ -343,6 +349,7 @@ class TasksGateTest(unittest.TestCase):
 - **Depends on**: —
 - **Tests**: t.ts
 - **Gate**: npm test
+- **Done when**: endpoint returns 200
 
 ### Phase 1
 
@@ -351,6 +358,7 @@ class TasksGateTest(unittest.TestCase):
 - **Depends on**: T2
 - **Tests**: t.ts
 - **Gate**: npm test
+- **Done when**: tokens sign and verify
 """
         report = validate_tasks.build_report("tasks.md", tasks)
         self.assertFalse(report.passed)
@@ -371,6 +379,7 @@ class TasksGateTest(unittest.TestCase):
 - **Depends on**: —
 - **Tests**: t.ts
 - **Gate**: npm test
+- **Done when**: endpoint returns 200
 
 # Phase 1
 
@@ -379,6 +388,7 @@ class TasksGateTest(unittest.TestCase):
 - **Depends on**: T2
 - **Tests**: t.ts
 - **Gate**: npm test
+- **Done when**: tokens sign and verify
 """
         report = validate_tasks.build_report("tasks.md", tasks)
         self.assertFalse(report.passed)
@@ -401,6 +411,72 @@ class TasksGateTest(unittest.TestCase):
         tasks = VALID_TASKS.replace(
             "Create session token module", "Fix TODO later in tokens"
         )
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertTrue(report.passed, report.errors)
+
+    def test_missing_done_when_fails(self):
+        tasks = VALID_TASKS.replace("- **Done when**: module signs and verifies tokens\n", "", 1)
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("Done When" in error for error in report.errors))
+
+    def test_uncovered_spec_requirement_fails(self):
+        spec = VALID_SPEC + "\n### REQ-002: Token refresh\n- WHEN refresh THEN the system SHALL rotate\n"
+        report = validate_tasks.build_report(
+            "tasks.md", VALID_TASKS, spec_text=spec
+        )
+        self.assertFalse(report.passed)
+        self.assertTrue(any("REQ-002" in error for error in report.errors))
+
+    def test_spec_requirements_covered_by_tasks_pass(self):
+        report = validate_tasks.build_report(
+            "tasks.md", VALID_TASKS, spec_text=VALID_SPEC
+        )
+        self.assertTrue(report.passed, report.errors)
+        self.assertTrue(any("covered by tasks" in check for check in report.checks))
+
+    def test_independent_tasks_sharing_a_file_fail(self):
+        tasks = """# Tasks
+
+### T1: Create session token module
+- **Requirement**: REQ-001
+- **Files**: src/auth/shared.ts
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+- **Done when**: tokens sign
+
+### T2: Add login endpoint handler
+- **Requirement**: REQ-001
+- **Files**: src/auth/shared.ts
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+- **Done when**: endpoint returns 200
+"""
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("both write" in error for error in report.errors))
+
+    def test_dependent_tasks_may_share_a_file(self):
+        tasks = """# Tasks
+
+### T1: Create session token module
+- **Requirement**: REQ-001
+- **Files**: src/auth/token.ts
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+- **Done when**: tokens sign
+
+### T2: Extend token module helpers
+- **Requirement**: REQ-001
+- **Files**: src/auth/token.ts
+- **Depends on**: T1
+- **Tests**: t.ts
+- **Gate**: npm test
+- **Done when**: helpers export
+"""
         report = validate_tasks.build_report("tasks.md", tasks)
         self.assertTrue(report.passed, report.errors)
 
@@ -503,6 +579,48 @@ class StateGateTest(unittest.TestCase):
         )
         self.assertFalse(report.passed)
         self.assertTrue(any("evidence" in e for e in report.errors))
+
+    def test_requirement_without_same_line_evidence_fails(self):
+        report = validate_state.build_report(
+            self._feature_dir(
+                "# V\n- Verdict: PASS\n## Coverage\n"
+                "- REQ-001 covered somehow\n"
+                "- extra - test/routes/login.test.ts:24\n"
+                "## Discrimination Sensor\n- mutant killed\n"
+            )
+        )
+        self.assertFalse(report.passed)
+        self.assertTrue(any("REQ-001" in e for e in report.errors))
+
+    def test_medium_plus_requires_discrimination_sensor(self):
+        tasks = "# Tasks\n\n" + "".join(
+            f"### T{i}: Add module number {i}\n"
+            f"- **Requirement**: REQ-001\n"
+            f"- **Depends on**: —\n"
+            f"- **Tests**: t.ts\n"
+            f"- **Gate**: npm test\n"
+            f"- **Done when**: module {i} works\n"
+            f"- [x] complete\n\n"
+            for i in range(1, 5)
+        )
+        validation = (
+            "# V\n- Verdict: PASS\n## Coverage\n"
+            "- REQ-001 - test/routes/login.test.ts:24\n"
+        )
+        report = validate_state.build_report(
+            self._feature_dir(validation=validation, tasks=tasks)
+        )
+        self.assertFalse(report.passed)
+        self.assertTrue(any("Medium+" in e for e in report.errors))
+
+    def test_small_feature_sensor_absence_is_a_warning(self):
+        validation = (
+            "# V\n- Verdict: PASS\n## Coverage\n"
+            "- REQ-001 - test/routes/login.test.ts:24\n"
+        )
+        report = validate_state.build_report(self._feature_dir(validation=validation))
+        self.assertTrue(report.passed, report.errors)
+        self.assertTrue(any("discrimination sensor" in w for w in report.warnings))
 
 
 @contextmanager

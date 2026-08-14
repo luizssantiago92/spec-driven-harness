@@ -104,6 +104,8 @@ Maps to SDD: `/tasks` → `/loop` (workers) → `/verify` (diamond verify node) 
 - Each worker implements → gates → commits each of its tasks in order, then reports a compact summary: tasks done, commit hashes, test counts, deviations.
 - Workers never spawn further sub-agents.
 
+Full operational contract (worker payload, compact summary template, failure table, merge owner steps): `references/sub-agents.md`.
+
 **Verifier** — After the final task, dispatch a fresh verifier regardless of batch count. It is the closing step of Execute, never prompted. See `references/validate.md`.
 
 **Model tier per role** — When the harness allows choosing a model per sub-agent:
