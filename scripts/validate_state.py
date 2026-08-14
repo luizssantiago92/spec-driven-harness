@@ -47,10 +47,8 @@ VERDICT_HEADING = re.compile(
 EVIDENCE = re.compile(r"[\w./\\-]+\.[A-Za-z][A-Za-z0-9]{0,9}:\d{1,6}\b")
 URL = re.compile(r"\b[a-z][a-z0-9+.-]*://\S+", re.IGNORECASE)
 SENSOR = re.compile(r"(discrimination sensor|mutant)", re.IGNORECASE)
-SENSOR_RESULT = re.compile(
-    r"\b(killed|survived|injected|discrimination sensor)\b",
-    re.IGNORECASE,
-)
+# Outcome words only — the section title "Discrimination Sensor" must not count.
+SENSOR_RESULT = re.compile(r"\b(killed|survived|injected)\b", re.IGNORECASE)
 OPEN_TASK = re.compile(r"^\s*[-*]\s*\[ \]\s+(?P<label>.+)$", re.MULTILINE)
 TASK_HEADING = re.compile(
     r"^#{2,6}\s*T\d{1,6}\b", re.MULTILINE | re.IGNORECASE
@@ -77,9 +75,10 @@ def find_evidence(text: str) -> list[str]:
 
 
 def is_medium_plus(feature_dir: Path) -> bool:
-    """Medium+ when design exists, tasks are substantial, or work is phased."""
+    """Medium+ when a non-empty design exists, tasks are substantial, or work is phased."""
 
-    if (feature_dir / "design.md").is_file():
+    design_path = feature_dir / "design.md"
+    if design_path.is_file() and design_path.read_text(encoding="utf-8").strip():
         return True
 
     tasks_path = feature_dir / "tasks.md"

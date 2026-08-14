@@ -420,6 +420,37 @@ class TasksGateTest(unittest.TestCase):
         self.assertFalse(report.passed)
         self.assertTrue(any("Done When" in error for error in report.errors))
 
+    def test_placeholder_done_when_fails(self):
+        tasks = VALID_TASKS.replace(
+            "module signs and verifies tokens", "—", 1
+        )
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("Done When" in error for error in report.errors))
+
+    def test_dot_slash_file_paths_count_as_overlap(self):
+        tasks = """# Tasks
+
+### T1: Create session token module
+- **Requirement**: REQ-001
+- **Files**: ./src/auth/token.ts
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+- **Done when**: tokens sign
+
+### T2: Add login endpoint handler
+- **Requirement**: REQ-001
+- **Files**: src/auth/token.ts
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+- **Done when**: endpoint returns 200
+"""
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("both write" in error for error in report.errors))
+
     def test_uncovered_spec_requirement_fails(self):
         spec = VALID_SPEC + "\n### REQ-002: Token refresh\n- WHEN refresh THEN the system SHALL rotate\n"
         report = validate_tasks.build_report(
@@ -612,6 +643,39 @@ class StateGateTest(unittest.TestCase):
         )
         self.assertFalse(report.passed)
         self.assertTrue(any("Medium+" in e for e in report.errors))
+
+    def test_sensor_heading_alone_is_not_an_outcome(self):
+        tasks = "# Tasks\n\n" + "".join(
+            f"### T{i}: Add module number {i}\n"
+            f"- **Requirement**: REQ-001\n"
+            f"- **Depends on**: —\n"
+            f"- **Tests**: t.ts\n"
+            f"- **Gate**: npm test\n"
+            f"- **Done when**: module {i} works\n"
+            f"- [x] complete\n\n"
+            for i in range(1, 5)
+        )
+        validation = (
+            "# V\n- Verdict: PASS\n## Coverage\n"
+            "- REQ-001 - test/routes/login.test.ts:24\n"
+            "## Discrimination Sensor\n"
+            "- noted for later\n"
+        )
+        report = validate_state.build_report(
+            self._feature_dir(validation=validation, tasks=tasks)
+        )
+        self.assertFalse(report.passed)
+        self.assertTrue(any("Medium+" in e for e in report.errors))
+
+    def test_empty_design_md_does_not_force_medium_plus(self):
+        temp_dir = self._feature_dir(
+            "# V\n- Verdict: PASS\n## Coverage\n"
+            "- REQ-001 - test/routes/login.test.ts:24\n"
+        )
+        (temp_dir / "design.md").write_text("   \n", encoding="utf-8")
+        report = validate_state.build_report(temp_dir)
+        self.assertTrue(report.passed, report.errors)
+        self.assertTrue(any("discrimination sensor" in w for w in report.warnings))
 
     def test_small_feature_sensor_absence_is_a_warning(self):
         validation = (

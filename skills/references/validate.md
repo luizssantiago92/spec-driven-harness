@@ -104,7 +104,7 @@ python3 .specs/harness/scripts/validate_state.py [feature]
 python3 .specs/harness/scripts/validate_state.py          # single-feature projects
 ```
 
-Checks that the report exists, the verdict is exactly PASS, every spec requirement ID shares a line with test `file:line` evidence, and no task remains open. On Medium+ features (`design.md`, 4+ tasks, or 2+ phases) a discrimination-sensor / mutant result is **blocking**; below that it is a warning (`--strict` still promotes warnings). Non-zero exit means the feature is not done.
+Checks that the report exists, the verdict is exactly PASS, every spec requirement ID shares a line with test `file:line` evidence, and no task remains open. On Medium+ features (`design.md` with content, 4+ tasks, or 2+ phases) a discrimination-sensor **outcome** (`killed` / `survived` / `injected`) is **blocking** — the section heading alone is not enough. Below Medium+ a missing outcome is a warning (`--strict` still promotes warnings). Non-zero exit means the feature is not done.
 
 The gate cannot judge whether a cited test actually asserts the criterion. That judgment is the verifier's; a green gate with a weak assertion is still a FAIL in the report.
 
