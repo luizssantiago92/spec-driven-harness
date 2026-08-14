@@ -38,7 +38,7 @@ Plan → Test → Implement → Gate → Commit → Next
 3. **Implement** — The smallest change that makes the test pass, following the conventions already in the codebase.
 4. **Gate** — Run the task's `Gate` command. The runner decides, not your judgment. On failure, follow the playbook below.
 5. **Mark complete** — Check the task box in `tasks.md` in the same change set.
-6. **Commit** — One atomic commit including the code, the tests, and the `tasks.md` update.
+6. **Commit** — One atomic commit including the code, the tests, and the `tasks.md` update — only after Adequacy A–D pass.
 
 ```bash
 python3 .specs/harness/scripts/check_commit.py --message "feat(auth): add token refresh"
@@ -46,6 +46,18 @@ git add [files] .specs/features/[feature]/tasks.md
 git commit -m "feat(auth): add token refresh"
 ```
 
+## Adequacy (before commit)
+
+Verifier judgment, not a structural gate. If any check is No, do not commit — continue the cycle or escalate.
+
+| Check | Ask |
+| --- | --- |
+| **A Outcome** | Does the new test assert this task’s `Done when` / spec criterion (not merely that code ran)? |
+| **B Scope** | Do `git status` and the task `Files` list agree — no sibling files in the index? |
+| **C Gate** | Did this task’s `Gate` command pass? |
+| **D Spec** | No extra behavior outside the spec? If the spec is wrong, stop and follow Spec Deviation (`SPEC_DEVIATION`) — do not adapt in code. |
+
+A gate that passes while A or D fails is not done.
 ## Gate Failure Playbook
 
 A failing gate is information. Do not skip, delete, or loosen a test to make it pass.
