@@ -187,7 +187,7 @@ Even when Tasks is skipped, Execute opens by listing the atomic steps. More than
 - **Discrimination sensor** — mutants injected into an isolated scratch copy, never `git stash`; a surviving mutant becomes a fix task. On gate Medium+ features (`design.md` with content, 4+ tasks, or 2+ phases) the completion gate **blocks** if the sensor result is missing.
 - **Security review** — OWASP checklist, with a documented lightweight path for changes with no auth or API surface
 - **Conditional AppSec / QA** — on Complex or risk surfaces, load `appsec.md` then `qa-strategy.md` one at a time (verifier judgment; not gated)
-- **Lean Interactive UAT** — on Complex + user-facing work, a short walkthrough after automated checks (verifier judgment)
+- **Lean Interactive UAT** — on Complex + user-facing work, a short walkthrough after automated checks (verifier judgment; `validate_state.py` does not run the walkthrough)
 - **Bounded loop** — fix and re-verify at most three times, then escalate
 
 ## Memory

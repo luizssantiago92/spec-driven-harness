@@ -91,10 +91,19 @@ export const DEFAULT_FIXTURES = {
 
 /**
  * @param {Record<string, string>} [fixtures]
+ * @param {{ redirects?: Record<string, string> }} [options]
  */
-export function createMockAssetServer(fixtures = DEFAULT_FIXTURES) {
+export function createMockAssetServer(fixtures = DEFAULT_FIXTURES, options = {}) {
+  const redirects = options.redirects ?? {};
   const server = http.createServer((req, res) => {
-    const body = fixtures[req.url ?? ""];
+    const key = req.url ?? "";
+    const location = redirects[key];
+    if (location !== undefined) {
+      res.writeHead(302, { Location: location });
+      res.end("");
+      return;
+    }
+    const body = fixtures[key];
     if (body === undefined) {
       res.writeHead(404, { "Content-Type": "text/plain; charset=utf-8" });
       res.end("not found");

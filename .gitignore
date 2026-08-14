@@ -4,6 +4,11 @@ node_modules/
 __pycache__/
 *.py[cod]
 
+# Secrets / local env
+.env
+.env.*
+!.env.example
+
 # Installer output in this source repo (consumers commit their own .specs/)
 .cursor/
 .claude/

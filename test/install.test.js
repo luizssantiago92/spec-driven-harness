@@ -6,6 +6,7 @@ import { describe, it } from "node:test";
 
 import {
   assertSafeAssetBase,
+  assertSafeDownloadUrl,
   HARNESS_SCRIPTS_DIR,
   LESSONS_HEADER,
   PINNED_REF,
@@ -18,6 +19,7 @@ import {
   STATE_HEADER,
 } from "../lib/constants.js";
 import { packagedAssetPath, resolveInstallSource } from "../lib/assets.js";
+import { downloadToFile } from "../lib/download.js";
 import { injectCursorRules } from "../lib/cursorrules.js";
 import { runGate } from "../lib/gates.js";
 import { install } from "../lib/install.js";
@@ -60,7 +62,9 @@ async function withMockServer(fn, options) {
     return;
   }
 
-  const mockServer = await createMockAssetServer(options?.fixtures);
+  const mockServer = await createMockAssetServer(options?.fixtures, {
+    redirects: options?.redirects,
+  });
   try {
     await fn(mockServer);
   } finally {
@@ -614,6 +618,101 @@ describe("packaged assets", () => {
     ]) {
       await fs.access(packagedAssetPath(asset.remotePath));
     }
+  });
+});
+
+describe("download safety", () => {
+  it("follows same-host redirects that stay on an allowed URL", async () => {
+    await withMockServer(
+      async (mockServer) => {
+        const dest = path.join(await createTempDir("ah-redir-ok-"), "asset.md");
+        await downloadToFile(
+          `${mockServer.baseUrl}/skills/agent-architecture.md`,
+          dest,
+        );
+        const body = await fs.readFile(dest, "utf8");
+        assert.match(body, /Agent Architecture/);
+        await fs.rm(path.dirname(dest), { recursive: true, force: true });
+      },
+      {
+        redirects: {
+          "/skills/agent-architecture.md": "/skills/agent-architecture.md?ok=1",
+        },
+        fixtures: {
+          "/skills/agent-architecture.md?ok=1": SKILL_FIXTURE,
+        },
+      },
+    );
+  });
+
+  it("rejects a redirect hop to a disallowed host", async () => {
+    await withMockServer(
+      async (mockServer) => {
+        const dest = path.join(
+          await createTempDir("ah-redir-bad-"),
+          "asset.md",
+        );
+        await assert.rejects(
+          () =>
+            downloadToFile(
+              `${mockServer.baseUrl}/skills/agent-architecture.md`,
+              dest,
+            ),
+          /disallowed URL|only HTTPS sources are allowed/,
+        );
+        assert.equal(await pathExists(dest), false);
+        await fs.rm(path.dirname(dest), { recursive: true, force: true });
+      },
+      {
+        redirects: {
+          "/skills/agent-architecture.md": "http://evil.example.com/payload",
+        },
+      },
+    );
+  });
+
+  it("refuses to overwrite a destination symlink", async () => {
+    const cwd = await createTempDir("ah-symlink-");
+    const secret = path.join(cwd, "secret.env");
+    const link = path.join(cwd, "skill.md");
+    await fs.writeFile(secret, "SECRET=keep\n", "utf8");
+    await fs.symlink(secret, link);
+
+    await withMockServer(async (mockServer) => {
+      await assert.rejects(
+        () =>
+          downloadToFile(
+            `${mockServer.baseUrl}/skills/agent-architecture.md`,
+            link,
+          ),
+        /Refusing to write through symlink/,
+      );
+      assert.equal(await fs.readFile(secret, "utf8"), "SECRET=keep\n");
+    });
+
+    await fs.rm(cwd, { recursive: true, force: true });
+  });
+
+  it("rejects packaged paths that escape the package root", () => {
+    assert.throws(
+      () => packagedAssetPath("../outside.md"),
+      /outside package root/,
+    );
+    assert.throws(
+      () => packagedAssetPath("skills/../../outside.md"),
+      /outside package root/,
+    );
+  });
+
+  it("assertSafeDownloadUrl matches the HTTPS policy", () => {
+    assert.equal(
+      assertSafeDownloadUrl("https://example.com/a.md"),
+      "https://example.com/a.md",
+    );
+    assert.throws(
+      () => assertSafeDownloadUrl("http://evil.example.com/a.md"),
+      /only HTTPS sources are allowed/,
+    );
   });
 });
 

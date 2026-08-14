@@ -32,7 +32,7 @@ Does every goal have a job? Does every job say where it changes, how we’ll kno
 Does the commit message look like a normal engineering commit (clear type, not a novel ending with a period)?
 
 **Before you call the feature finished**  
-Is there a real pass/fail from a fresh review? Is there a pointer to a **test** that backs each goal? For bigger work, did we poke the tests with a small “what if we break this?” check? Are leftover “still broken” notes still sitting under Gaps?
+Is there a real pass/fail from a fresh review? Is there a pointer to a **test** that backs each goal? For bigger work (a design write-up, several tasks, or more than one phase group), did we poke the tests with a small “what if we break this?” check? Are leftover “still broken” notes still sitting under Gaps?
 
 ## What “PASS” means here
 
@@ -42,6 +42,8 @@ It does **not** mean: users will love it, security is perfect forever, or every 
 
 If Gaps still lists real problems, or security was marked fail, that’s not a PASS — rewrite the verdict or fix the issues.
 
+A human walkthrough (click through the UI) helps on big user-facing work, but the harness **does not** run that walkthrough — the verifier still owns that call.
+
 ## Guarantees (honest version)
 
 | The harness **does** | The harness **does not** |
@@ -50,6 +52,7 @@ If Gaps still lists real problems, or security was marked fail, that’s not a P
 | Demand proof links to tests at the end | Judge if those tests are brilliant |
 | Keep parallel work from colliding on files | Run your app in production for you |
 | Save tokens by loading only the current phase | Magically make a weak idea strong |
+| Ask for a mutant/sensor result on bigger work | Run an interactive UI walkthrough for you |
 
 ## How it feels in practice
 

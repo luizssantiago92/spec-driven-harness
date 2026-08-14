@@ -22,9 +22,16 @@ jobs:
       contents: write
 
     steps:
+      - name: Require main for manual publish
+        if: github.event_name == 'workflow_dispatch' && github.ref != 'refs/heads/main'
+        run: |
+          echo "Manual publish must run from main (got ${{ github.ref }})."
+          exit 1
+
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.event_name == 'workflow_dispatch' && 'main' || github.ref }}
 
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -58,4 +65,4 @@ jobs:
 
       - name: Push version tag (manual dispatch)
         if: github.event_name == 'workflow_dispatch'
-        run: git push origin HEAD:main --follow-tags
+        run: git push origin main --follow-tags
