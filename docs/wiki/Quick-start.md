@@ -45,6 +45,31 @@ If the report still lists open gaps, it isn’t done.
 - The agent isn’t inventing a giant PR in silence  
 - You know the next step (do job 1, or fix a failed check)
 
+## Everyday checks (optional CLI)
+
+After install, you can run the same brakes from the terminal. Think of them as “is this paperwork honest?” — not as a full product test suite.
+
+```bash
+# Is the written goal complete enough?
+npx @luizsantiago/agentic-harness validate-spec auth
+
+# Does this commit message follow the house style?
+npx @luizsantiago/agentic-harness check-commit --message "feat(auth): add token refresh"
+
+# What lessons has the project already confirmed?
+npx @luizsantiago/agentic-harness lessons list --status confirmed
+```
+
+Replace `auth` with your feature folder name under `.specs/features/`. A non-zero exit means: stop, fix the artifact, run again.
+
+| Command | Plain meaning |
+| --- | --- |
+| `validate-spec` | The written goal has the required sections and real criteria |
+| `check-commit` | The commit title looks Conventional (type, length, no trailing period) |
+| `lessons list` | Show rules the team already promoted — candidates stay hidden |
+
+More gates (tasks, “are we actually done?”) live in the [README Gates section](https://github.com/luizssantiago92/spec-driven-harness#gates).
+
 ## If something feels stuck
 
 - **No Python?** The playbook still guides the agent; install Python 3 when you want the automatic stop checks.  

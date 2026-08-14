@@ -31,6 +31,25 @@ When you claim you’re done, the gate looks for real artifacts—not vibes:
 
 If those aren’t there, **done** doesn’t stick.
 
+## Run the brakes yourself
+
+Same checks the agent should run — from your shell after install:
+
+```bash
+npx @luizsantiago/agentic-harness validate-spec auth
+npx @luizsantiago/agentic-harness check-commit --message "feat(auth): add token refresh"
+npx @luizsantiago/agentic-harness lessons list --status confirmed
+```
+
+| Command | Catches |
+| --- | --- |
+| `validate-spec` | Thin or incomplete written goals |
+| `check-commit` | Sloppy commit titles |
+| `lessons list --status confirmed` | Nothing broken — lists hard-won rules to reuse |
+
+Fail → fix the file → re-run. Full reject lists: [README Gates](https://github.com/luizssantiago92/spec-driven-harness#gates).
+
+
 ## What the gate **does not** fully enforce
 
 These stay in the **guides** (judgment and authoring quality):
