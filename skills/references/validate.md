@@ -108,7 +108,7 @@ Checks that the report exists, the verdict is exactly PASS in the **preamble** (
 
 The gate cannot judge whether a cited test actually asserts the criterion. That judgment is the verifier's; a green gate with a weak assertion is still a FAIL in the report.
 
-**Gate-enforced vs verifier judgment.** `validate_state.py` enforces form: verdict scope, test-path evidence, REQ↔evidence lines, sensor outcomes on Medium+, open Gaps, Security `Result: fail`, open tasks. The following stay **verifier judgment** (not structural gates): whether each coverage row's test truly asserts the outcome, whether a lightweight Security path is justified, and Interactive UAT / walkthrough success. See `prd/gate-stability.md`.
+**Gate-enforced vs verifier judgment.** `validate_state.py` enforces form: verdict scope, test-path evidence, REQ↔evidence lines, sensor outcomes on Medium+, open Gaps, Security `Result: fail`, open tasks. The following stay **verifier judgment** (not structural gates): whether each coverage row's test truly asserts the outcome, whether a lightweight Security path is justified, and Interactive UAT / walkthrough success. See the [gate stability contract](https://github.com/luizssantiago92/spec-driven-harness/blob/main/prd/gate-stability.md).
 
 ## Template
 
@@ -160,7 +160,7 @@ An unjustified lightweight path is a gap.
 
 ## Failure Handling
 
-**PASS requirements.** Write `Verdict: PASS` only when every coverage row passes (verifier judgment), every mutant is killed (gate checks sensor/mutant lines), Security is pass or a justified lightweight path (gate blocks `Result: fail`; justification quality is verifier judgment), Gaps is `none` (gate blocks open Gaps bullets), Interactive UAT is pass or correctly skipped (verifier judgment; not gated), and `validate_state.py` exits 0. Anything else is FAIL — do not write PASS and list gaps underneath.
+**PASS requirements.** Write `Verdict: PASS` only when every coverage row passes (verifier judgment); no surviving mutant appears on a sensor/mutant line (gate blocks that); on Medium+ a sensor **outcome** is present and at least one mutant is `killed` (below Medium+ a missing outcome is a gate warning unless `--strict`); Security is pass or a justified lightweight path (gate blocks `Result: fail`; justification quality is verifier judgment); Gaps is `none` (gate blocks open Gaps bullets); Interactive UAT is pass or correctly skipped (verifier judgment; not gated); and `validate_state.py` exits 0. Anything else is FAIL — do not write PASS and list gaps underneath.
 
 - FAIL verdict → gaps become fix tasks; return to `implement.md`.
 - The fix → re-verify loop is bounded to **3 iterations**, then escalate to the owner with the blocking gap.

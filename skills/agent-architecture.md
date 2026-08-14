@@ -82,7 +82,7 @@ Complexity determines depth. Do not run every phase on every change.
 
 **Rules**
 
-- **Specify and Verify are always required** — you must know WHAT was asked and prove it was delivered.
+- **Specify and Verify are always required on the full pipeline** — you must know WHAT was asked and prove it was delivered. **Quick** is the exception: the express lane in `references/quick-mode.md` (describe → implement → verify → commit) with only `check_commit.py` as a structural gate.
 - **Design is skipped** when there are no architectural decisions and no new patterns.
 - **Tasks is skipped** when there are ≤3 obvious steps.
 - **Discuss is triggered inside Specify** when the feature touches persistence, external calls, auth, payments, concurrency, or state transitions, or when the owner's intent is ambiguous.
