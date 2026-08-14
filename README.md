@@ -27,7 +27,7 @@ Re-running refreshes skills, references and gate scripts, and upgrades the harne
 | Artifact | Purpose |
 | --- | --- |
 | `.cursor/skills/agent-architecture.md` | Hub — execution contract, phase map, complexity router |
-| `.cursor/skills/references/*.md` | Per-phase procedures (10 files) |
+| `.cursor/skills/references/*.md` | Per-phase procedures (11 files) |
 | `.cursor/skills/task-graph-engineering.md` | Task DAG, parallelism, diamond verify, sub-agent batches |
 | `.cursor/skills/engineering-standards.md` | Secure coding, code quality, one writer per file |
 | `.cursor/skills/security-review.md` | OWASP checklist for `/verify` |
@@ -66,11 +66,13 @@ A non-zero exit means stop, fix the artifact, and re-run.
 
 | Gate | Rejects |
 | --- | --- |
-| `validate_spec` | Missing `Requirements` / `Assumptions` / `Out of Scope`, a criterion without `SHALL` or `MUST`, malformed IDs, a requirement without acceptance criteria, unfilled template placeholders |
-| `validate_tasks` | Missing required field (`Requirement`, `Depends on`, `Tests`, `Gate`), unknown or forward dependency, dependency on a later phase, dependency cycle, a title on the vague-phrase list |
+| `validate_spec` | Missing `Requirements` / `Assumptions` / `Out of Scope`, a criterion without `SHALL` or `MUST`, malformed IDs, a requirement without acceptance criteria, unfilled template placeholders outside fenced samples |
+| `validate_tasks` | Missing required field (`Requirement`, `Depends on`, `Tests`, `Gate`, `Done when`), unknown or forward dependency, dependency on a later phase, dependency cycle, a title on the vague-phrase list, uncovered spec requirement IDs, independent tasks sharing a `Files` path |
 | `check_commit` | Non-Conventional header, unknown type, header over 72 characters, trailing period |
-| `validate_state` | Missing `validation.md`, verdict other than PASS, no `file:line` evidence, open task |
-| `lessons` | Add without `--source`, source other than `validation.md`, corrupt `lessons.json` |
+| `validate_state` | Missing `validation.md`, verdict other than exact `PASS`/`PASSED` (`PASS WITH GAPS` fails), no **test** `file:line` evidence, a spec requirement without same-line test evidence, open task, Medium+ feature without a discrimination-sensor result |
+| `lessons` | Add without `--source`, source other than `validation.md`, source outside `.specs/`, corrupt `lessons.json` (missing `title`/`rule`) |
+
+Fenced code samples and markdown tables are documentation, not criteria or tasks. `Depends on: REQ-T100` is a requirement id, not task `T100`. Evidence-or-zero accepts paths such as `test/auth/token.test.ts:41`, not `config.yaml:12`.
 
 To enforce the commit format without involving the agent:
 
@@ -103,9 +105,10 @@ SPECIFY → DISCUSS (conditional) → DESIGN (optional) → TASKS (optional) →
 | Handoff | `/handoff` | `references/memory.md` | `git-handoff` | — |
 | Quick | `/quick` | `references/quick-mode.md` | — | `check_commit.py` |
 | Context | — | `references/context-limits.md` | — | — |
+| Sub-agents | — | `references/sub-agents.md` | `task-graph-engineering` | — |
 | Lessons | `/lessons` | `references/lessons.md` | — | `lessons.py` |
 
-Context is a load rule and Lessons is a FAIL-path step — neither is a sequential pipeline phase.
+Context is a load rule, Sub-agents is the Execute scaling protocol, and Lessons is a FAIL-path step — none is a sequential pipeline phase.
 
 `/task-graph` draws the job DAG before `/loop`; `/sync-spec` commits the current feature's artifacts without a full handoff.
 
@@ -134,9 +137,9 @@ Even when Tasks is skipped, Execute opens by listing the atomic steps. More than
 ## Verification
 
 - **Spec-anchored check** — every criterion has a test asserting the outcome the spec defines
-- **Discrimination sensor** — mutants injected into an isolated scratch copy, never `git stash`; a surviving mutant becomes a fix task
+- **Evidence-or-zero** — a requirement is done only with a `file:line` reference to a passing assertive **test** on the same coverage line as the requirement ID (`test/auth/token.test.ts:41`). A config path is not evidence. The verdict must be exactly `PASS` or `PASSED`.
+- **Discrimination sensor** — mutants injected into an isolated scratch copy, never `git stash`; a surviving mutant becomes a fix task. On Medium+ features the completion gate **blocks** if the sensor result is missing.
 - **Security review** — OWASP checklist, with a documented lightweight path for changes with no auth or API surface
-- **Evidence-or-zero** — a requirement is done only with a `file:line` reference to a passing assertive test
 - **Bounded loop** — fix and re-verify at most three times, then escalate
 
 ## Memory
@@ -188,6 +191,8 @@ Run `npx @luizsantiago/agentic-harness install` again. Existing memory and edite
 
 | Coming from | Manual step |
 | --- | --- |
+| A version before `0.6.0` | Tasks need `Done when`. Re-run `validate_tasks` against the sibling `spec.md` (every REQ needs a task). Independent tasks cannot share `Files`. Closing a Medium+ feature requires a discrimination-sensor result and same-line REQ ↔ test evidence in `validation.md` |
+| A version before `0.5.4` | Re-run the gates. `PASS WITH GAPS` is no longer a pass; evidence must cite a test path; fenced samples and markdown tables are not criteria. `lessons.py --source` must live under `.specs/` |
 | A version before `0.5.0` | Default install no longer downloads from GitHub. Forks keep using `HARNESS_REPO_URL`. No artifact migration |
 | A version before `0.4.0` | `LESSONS.md` is now generated. Do not hand-edit it. Existing entries are not imported — re-record grounded ones with `lessons.py add --source` pointing at the original `validation.md` |
 | A version before `0.3.0` | Specs must include `## Assumptions` (use `- none` when nothing was inferred) and every acceptance criterion must use `SHALL` or `MUST`. Re-run `validate_spec` after upgrading — this is a breaking gate change |
@@ -204,16 +209,19 @@ spec-driven-harness/
 ├── lib/                            # Installer and Python bridge
 ├── skills/
 │   ├── agent-architecture.md       # Hub
-│   ├── references/                 # 10 phase procedures
+│   ├── references/                 # 11 phase / load procedures
 │   ├── task-graph-engineering.md
 │   ├── engineering-standards.md
 │   ├── security-review.md
 │   └── git-handoff.md
 ├── rules/engineering-baseline.mdc
-├── scripts/                        # Gate scripts (Python)
+├── scripts/                        # Gate scripts (Python; npm ships *.py only)
+├── prd/                            # Product specs for harness changes
 ├── test/
 │   ├── install.test.js             # Installer and CLI (Node)
-│   └── test_gates.py               # Gates (Python)
+│   ├── test_gates.py               # Gates (Python)
+│   └── test_lessons.py             # Lessons engine (Python)
+├── .npmignore                      # Keep bytecode out of the published pack
 └── .github/workflows/
 ```
 

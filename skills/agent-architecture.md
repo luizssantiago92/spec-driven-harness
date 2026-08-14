@@ -59,9 +59,10 @@ SPECIFY → DISCUSS (conditional) → DESIGN (optional) → TASKS (optional) →
 | **Handoff** | Yes | `references/memory.md` | `git-handoff.md` | — |
 | **Quick** | Alternative | `references/quick-mode.md` | — | `check_commit.py` |
 | **Context** | Always | `references/context-limits.md` | — | — |
+| **Sub-agents** | When batched | `references/sub-agents.md` | `task-graph-engineering.md` | — |
 | **Lessons** | On FAIL | `references/lessons.md` | — | `lessons.py` |
 
-Context is a load rule, not a pipeline phase. Read it when the session is long or the feature has more than a handful of tasks. Lessons is a FAIL-path step, not a sequential phase — see `references/lessons.md`.
+Context is a load rule, not a pipeline phase. Read it when the session is long or the feature has more than a handful of tasks. Sub-agents is the Execute scaling protocol — offer only when the task graph needs more than one batch; see `references/sub-agents.md`. Lessons is a FAIL-path step, not a sequential phase — see `references/lessons.md`.
 
 ## Complexity Router
 

@@ -27,13 +27,13 @@ Break the work into atomic tasks with real dependencies and binary done criteria
 ## Procedure
 
 1. **Write one task per deliverable.** A task is something you would hand to a single agent and check in one commit.
-2. **Give every task the full field set.** Authoring requires all six; the gate blocks if `Requirement`, `Depends on`, `Tests`, or `Gate` is missing:
+2. **Give every task the full field set.** Authoring and the gate require all six:
    - `Requirement` — the spec ID it serves (gated)
-   - `Files` — where the change lands (authoring; the gate does not check this)
+   - `Files` — where the change lands (gated for overlap across independent tasks)
    - `Depends on` — real dependencies only, or `—` (gated)
    - `Tests` — the test file that proves it (gated)
    - `Gate` — the command that must pass (gated)
-   - `Done when` — binary criterion (authoring; the gate does not check this)
+   - `Done when` — binary criterion (gated)
 3. **Delete fake edges.** For every "and then", ask whether the next task actually reads the previous task's output. If not, the edge is fake — remove it and the tasks can run in parallel. See `task-graph-engineering.md`.
 4. **Order tasks so dependencies come first.** Forward dependencies fail the gate. When grouping under `### Phase N`, a task must not depend on a task in a later phase.
 5. **Apply the stop rule.** Only split work that never reads its siblings' results; sequential work stays with one agent.
@@ -49,9 +49,11 @@ python3 .specs/harness/scripts/validate_tasks.py [feature]
 python3 .specs/harness/scripts/validate_tasks.py          # single-feature projects
 ```
 
-Checks task IDs, required fields, dependency direction, later-phase dependencies, cycles, and granularity smells. Non-zero exit means STOP.
+Checks task IDs, required fields (including `Done when`), dependency direction, later-phase dependencies, cycles, granularity smells, **spec requirement coverage**, and **Files overlap** across independent tasks. Non-zero exit means STOP.
 
-The gate does not check that `Files` are disjoint, that `Done when` is binary, or that every `REQ` has a task — you do. A passing gate is necessary, not sufficient.
+When a sibling `spec.md` exists, every requirement heading ID must appear in at least one task `Requirement` field. Independent tasks (no dependency path either way) must not share a path in `Files`.
+
+The gate does not check that `Done when` is philosophically binary — you do. A passing gate is necessary, not sufficient.
 
 ## Execution Plan (phases)
 

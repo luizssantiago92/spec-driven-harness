@@ -24,7 +24,7 @@ Chat language is a personal preference. Set it in your own agent settings if you
 | Skill | Purpose |
 | --- | --- |
 | `.cursor/skills/agent-architecture.md` | SDD hub — contract, phases, gates, complexity router |
-| `.cursor/skills/references/` | Phase procedures (specify, discuss, design, tasks, implement, validate, memory, quick-mode, context-limits, lessons) |
+| `.cursor/skills/references/` | Phase procedures (specify, discuss, design, tasks, implement, validate, memory, quick-mode, context-limits, lessons, sub-agents) |
 | `.cursor/skills/task-graph-engineering.md` | Task DAG, parallelism, verify topology |
 | `.cursor/skills/engineering-standards.md` | Code quality, secure coding, git hygiene |
 | `.cursor/skills/security-review.md` | Security checklist for verification |

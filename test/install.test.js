@@ -615,7 +615,11 @@ describe("reference catalog", () => {
       REFERENCE_ASSETS.some((asset) => asset.file === "lessons.md"),
       true,
     );
-    assert.equal(REFERENCE_ASSETS.length, 10);
+    assert.equal(
+      REFERENCE_ASSETS.some((asset) => asset.file === "sub-agents.md"),
+      true,
+    );
+    assert.equal(REFERENCE_ASSETS.length, 11);
     assert.equal(
       SCRIPT_ASSETS.some((asset) => asset.file === "lessons.py"),
       true,

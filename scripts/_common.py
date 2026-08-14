@@ -96,6 +96,24 @@ class Report:
 
 FEATURES_DIR = Path(".specs/features")
 
+REQUIREMENT_ID = re.compile(
+    r"^#{2,6}\s*(?P<id>[A-Z][A-Z0-9]{1,9}-\d{2,4})\b",
+    re.MULTILINE,
+)
+
+
+def requirement_ids(text: str) -> list[str]:
+    """Return requirement IDs from markdown headings, in document order."""
+
+    seen: set[str] = set()
+    ordered: list[str] = []
+    for match in REQUIREMENT_ID.finditer(text):
+        requirement_id = match.group("id")
+        if requirement_id not in seen:
+            seen.add(requirement_id)
+            ordered.append(requirement_id)
+    return ordered
+
 
 def _fail_usage(gate: str, target: str, message: str) -> None:
     print(f"[{gate}] FAIL - {target}")

@@ -24,7 +24,7 @@ Execute one task at a time: test first, gate, commit, repeat. Always required.
 1. Read this file completely.
 2. Run `python3 .specs/harness/scripts/validate_tasks.py` when a formal `tasks.md` exists.
 3. If Tasks was skipped, list the atomic steps inline now. More than 5 steps or real dependencies means the Tasks phase was skipped in error — stop and create `tasks.md`.
-4. If the breakdown exceeds roughly 8 tasks, offer sub-agent delegation per `task-graph-engineering.md`. Offer and wait; never auto-spawn.
+4. If the breakdown exceeds roughly 8 tasks, offer sub-agent delegation per `task-graph-engineering.md` and the operational contract in `sub-agents.md`. Offer and wait; never auto-spawn.
 5. Confirm you are the only writer for each file this task names. Two parallel tasks never share a file in the same round.
 
 ## Per-Task Cycle
