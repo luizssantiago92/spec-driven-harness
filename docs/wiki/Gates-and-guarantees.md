@@ -54,6 +54,7 @@ A human walkthrough (click through the UI) helps on big user-facing work, but th
 | Save tokens by loading only the current phase | Magically make a weak idea strong |
 | Ask for a mutant/sensor result on bigger work | Run an interactive UI walkthrough for you |
 | Offer short AppSec / QA guides when risk is high | Guarantee real-world security or product QA by code alone |
+| Offer simplify or ship-ready checklists when triggered | Fail the Python gate if those optional guides were skipped; authorize push/deploy |
 | Ask for EARS-shaped criteria, a REQ↔test table, and a pre-commit adequacy check | Fail the Python gate if those authoring steps were skipped |
 
 ## How it feels in practice

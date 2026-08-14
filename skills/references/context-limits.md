@@ -15,9 +15,9 @@ Treat context as a working set, not an archive. Prefer a complete read of a smal
 | Memory | `STATE.md` Next Step, Blockers, and `AD-NNN` that constrain this area; `lessons.py list --status confirmed` | Candidates, quarantined entries, other features' `validation.md` |
 | Code | Files named on the current task | The rest of the module "for orientation" |
 | Verify | Spec + diff range + the tests the spec names; `security-review.md` | The author's session notes |
-| Conditional sister | **At most one** of `appsec.md` or `qa-strategy.md`, and only when Verify triggers say so | Both at once; either on Quick/Simple without a trigger |
+| Conditional sister | **At most one** of `appsec.md`, `qa-strategy.md`, `code-simplify.md`, or `ship-ready.md`, and only when that skill’s trigger says so | Two or more at once; AppSec/QA on Quick/Simple without a trigger; ship-ready during normal Verify |
 
-If the working set no longer fits, drop code search leftovers first, then prior-phase artifacts you have already turned into the current artifact, then sister skills that are not in the phase map cell. Drop a finished conditional sister (AppSec) before loading QA.
+If the working set no longer fits, drop code search leftovers first, then prior-phase artifacts you have already turned into the current artifact, then sister skills that are not in the phase map cell. Drop a finished conditional sister before loading the next (e.g. AppSec before QA; never hold simplify or ship with AppSec/QA).
 
 ## Load order
 
@@ -25,9 +25,11 @@ If the working set no longer fits, drop code search leftovers first, then prior-
 2. Open the hub only if the phase or the router is in doubt.
 3. Open the current phase reference completely.
 4. Open the sister skill the phase map names, if any.
-5. On Verify only: if an AppSec trigger fired, open `appsec.md`, act, then drop it before opening `qa-strategy.md` (never both). Skip both on Quick/Simple without triggers.
-6. Open this feature's artifacts for the current phase — never two features at once.
-7. Open source files the current task lists.
+5. On Verify only: if an AppSec trigger fired, open `appsec.md`, act, then drop it before opening `qa-strategy.md` (never both). Skip both on Quick/Simple without triggers. Do **not** auto-load `ship-ready.md` here.
+6. On Execute (Medium+ after A–D, or owner ask): optionally open **only** `code-simplify.md`, then drop it.
+7. On explicit ship/deploy ask (after Verify PASS): open **only** `ship-ready.md`.
+8. Open this feature's artifacts for the current phase — never two features at once.
+9. Open source files the current task lists.
 
 Skip a step when its output is already in the working set from earlier in the same session.
 
