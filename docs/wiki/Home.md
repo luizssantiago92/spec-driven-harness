@@ -24,6 +24,16 @@ Re-run anytime to refresh the playbook. Your notes and decisions in `.specs/` st
 6. **Clearer asks** — sharp goals, a small job list, a “may I commit?” pause before each check-in  
 7. **Optional polish** — tidy the code without changing behavior, or a ship checklist when you ask — still one guide at a time  
 
+## Everyday brakes (after install)
+
+```bash
+npx @luizsantiago/agentic-harness validate-spec auth
+npx @luizsantiago/agentic-harness check-commit --message "feat(auth): add token refresh"
+npx @luizsantiago/agentic-harness lessons list --status confirmed
+```
+
+Plain meaning on [[Quick-start]] and [[Gates-and-guarantees]].
+
 ## Start here
 
 | Page | Read when |

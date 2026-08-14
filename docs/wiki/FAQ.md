@@ -49,6 +49,16 @@ Under **`.specs/`** in the repo (see skill templates after install). That’s th
 
 No. It checks **structure and evidence**. Humans (and sisters) still review quality, security nuance, and product fit.
 
+## What do `validate-spec`, `check-commit`, and `lessons list` do?
+
+| Command | In one line |
+| --- | --- |
+| `npx @luizsantiago/agentic-harness validate-spec auth` | Checks that the **auth** feature’s written goal is complete enough to build from |
+| `… check-commit --message "feat(auth): …"` | Checks the commit title style before you land a change |
+| `… lessons list --status confirmed` | Lists project rules learned from past failures (confirmed only) |
+
+You need Python 3 for these. Without a real `.specs/features/auth` folder, `validate-spec auth` will fail with “no such feature” — that’s expected until you specify one.
+
 ## I’m not technical—can I still use this?
 
 Yes at a high level: ask your agent to **install the harness**, then to **specify before building** and **verify before done**. Engineers maintain the repo and the gate; you can still insist on the process in plain language.
