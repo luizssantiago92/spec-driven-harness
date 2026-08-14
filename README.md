@@ -74,6 +74,19 @@ A non-zero exit means stop, fix the artifact, and re-run.
 
 Fenced code samples and markdown tables are documentation, not criteria or tasks. `Depends on: REQ-T100` is a requirement id, not task `T100`. Evidence-or-zero accepts paths such as `test/auth/token.test.ts:41`, not `config.yaml:12`.
 
+### Gate guarantees
+
+Structural gates freeze **form**, not meaning. See [`prd/gate-stability.md`](prd/gate-stability.md).
+
+| Guarantees | Does not guarantee |
+| --- | --- |
+| Required sections/fields, IDs, dependency shape, normalized Files overlap | That a cited test asserts the criterion |
+| Exact `PASS`/`PASSED`, test-path evidence, Medium+ sensor outcomes | Real-world security beyond the recorded Security Review result |
+| PASS blocked by open Gaps or Security `Result: fail` | Interactive UAT / walkthrough success |
+| Conventional commits; grounded lessons store rules | That `Done when` prose is philosophically binary |
+
+After **0.7.0**, free-form gate audits only become PRs when a new failing case lands in `test/test_adversarial_gates.py` first.
+
 To enforce the commit format without involving the agent:
 
 ```bash
@@ -191,6 +204,7 @@ Run `npx @luizsantiago/agentic-harness install` again. Existing memory and edite
 
 | Coming from | Manual step |
 | --- | --- |
+| A version before `0.7.0` | Stability baseline: shared path/markdown helpers, adversarial matrix in CI, skill PASS language aligned with gates. Free-form audits need a failing matrix case before a gate PR. Read `prd/gate-stability.md` |
 | A version before `0.6.8` | Evidence inside fences or HTML comments does not count. `Files` overlap is case-insensitive and unwraps markdown links. `PASS` with open `Gaps` or Security Review `Result: fail` fails |
 | A version before `0.6.7` | Requirement IDs only under `## Requirements`. Quoted/`../` `Files` paths normalize for overlap. `killed`/`survived` must sit in the sensor section or on a mutant line. Conflicting preamble vs `## Verdict` fails |
 | A version before `0.6.5` | `PASS` with a surviving mutant fails. Medium+ `PASS` needs at least one `killed` (injected alone is not enough). `Files: none` and `Gate: none` fail. `/path` overlaps `path` |
@@ -222,9 +236,12 @@ spec-driven-harness/
 ├── rules/engineering-baseline.mdc
 ├── scripts/                        # Gate scripts (Python; npm ships *.py only)
 ├── prd/                            # Product specs for harness changes
+│   ├── harness-power-ups.md
+│   └── gate-stability.md           # What gates guarantee; audit freeze policy
 ├── test/
 │   ├── install.test.js             # Installer and CLI (Node)
 │   ├── test_gates.py               # Gates (Python)
+│   ├── test_adversarial_gates.py   # Closed false-pass families (Python)
 │   └── test_lessons.py             # Lessons engine (Python)
 ├── .npmignore                      # Keep bytecode out of the published pack
 └── .github/workflows/

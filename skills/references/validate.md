@@ -108,6 +108,8 @@ Checks that the report exists, the verdict is exactly PASS in the **preamble** (
 
 The gate cannot judge whether a cited test actually asserts the criterion. That judgment is the verifier's; a green gate with a weak assertion is still a FAIL in the report.
 
+**Gate-enforced vs verifier judgment.** `validate_state.py` enforces form: verdict scope, test-path evidence, REQ↔evidence lines, sensor outcomes on Medium+, open Gaps, Security `Result: fail`, open tasks. The following stay **verifier judgment** (not structural gates): whether each coverage row's test truly asserts the outcome, whether a lightweight Security path is justified, and Interactive UAT / walkthrough success. See `prd/gate-stability.md`.
+
 ## Template
 
 ```markdown
@@ -151,7 +153,7 @@ An unjustified lightweight path is a gap.
 
 ## Failure Handling
 
-**PASS requirements.** Verdict is PASS only when every coverage row is pass, every mutant is killed, security is pass or a justified lightweight path, Gaps is `none`, and `validate_state.py` exits 0. Anything else is FAIL — do not write PASS and list gaps underneath.
+**PASS requirements.** Write `Verdict: PASS` only when every coverage row passes (verifier judgment), every mutant is killed (gate checks sensor/mutant lines), Security is pass or a justified lightweight path (gate blocks `Result: fail`; justification quality is verifier judgment), Gaps is `none` (gate blocks open Gaps bullets), and `validate_state.py` exits 0. Anything else is FAIL — do not write PASS and list gaps underneath.
 
 - FAIL verdict → gaps become fix tasks; return to `implement.md`.
 - The fix → re-verify loop is bounded to **3 iterations**, then escalate to the owner with the blocking gap.
@@ -159,7 +161,7 @@ An unjustified lightweight path is a gap.
 
 ## Interactive UAT
 
-For user-facing features on the Complex tier, add a scripted walkthrough after the automated verdict: list the exact steps the owner should perform and the outcome to expect at each one. Automated PASS with a failed walkthrough is still a FAIL.
+For user-facing features on the Complex tier, add a scripted walkthrough after the automated verdict: list the exact steps the owner should perform and the outcome to expect at each one. Automated PASS with a failed walkthrough is still a FAIL for the verifier — **Interactive UAT is verifier judgment; `validate_state.py` does not run the walkthrough.**
 
 ## Next
 

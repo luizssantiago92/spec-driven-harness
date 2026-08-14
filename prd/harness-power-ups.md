@@ -1,5 +1,7 @@
 # PRD: Harness Power-Ups (0.6.0)
 
+**Status:** Delivered through 0.6.x. Follow-on stability baseline is [`prd/gate-stability.md`](gate-stability.md) (0.7.0).
+
 ## Problem
 
 The 0.5.x harness stops incomplete *form* (missing sections, soft PASS, non-test evidence). Agents can still ship features where a requirement has no task, a task has no binary done criterion, parallel workers collide on a file, Verify skips the discrimination sensor, or multi-agent Execute has no operational protocol.
