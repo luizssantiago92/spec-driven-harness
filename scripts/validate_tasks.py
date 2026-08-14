@@ -127,10 +127,19 @@ def parse_files(value: str) -> list[str]:
         return []
     files: list[str] = []
     for chunk in re.split(r"[,;\n]", value):
-        path = chunk.strip().strip("`").rstrip("/")
+        path = normalize_file_path(chunk)
         if path and path.lower() not in NONE_VALUES:
             files.append(path)
     return files
+
+
+def normalize_file_path(raw: str) -> str:
+    """Strip markdown/noise and collapse `./foo` with `foo` for overlap checks."""
+
+    cleaned = raw.strip().strip("`").replace("\\", "/")
+    while cleaned.startswith("./"):
+        cleaned = cleaned[2:]
+    return cleaned.rstrip("/")
 
 
 def detect_cycle(graph: dict[str, list[str]]) -> list[str] | None:
@@ -228,7 +237,11 @@ def build_report(
         fields = parse_fields(body)
 
         for required in REQUIRED_FIELDS:
-            if required not in fields or not fields[required]:
+            value = fields.get(required, "")
+            missing = not value
+            if required == "done when" and value.strip().lower() in NONE_VALUES:
+                missing = True
+            if missing:
                 report.error(f"{task_id}: missing '{required.title()}' field")
 
         requirement = fields.get("requirement", "")
