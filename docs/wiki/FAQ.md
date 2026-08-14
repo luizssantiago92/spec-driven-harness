@@ -20,7 +20,11 @@ Re-running install refreshes skills, guides, and gate scripts. It keeps your `ST
 
 ## Does a green gate mean the feature is perfect?
 
-No. It means the **forms and proof links** look complete. You still judge product taste, test depth, and real-world risk.
+No. It means the **forms and proof links** look complete. You still judge product taste, test depth, and real-world risk. Optional AppSec / QA sections and UI walkthroughs are **judgment** too — the gate does not run them.
+
+## Do AppSec and QA skills always run?
+
+No. They load on **Complex** work or clear risk (auth, PII, multi-step UI, etc.), **one at a time** (AppSec then QA). Tiny fixes skip them.
 
 ## What is “Author ≠ verifier”?
 

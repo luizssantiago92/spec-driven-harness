@@ -34,7 +34,13 @@ The agent picks **one** task, writes the test for the outcome, implements it, ru
 ### 5. Verify — “Would a stranger believe this is done?”
 A fresh review looks at the original goals and asks for **proof** (links to real tests), not confidence. If something’s still open, it’s a fail — not a soft “mostly fine”.
 
-On a **Complex** feature with a real UI (or another human-observable flow), the verifier also writes a short step-by-step walkthrough. Backend-only work skips that.
+On bigger or riskier work the verifier may also, **one guide at a time**:
+
+- a short **AppSec** threat sketch (auth, payments, PII, trust boundaries) — not a full pentest  
+- a **QA** smoke / regression focus for multi-step UI  
+- a **walkthrough** script for Complex user-facing flows  
+
+Backend-only or tiny changes skip those extras. The Python gate still only checks the structural report — AppSec, QA, and the walkthrough are human/verifier judgment.
 
 ## What you get day to day
 

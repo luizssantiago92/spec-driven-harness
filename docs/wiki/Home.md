@@ -2,6 +2,8 @@
 
 A **spec-driven harness** for AI coding agents: adaptive phases (Specify → Verify), progressive skill loading, `.specs/` memory, and **Python gates** that stop incomplete work.
 
+Fit for **full-stack features** (API + UI + auth): the agent goes as deep as the risk needs — Quick stays light; Complex can add a short AppSec look, a QA focus, and a human walkthrough, **one guide at a time**.
+
 This is not "another prompt pack". Incomplete specs, tasks without done criteria, or Verify without test evidence **exit non-zero** — the agent must fix the artifact before claiming success.
 
 ## Install
@@ -16,8 +18,9 @@ Agents are good at generating code and bad at knowing when to stop. The harness 
 
 1. **Phases on demand** — only as deep as the work needs (Quick → Complex)
 2. **Structural gates** — form checks enforced by code, not vibes
-3. **Progressive disclosure** — load the current phase, not the whole skill kit (~66% fewer skill tokens per plan turn; ~80% less on a typical Medium feature vs naive full dumps)
+3. **Progressive disclosure** — load the current phase, not the whole skill kit (~70% fewer skill tokens per plan turn vs a full dump; ~80% less on a typical Medium feature vs naive full reloads)
 4. **Author ≠ verifier** — Verify runs in a clean context with test-path evidence
+5. **Risk-sized Verify** — OWASP checklist always; AppSec / QA / walkthrough only when the feature warrants it
 
 ## Start here
 

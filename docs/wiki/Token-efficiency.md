@@ -21,14 +21,17 @@ For a normal turn, roughly:
 - The short “map” of the harness (the hub)
 - The guide for **this** phase only (specify, or build, or verify…)
 - At most one sister guide that phase needs (for example security at verify time)
+- On risky Verify only: **either** the AppSec guide **or** the QA guide — never both in the same window
 - The budget rules (don’t drag in sibling features “for orientation”)
 
 Not: all eleven phase guides + every sister skill + last week’s chats + three other features’ specs.
 
+The kit on disk grew (more optional sisters). The **working set** rule did not: most turns still load one phase. Dumping everything is now about **~25k** skill tokens; a planning turn stays around **~7k** (~**70%** less).
+
 ## Why that helps you
 
 **Cheaper** — less text in context means fewer tokens burned per turn.  
-Measured from the shipped skill texts: a planning turn can use about **two-thirds less** skill text than dumping the full kit; a typical mid-size feature can use on the order of **~80% less** skill text than reloading everything every turn.
+Measured from the shipped skill texts: a planning turn can use about **two-thirds less** (≈**70%**) skill text than dumping the full kit; a typical mid-size feature can use on the order of **~80% less** skill text than reloading everything every turn.
 
 **Clearer** — the model focuses on “finish this job”, not “remember the whole religion”.
 

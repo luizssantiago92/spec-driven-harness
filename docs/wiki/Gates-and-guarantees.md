@@ -42,7 +42,7 @@ It does **not** mean: users will love it, security is perfect forever, or every 
 
 If Gaps still lists real problems, or security was marked fail, that’s not a PASS — rewrite the verdict or fix the issues.
 
-A human walkthrough (click through the UI) helps on big user-facing work, but the harness **does not** run that walkthrough — the verifier still owns that call.
+A human walkthrough (click through the UI) helps on big user-facing work, but the harness **does not** run that walkthrough — the verifier still owns that call. Same for optional AppSec / QA write-ups: useful process, not a Python brake.
 
 ## Guarantees (honest version)
 
@@ -53,6 +53,7 @@ A human walkthrough (click through the UI) helps on big user-facing work, but th
 | Keep parallel work from colliding on files | Run your app in production for you |
 | Save tokens by loading only the current phase | Magically make a weak idea strong |
 | Ask for a mutant/sensor result on bigger work | Run an interactive UI walkthrough for you |
+| Offer short AppSec / QA guides when risk is high | Guarantee real-world security or product QA by code alone |
 
 ## How it feels in practice
 

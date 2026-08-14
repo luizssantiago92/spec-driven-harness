@@ -5,6 +5,8 @@
 
 A spec-driven harness for AI coding agents: adaptive phases from Specify to Verify, progressive skill loading, persistent `.specs/` memory, and structural Python gates that stop incomplete work.
 
+Built for **full-stack feature work** with an agent — API + UI + auth — without dumping the whole manual into every turn. Depth follows risk: Quick stays cheap; Complex can add AppSec, QA, and a lean walkthrough **one step at a time**.
+
 The gates are what separate this from a prompt. An incomplete spec, a task without a success criterion, or a feature without test evidence exit non-zero — and the agent stops instead of declaring success.
 
 **Stability baseline 0.7** freezes the gate contract and ships an adversarial CI matrix (`prd/gate-stability.md`). Free-form “find more gate bugs” only becomes a PR when a failing matrix case lands first.
@@ -30,11 +32,12 @@ Dumping every skill and reference into every turn is the expensive default. This
 
 | Load pattern | What enters context | Relative size |
 | --- | --- | --- |
-| Naive full dump | Hub + all 11 phase refs + 4 sister skills + project rule | ~21k tokens |
-| Progressive (plan turn) | Hub + current phase ref + mapped sister skill + `context-limits` + rule | ~7k tokens (~**66% less**) |
+| Naive full dump | Hub + all 11 phase refs + 6 sister skills + project rule | ~25k tokens |
+| Progressive (plan turn) | Hub + current phase ref + mapped sister skill + `context-limits` + rule | ~7k tokens (~**70% less**) |
 | Execute lean | Current phase ref + sister skill + `context-limits` | ~4k tokens |
+| Verify + one conditional | Base Verify set + `appsec.md` **or** `qa-strategy.md` (never both at once) | ~+1k vs base Verify |
 
-On a typical Medium feature (plan → several execute loops → verify), progressive loading uses on the order of **~80% fewer** skill tokens than reloading the full kit every turn. Sub-agents receive only their task payload (`references/sub-agents.md`), and Verify starts with a **clean context** — Author ≠ verifier — so the author’s working set is not paid twice.
+On a typical Medium feature (plan → several execute loops → verify), progressive loading uses on the order of **~80% fewer** skill tokens than reloading the full kit every turn. Sub-agents receive only their task payload (`references/sub-agents.md`), and Verify starts with a **clean context** — Author ≠ verifier — so the author’s working set is not paid twice. Conditional AppSec/QA only join Complex or risk-surface Verify, and only **one at a time**.
 
 These figures are measured from the shipped skill texts (chars÷4). Real sessions also save retries when gates catch incomplete artifacts early.
 
@@ -114,8 +117,8 @@ Structural gates freeze **form**, not meaning. See [`prd/gate-stability.md`](prd
 | Guarantees | Does not guarantee |
 | --- | --- |
 | Required sections/fields, IDs, dependency shape, normalized Files overlap | That a cited test asserts the criterion |
-| Exact `PASS`/`PASSED`, test-path evidence, Medium+ sensor outcomes (`design.md` with content, 4+ tasks, or 2+ phases — not the hub Complexity Router’s “Medium” label) | Real-world security beyond the recorded Security Review result |
-| PASS blocked by open Gaps or Security `Result: fail` | Interactive UAT / walkthrough success |
+| Exact `PASS`/`PASSED`, test-path evidence, Medium+ sensor outcomes (`design.md` with content, 4+ tasks, or 2+ phases — not the hub Complexity Router’s “Medium” label) | Real-world security beyond the recorded Security Review / AppSec result |
+| PASS blocked by open Gaps or Security `Result: fail` | Interactive UAT / walkthrough success; optional `## AppSec` / `## QA` quality (verifier judgment, not gated) |
 | Conventional commits; grounded lessons store rules | That `Done when` prose is philosophically binary |
 
 After **0.7.0**, free-form gate audits only become PRs when a new failing case lands in `test/test_adversarial_gates.py` first.
@@ -147,7 +150,7 @@ SPECIFY → DISCUSS (conditional) → DESIGN (optional) → TASKS (optional) →
 | Design | `/plan` | `references/design.md` | — | — |
 | Tasks | `/tasks` | `references/tasks.md` | `task-graph-engineering` | `validate_tasks.py` |
 | Execute | `/loop` | `references/implement.md` | `engineering-standards` | `check_commit.py` |
-| Verify | `/verify` | `references/validate.md` | `security-review` | `validate_state.py` |
+| Verify | `/verify` | `references/validate.md` | `security-review` (+ conditional `appsec` then `qa-strategy`, one at a time) | `validate_state.py` |
 | Handoff | `/handoff` | `references/memory.md` | `git-handoff` | — |
 | Quick | `/quick` | `references/quick-mode.md` | — | `check_commit.py` |
 | Context | — | `references/context-limits.md` | — | — |
@@ -167,7 +170,7 @@ Depth follows the work, not a fixed pipeline.
 | Quick | ≤3 files, no design decision | Describe, implement, verify, commit |
 | Simple | 2–5 files | Specify → Execute → Verify |
 | Medium | New feature, under 10 tasks | Specify → Tasks → Execute → Verify |
-| Complex | Architecture, API surface, infrastructure | Specify → Discuss → Design → Tasks → Execute → Verify |
+| Complex | Architecture, API surface, infrastructure | Specify → Discuss → Design → Tasks → Execute → Verify (AppSec/QA/UAT when triggers fire) |
 | Parallel | Splittable work, multiple agents | Any of the above plus `/task-graph` |
 
 Even when Tasks is skipped, Execute opens by listing the atomic steps. More than five steps, or a real dependency between them, means the Tasks phase was skipped in error — the agent stops and writes `tasks.md`.
@@ -241,6 +244,7 @@ Run `npx @luizsantiago/agentic-harness install` again. Existing memory and edite
 
 | Coming from | Manual step |
 | --- | --- |
+| A version before AppSec/QA sister skills | Re-run install to receive `appsec.md` and `qa-strategy.md`. Sections in `validation.md` stay optional (judgment); no artifact migration |
 | A version before `0.7.2` | Gaps placeholders accept markdown emphasis (`- **none**`, `- *none*`) |
 | A version before `0.7.0` | Stability baseline: shared path/markdown helpers, adversarial matrix in CI, skill PASS language aligned with gates. Free-form audits need a failing matrix case before a gate PR. Read `prd/gate-stability.md` |
 | A version before `0.6.8` | Evidence inside fences or HTML comments does not count. `Files` overlap is case-insensitive and unwraps markdown links. `PASS` with open `Gaps` or Security Review `Result: fail` fails |
