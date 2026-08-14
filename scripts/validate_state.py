@@ -10,7 +10,7 @@ Run before declaring a feature done:
 Checks:
   * spec.md exists
   * validation.md exists and was written by the independent verifier
-  * the verdict is filled and reads PASS
+  * the verdict is filled and reads PASS (preamble or ## Verdict heading only)
   * the report cites file:line evidence (evidence-or-zero)
   * every spec requirement ID has test evidence on the same coverage line
   * the discrimination sensor result is recorded (blocking on Medium+ features)
@@ -44,6 +44,7 @@ VERDICT_HEADING = re.compile(
     r"^#{1,6}\s*(?:verdict|result|status)\s*$\s*\n+\s*\*{0,2}(?P<value>[A-Za-z ]+)",
     re.IGNORECASE | re.MULTILINE,
 )
+SECTION_START = re.compile(r"^#{2,6}\s", re.MULTILINE)
 EVIDENCE = re.compile(r"[\w./\\-]+\.[A-Za-z][A-Za-z0-9]{0,9}:\d{1,6}\b")
 URL = re.compile(r"\b[a-z][a-z0-9+.-]*://\S+", re.IGNORECASE)
 SENSOR = re.compile(r"(discrimination sensor|mutant)", re.IGNORECASE)
@@ -65,6 +66,23 @@ TEST_EVIDENCE = re.compile(
 PASS_VERDICTS = {"PASS", "PASSED"}
 FAIL_VERDICTS = {"FAIL", "FAILED"}
 MEDIUM_TASK_FLOOR = 4
+
+
+def validation_preamble(text: str) -> str:
+    """Return the text before the first `##` section (fences already ignored)."""
+
+    visible = mask_fenced_blocks(text)
+    match = SECTION_START.search(visible)
+    if not match:
+        return visible
+    return visible[: match.start()]
+
+
+def find_verdict(text: str) -> re.Match[str] | None:
+    """Accept Verdict only in the preamble or as a dedicated ## Verdict heading."""
+
+    preamble = validation_preamble(text)
+    return VERDICT.search(preamble) or VERDICT_HEADING.search(mask_fenced_blocks(text))
 
 
 def find_evidence(text: str) -> list[str]:
@@ -132,10 +150,11 @@ def build_report(feature_dir: Path) -> Report:
         report.error("validation.md is empty")
         return report
 
-    verdict_match = VERDICT.search(validation) or VERDICT_HEADING.search(validation)
+    verdict_match = find_verdict(validation)
     if not verdict_match:
         report.error(
-            "validation.md has no verdict - add 'Verdict: PASS' or 'Verdict: FAIL'"
+            "validation.md has no verdict - add 'Verdict: PASS' in the preamble "
+            "(before ## sections) or a '## Verdict' heading"
         )
     else:
         verdict = re.sub(r"\s+", " ", verdict_match.group("value").strip().upper())
