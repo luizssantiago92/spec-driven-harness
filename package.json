@@ -1,7 +1,7 @@
 {
   "name": "@luizsantiago/agentic-harness",
   "version": "0.7.10",
-  "description": "Spec-driven harness for AI agents. Progressive skills load only the current phase (~70% fewer tokens vs dumping the full kit). Python gates block incomplete work; REQ↔task↔test evidence; Medium+ mutant sensor; conditional AppSec/QA; adversarial matrix (0.7). Specify→Verify with .specs/ memory.",
+  "description": "Spec-driven harness for AI agents (0.7). Progressive skills (~70% fewer tokens vs full dump). Python gates: SHALL/MUST, REQ↔task↔test evidence, Medium+ sensor, adversarial matrix. EARS + Tasks matrix + Execute A–D (authoring). Conditional AppSec/QA. Specify→Verify with .specs/ memory.",
   "type": "module",
   "bin": {
     "agentic-harness": "./index.js"
