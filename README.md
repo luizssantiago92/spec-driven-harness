@@ -3,9 +3,25 @@
 [![npm version](https://img.shields.io/npm/v/@luizsantiago/agentic-harness.svg)](https://www.npmjs.com/package/@luizsantiago/agentic-harness)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A spec-driven harness for AI coding agents: adaptive phases from Specify to Verify, per-phase procedures, cross-cutting skills, persistent `.specs/` memory, and structural gates enforced by code.
+A spec-driven harness for AI coding agents: adaptive phases from Specify to Verify, progressive skill loading, persistent `.specs/` memory, and structural Python gates that stop incomplete work.
 
 The gates are what separate this from a prompt. An incomplete spec, a task without a success criterion, or a feature without test evidence exit non-zero — and the agent stops instead of declaring success.
+
+**Stability baseline 0.7** freezes the gate contract and ships an adversarial CI matrix (`prd/gate-stability.md`). Free-form “find more gate bugs” only becomes a PR when a failing matrix case lands first.
+
+## Token efficiency (progressive disclosure)
+
+Dumping every skill and reference into every turn is the expensive default. This harness is built so the agent **loads a working set**, not the archive — hub rule in `agent-architecture.md`, budget in `references/context-limits.md`:
+
+| Load pattern | What enters context | Relative size |
+| --- | --- | --- |
+| Naive full dump | Hub + all 11 phase refs + 4 sister skills + project rule | ~21k tokens |
+| Progressive (plan turn) | Hub + current phase ref + mapped sister skill + `context-limits` + rule | ~7k tokens (~**66% less**) |
+| Execute lean | Current phase ref + sister skill + `context-limits` | ~4k tokens |
+
+On a typical Medium feature (plan → several execute loops → verify), progressive loading uses on the order of **~80% fewer** skill tokens than reloading the full kit every turn. Sub-agents receive only their task payload (`references/sub-agents.md`), and Verify starts with a **clean context** — Author ≠ verifier — so the author’s working set is not paid twice.
+
+These figures are measured from the shipped skill texts (chars÷4). Real sessions also save retries when gates catch incomplete artifacts early.
 
 ## Requirements
 
@@ -27,7 +43,7 @@ Re-running refreshes skills, references and gate scripts, and upgrades the harne
 | Artifact | Purpose |
 | --- | --- |
 | `.cursor/skills/agent-architecture.md` | Hub — execution contract, phase map, complexity router |
-| `.cursor/skills/references/*.md` | Per-phase procedures (11 files) |
+| `.cursor/skills/references/*.md` | Per-phase procedures (11 files), including `context-limits.md` |
 | `.cursor/skills/task-graph-engineering.md` | Task DAG, parallelism, diamond verify, sub-agent batches |
 | `.cursor/skills/engineering-standards.md` | Secure coding, code quality, one writer per file |
 | `.cursor/skills/security-review.md` | OWASP checklist for `/verify` |
@@ -184,7 +200,7 @@ Artifacts are created lazily. An empty `design.md` claims a phase ran when it di
 | `security-review.md` | Verification | Security during `/verify` |
 | `git-handoff.md` | Persistence | How memory reaches git |
 
-Each skill links to the others, and `.cursorrules` points at the hub, so the agent loads the set when planning or executing.
+Each skill links to the others, and `.cursorrules` points at the hub, so the agent loads the set when planning or executing. Prefer the **Token efficiency** working set above over loading every skill on every turn — that is the cost win.
 
 ## Knowledge verification chain
 
