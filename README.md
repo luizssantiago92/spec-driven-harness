@@ -3,13 +3,23 @@
 [![npm version](https://img.shields.io/npm/v/@luizsantiago/agentic-harness.svg)](https://www.npmjs.com/package/@luizsantiago/agentic-harness)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A spec-driven harness for AI coding agents: adaptive phases from Specify to Verify, progressive skill loading, persistent `.specs/` memory, and structural Python gates that stop incomplete work.
+A **spec-driven harness** for AI coding agents — npm [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **0.7.x** (current **0.7.10**): adaptive phases from Specify to Verify, progressive skill loading, persistent `.specs/` memory, and structural Python gates that stop incomplete work.
 
-Built for **full-stack feature work** with an agent — API + UI + auth — without dumping the whole manual into every turn. Depth follows risk: Quick stays cheap; Complex can add AppSec, QA, and a lean walkthrough **one step at a time**.
+Built for **full-stack feature work** with an agent — API + UI + auth — without dumping the whole manual into every turn. Depth follows risk: Quick stays cheap; Complex can add AppSec, QA, and a lean walkthrough **one guide at a time**.
 
-The gates are what separate this from a prompt. An incomplete spec, a task without a success criterion, or a feature without test evidence exit non-zero — and the agent stops instead of declaring success.
+The gates are what separate this from a prompt pack. An incomplete spec, a task without a success criterion, or a feature without test evidence exit non-zero — and the agent stops instead of declaring success.
 
-**Stability baseline 0.7** freezes the gate contract and ships an adversarial CI matrix (`prd/gate-stability.md`). Free-form “find more gate bugs” only becomes a PR when a failing matrix case lands first.
+### What's in 0.7.x
+
+| Area | What you get |
+| --- | --- |
+| **Progressive disclosure** | Load the current phase, not the archive — ~**70%** fewer skill tokens on a plan turn vs a full dump (~25k → ~7k); ~**80%** less across a typical Medium feature |
+| **Python gates (form)** | Specs need `SHALL`/`MUST`; tasks need fields + REQ coverage + Files overlap; commits are Conventional; Verify needs exact `PASS`/`PASSED`, test-path evidence, Medium+ mutant sensor; open Gaps or Security `Result: fail` block PASS. Contract: [`prd/gate-stability.md`](prd/gate-stability.md) |
+| **Authoring (judgment)** | EARS patterns on criteria (shape is a **warning**; missing `SHALL`/`MUST` still **blocks**); Tasks **Test Coverage Matrix** + **Gate Check Commands**; Execute adequacy **A–D** before each commit — not extra Python brakes |
+| **Verify depth** | OWASP checklist always; conditional **AppSec** then **QA** (one at a time); lean interactive UAT on Complex user-facing work — verifier judgment, not `validate_state.py` |
+| **Install surface** | Cursor + Claude Code; 7 skills (hub + 6 sisters), 11 phase refs, 6 gate scripts; re-run install refreshes kit and keeps `.specs/` memory |
+
+**Stability baseline 0.7** freezes that gate contract and ships an adversarial CI matrix. Free-form “find more gate bugs” only becomes a PR when a failing case lands in `test/test_adversarial_gates.py` first.
 
 ## Learn more
 

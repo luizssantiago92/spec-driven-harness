@@ -1,6 +1,6 @@
 ---
 name: agent-architecture
-description: Spec-Driven Development hub for AI-assisted engineering. Progressive disclosure (~66% fewer skill tokens vs dumping the full kit). Adaptive phases with Python gates, independent verifier, discrimination sensor, evidence-or-zero, and .specs/ memory. Triggers on "specify feature", "design", "break into tasks", "implement", "verify", "quick fix", "resume work", "handoff".
+description: Spec-Driven Development hub for AI-assisted engineering. Progressive disclosure (~70% fewer skill tokens vs dumping the full kit). Adaptive phases with Python gates, independent verifier, discrimination sensor, evidence-or-zero, and .specs/ memory. Triggers on "specify feature", "design", "break into tasks", "implement", "verify", "quick fix", "resume work", "handoff".
 ---
 
 # Agent Architecture (Hub)
@@ -8,7 +8,7 @@ description: Spec-Driven Development hub for AI-assisted engineering. Progressiv
 Spec-Driven Development (SDD) harness for AI-assisted software engineering.
 Replaces "Vibe Coding" with adaptive phases backed by persistent memory, sister skills, and gates enforced by code.
 
-**Token cost.** Load a working set, not the archive — see `references/context-limits.md`. Progressive phase loading is ~66% fewer skill tokens than dumping hub + all references + sister skills every turn; a Medium feature is typically ~80% cheaper in skill tokens than naive full reloads.
+**Token cost.** Load a working set, not the archive — see `references/context-limits.md`. Progressive phase loading is ~70% fewer skill tokens than dumping hub + all references + sister skills every turn; a Medium feature is typically ~80% cheaper in skill tokens than naive full reloads.
 
 This file is the contract and the map. Phase procedures live in `references/`; cross-cutting concerns live in sister skills.
 
