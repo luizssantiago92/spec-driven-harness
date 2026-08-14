@@ -9,7 +9,8 @@ Run before presenting a task breakdown for approval:
 
 Checks:
   * at least one task with a well-formed ID (T1, T2, ...)
-  * every task carries Requirement, Depends on, Tests, Gate and Done when
+  * every task carries Requirement, Files, Depends on, Tests, Gate and Done when
+  * Tests and Done when reject placeholder values (none, —, n/a)
   * dependencies reference existing tasks, never forward, never self
   * a task never depends on a task in a later `### Phase N` group
   * dependency graph is acyclic
@@ -54,7 +55,8 @@ PHASE_HEADING = re.compile(
 REQUIREMENT_REF = re.compile(r"\b[A-Z][A-Z0-9]{1,9}-\d{2,4}\b")
 NONE_VALUES = {"-", "—", "–", "none", "n/a", "na", "nenhum", "nenhuma", "no"}
 
-REQUIRED_FIELDS = ("requirement", "depends on", "tests", "gate", "done when")
+REQUIRED_FIELDS = ("requirement", "files", "depends on", "tests", "gate", "done when")
+PLACEHOLDER_FIELDS = frozenset({"done when", "tests"})
 VAGUE_TITLE_WORDS = {
     "implement feature",
     "create form",
@@ -239,7 +241,7 @@ def build_report(
         for required in REQUIRED_FIELDS:
             value = fields.get(required, "")
             missing = not value
-            if required == "done when" and value.strip().lower() in NONE_VALUES:
+            if required in PLACEHOLDER_FIELDS and value.strip().lower() in NONE_VALUES:
                 missing = True
             if missing:
                 report.error(f"{task_id}: missing '{required.title()}' field")

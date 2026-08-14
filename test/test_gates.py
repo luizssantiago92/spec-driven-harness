@@ -280,6 +280,7 @@ class TasksGateTest(unittest.TestCase):
         tasks = "# Tasks\n\n" + "".join(
             f"### T{i}: Do the thing {i}\n"
             f"- **Requirement**: REQ-001\n"
+            f"- **Files**: src/mod{i}.ts\n"
             f"- **Depends on**: T{3 if i == 1 else i - 1}\n"
             f"- **Tests**: t.ts\n"
             f"- **Gate**: npm test\n"
@@ -293,7 +294,9 @@ class TasksGateTest(unittest.TestCase):
     def test_task_ids_beyond_t999_are_parsed(self):
         tasks = (
             "# Tasks\n\n### T1000: Add the last module\n"
-            "- **Requirement**: REQ-001\n- **Depends on**: —\n"
+            "- **Requirement**: REQ-001\n"
+            "- **Files**: src/last.ts\n"
+            "- **Depends on**: —\n"
             "- **Tests**: t.ts\n- **Gate**: npm test\n"
             "- **Done when**: last module is exported\n"
         )
@@ -305,6 +308,7 @@ class TasksGateTest(unittest.TestCase):
         tasks = "# Tasks\n\n" + "".join(
             f"### T{i}: Add module number {i}\n"
             f"- **Requirement**: REQ-001\n"
+            f"- **Files**: src/mod{i}.ts\n"
             f"- **Depends on**: {'—' if i == 1 else f'T{i - 1}'}\n"
             f"- **Tests**: t.ts\n"
             f"- **Gate**: npm test\n"
@@ -321,6 +325,7 @@ class TasksGateTest(unittest.TestCase):
 
 ### T1: Create session token module
 - **Requirement**: REQ-001
+- **Files**: src/auth/token.ts
 - **Depends on**: —
 - **Tests**: t.ts
 - **Gate**: npm test
@@ -328,6 +333,7 @@ class TasksGateTest(unittest.TestCase):
 
 ### T2: Add login endpoint handler
 - **Requirement**: REQ-001
+- **Files**: src/routes/login.ts
 - **Depends on**: T1
 - **Tests**: t.ts
 - **Gate**: npm test
@@ -346,6 +352,7 @@ class TasksGateTest(unittest.TestCase):
 
 ### T2: Add login endpoint handler
 - **Requirement**: REQ-001
+- **Files**: src/routes/login.ts
 - **Depends on**: —
 - **Tests**: t.ts
 - **Gate**: npm test
@@ -355,6 +362,7 @@ class TasksGateTest(unittest.TestCase):
 
 ### T1: Create session token module
 - **Requirement**: REQ-001
+- **Files**: src/auth/token.ts
 - **Depends on**: T2
 - **Tests**: t.ts
 - **Gate**: npm test
@@ -376,6 +384,7 @@ class TasksGateTest(unittest.TestCase):
 
 ### T2: Add login endpoint handler
 - **Requirement**: REQ-001
+- **Files**: src/routes/login.ts
 - **Depends on**: —
 - **Tests**: t.ts
 - **Gate**: npm test
@@ -385,6 +394,7 @@ class TasksGateTest(unittest.TestCase):
 
 ### T1: Create session token module
 - **Requirement**: REQ-001
+- **Files**: src/auth/token.ts
 - **Depends on**: T2
 - **Tests**: t.ts
 - **Gate**: npm test
@@ -427,6 +437,18 @@ class TasksGateTest(unittest.TestCase):
         report = validate_tasks.build_report("tasks.md", tasks)
         self.assertFalse(report.passed)
         self.assertTrue(any("Done When" in error for error in report.errors))
+
+    def test_missing_files_fails(self):
+        tasks = VALID_TASKS.replace("- **Files**: src/auth/token.ts\n", "", 1)
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("Files" in error for error in report.errors))
+
+    def test_tests_none_fails(self):
+        tasks = VALID_TASKS.replace("test/auth/token.test.ts", "none", 1)
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("Tests" in error for error in report.errors))
 
     def test_dot_slash_file_paths_count_as_overlap(self):
         tasks = """# Tasks
@@ -579,6 +601,19 @@ class StateGateTest(unittest.TestCase):
         )
         self.assertTrue(report.passed, report.errors)
 
+    def test_verdict_buried_under_sensor_is_rejected(self):
+        report = validate_state.build_report(
+            self._feature_dir(
+                "# Validation\n\n## Discrimination Sensor\n"
+                "- Verdict: PASS\n"
+                "- mutant killed\n"
+                "## Coverage\n"
+                "- REQ-001 - test/routes/login.test.ts:24\n"
+            )
+        )
+        self.assertFalse(report.passed)
+        self.assertTrue(any("no verdict" in e for e in report.errors))
+
     def test_open_task_blocks_completion(self):
         report = validate_state.build_report(
             self._feature_dir(tasks="### T1: Do thing\n- [ ] complete\n")
@@ -627,6 +662,7 @@ class StateGateTest(unittest.TestCase):
         tasks = "# Tasks\n\n" + "".join(
             f"### T{i}: Add module number {i}\n"
             f"- **Requirement**: REQ-001\n"
+            f"- **Files**: src/mod{i}.ts\n"
             f"- **Depends on**: —\n"
             f"- **Tests**: t.ts\n"
             f"- **Gate**: npm test\n"
@@ -648,6 +684,7 @@ class StateGateTest(unittest.TestCase):
         tasks = "# Tasks\n\n" + "".join(
             f"### T{i}: Add module number {i}\n"
             f"- **Requirement**: REQ-001\n"
+            f"- **Files**: src/mod{i}.ts\n"
             f"- **Depends on**: —\n"
             f"- **Tests**: t.ts\n"
             f"- **Gate**: npm test\n"
