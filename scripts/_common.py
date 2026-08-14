@@ -97,17 +97,44 @@ class Report:
 FEATURES_DIR = Path(".specs/features")
 
 REQUIREMENT_ID = re.compile(
-    r"^#{2,6}\s*(?P<id>[A-Z][A-Z0-9]{1,9}-\d{2,4})\b",
+    r"^(?P<level>#{2,6})\s*(?P<id>[A-Z][A-Z0-9]{1,9}-\d{2,4})\b",
     re.MULTILINE,
 )
+OUT_OF_SCOPE_HEADING = re.compile(
+    r"^(?P<level>#{2,6})\s*Out of Scope\b",
+    re.MULTILINE | re.IGNORECASE,
+)
+ANY_HEADING = re.compile(r"^(?P<level>#{1,6})\s", re.MULTILINE)
+
+
+def _without_out_of_scope(text: str) -> str:
+    """Drop each Out of Scope section through the next same-or-higher heading."""
+
+    match = OUT_OF_SCOPE_HEADING.search(text)
+    if not match:
+        return text
+
+    level = len(match.group("level"))
+    start = match.start()
+    end = len(text)
+    for heading in ANY_HEADING.finditer(text, match.end()):
+        if len(heading.group("level")) <= level:
+            end = heading.start()
+            break
+    return text[:start] + _without_out_of_scope(text[end:])
 
 
 def requirement_ids(text: str) -> list[str]:
-    """Return requirement IDs from markdown headings, in document order."""
+    """Return requirement IDs from markdown headings, in document order.
 
+    Skips any Out of Scope section so NOTE-001-style headings there do not
+    become coverage obligations.
+    """
+
+    cleaned = _without_out_of_scope(text)
     seen: set[str] = set()
     ordered: list[str] = []
-    for match in REQUIREMENT_ID.finditer(text):
+    for match in REQUIREMENT_ID.finditer(cleaned):
         requirement_id = match.group("id")
         if requirement_id not in seen:
             seen.add(requirement_id)

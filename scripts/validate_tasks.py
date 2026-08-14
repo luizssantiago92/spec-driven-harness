@@ -56,7 +56,8 @@ REQUIREMENT_REF = re.compile(r"\b[A-Z][A-Z0-9]{1,9}-\d{2,4}\b")
 NONE_VALUES = {"-", "—", "–", "none", "n/a", "na", "nenhum", "nenhuma", "no"}
 
 REQUIRED_FIELDS = ("requirement", "files", "depends on", "tests", "gate", "done when")
-PLACEHOLDER_FIELDS = frozenset({"done when", "tests"})
+# Depends on: — remains valid (no deps). Files/Gate/Tests/Done when reject none/—.
+PLACEHOLDER_FIELDS = frozenset({"done when", "tests", "gate", "files"})
 VAGUE_TITLE_WORDS = {
     "implement feature",
     "create form",
@@ -136,11 +137,12 @@ def parse_files(value: str) -> list[str]:
 
 
 def normalize_file_path(raw: str) -> str:
-    """Strip markdown/noise and collapse `./foo` with `foo` for overlap checks."""
+    """Strip markdown/noise and collapse `./foo`, `/foo`, and `foo` for overlap."""
 
     cleaned = raw.strip().strip("`").replace("\\", "/")
     while cleaned.startswith("./"):
         cleaned = cleaned[2:]
+    cleaned = cleaned.lstrip("/")
     return cleaned.rstrip("/")
 
 
@@ -242,6 +244,8 @@ def build_report(
             value = fields.get(required, "")
             missing = not value
             if required in PLACEHOLDER_FIELDS and value.strip().lower() in NONE_VALUES:
+                missing = True
+            if required == "files" and value and not parse_files(value):
                 missing = True
             if missing:
                 report.error(f"{task_id}: missing '{required.title()}' field")

@@ -14,6 +14,7 @@ Checks:
   * the report cites file:line evidence (evidence-or-zero)
   * every spec requirement ID has test evidence on the same coverage line
   * the discrimination sensor result is recorded (blocking on Medium+ features)
+  * PASS with a surviving mutant fails; Medium+ PASS requires at least one kill
   * open task checkboxes in tasks.md block completion
 
 Exit codes: 0 pass, 1 blocking issues, 2 usage error.
@@ -50,6 +51,8 @@ URL = re.compile(r"\b[a-z][a-z0-9+.-]*://\S+", re.IGNORECASE)
 SENSOR = re.compile(r"(discrimination sensor|mutant)", re.IGNORECASE)
 # Outcome words only — the section title "Discrimination Sensor" must not count.
 SENSOR_RESULT = re.compile(r"\b(killed|survived|injected)\b", re.IGNORECASE)
+SENSOR_KILLED = re.compile(r"\bkilled\b", re.IGNORECASE)
+SENSOR_SURVIVED = re.compile(r"\bsurvived\b", re.IGNORECASE)
 OPEN_TASK = re.compile(r"^\s*[-*]\s*\[ \]\s+(?P<label>.+)$", re.MULTILINE)
 TASK_HEADING = re.compile(
     r"^#{2,6}\s*T\d{1,6}\b", re.MULTILINE | re.IGNORECASE
@@ -150,6 +153,7 @@ def build_report(feature_dir: Path) -> Report:
         report.error("validation.md is empty")
         return report
 
+    verdict: str | None = None
     verdict_match = find_verdict(validation)
     if not verdict_match:
         report.error(
@@ -187,9 +191,25 @@ def build_report(feature_dir: Path) -> Report:
         else:
             report.ok("every spec requirement has test evidence")
 
+    if verdict in PASS_VERDICTS and SENSOR_SURVIVED.search(validation):
+        report.error(
+            "verdict is PASS but a mutant survived - kill every mutant before closing"
+        )
+
     medium_plus = is_medium_plus(feature_dir)
-    if SENSOR.search(validation) and SENSOR_RESULT.search(validation):
-        report.ok("discrimination sensor result recorded")
+    has_sensor = bool(SENSOR.search(validation) and SENSOR_RESULT.search(validation))
+    if has_sensor:
+        if (
+            medium_plus
+            and verdict in PASS_VERDICTS
+            and not SENSOR_KILLED.search(validation)
+        ):
+            report.error(
+                "Medium+ PASS requires at least one killed mutant "
+                "(injected alone is not enough to close)"
+            )
+        else:
+            report.ok("discrimination sensor result recorded")
     elif medium_plus:
         report.error(
             "Medium+ feature requires a discrimination sensor result "
