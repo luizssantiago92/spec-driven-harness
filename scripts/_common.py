@@ -100,41 +100,42 @@ REQUIREMENT_ID = re.compile(
     r"^(?P<level>#{2,6})\s*(?P<id>[A-Z][A-Z0-9]{1,9}-\d{2,4})\b",
     re.MULTILINE,
 )
-OUT_OF_SCOPE_HEADING = re.compile(
-    r"^(?P<level>#{2,6})\s*Out of Scope\b",
+REQUIREMENTS_HEADING = re.compile(
+    r"^(?P<level>#{2,6})\s*Requirements\b",
     re.MULTILINE | re.IGNORECASE,
 )
 ANY_HEADING = re.compile(r"^(?P<level>#{1,6})\s", re.MULTILINE)
 
 
-def _without_out_of_scope(text: str) -> str:
-    """Drop each Out of Scope section through the next same-or-higher heading."""
+def _section_body(text: str, heading: re.Pattern[str]) -> str | None:
+    """Return the body of the first matching section, or None if absent."""
 
-    match = OUT_OF_SCOPE_HEADING.search(text)
+    match = heading.search(text)
     if not match:
-        return text
+        return None
 
     level = len(match.group("level"))
-    start = match.start()
+    start = match.end()
     end = len(text)
-    for heading in ANY_HEADING.finditer(text, match.end()):
-        if len(heading.group("level")) <= level:
-            end = heading.start()
+    for next_heading in ANY_HEADING.finditer(text, start):
+        if len(next_heading.group("level")) <= level:
+            end = next_heading.start()
             break
-    return text[:start] + _without_out_of_scope(text[end:])
+    return text[start:end]
 
 
 def requirement_ids(text: str) -> list[str]:
-    """Return requirement IDs from markdown headings, in document order.
+    """Return requirement IDs from markdown headings under `## Requirements`.
 
-    Skips any Out of Scope section so NOTE-001-style headings there do not
-    become coverage obligations.
+    Headings under Assumptions, Out of Scope, or other sections are ignored so
+    NOTE-001-style notes never become coverage obligations.
     """
 
-    cleaned = _without_out_of_scope(text)
+    body = _section_body(text, REQUIREMENTS_HEADING)
+    search_text = body if body is not None else text
     seen: set[str] = set()
     ordered: list[str] = []
-    for match in REQUIREMENT_ID.finditer(cleaned):
+    for match in REQUIREMENT_ID.finditer(search_text):
         requirement_id = match.group("id")
         if requirement_id not in seen:
             seen.add(requirement_id)

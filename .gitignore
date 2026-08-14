@@ -4,7 +4,7 @@ node_modules/
 __pycache__/
 *.py[cod]
 
-# Artefatos gerados pelo instalador (não commitar no repo fonte)
+# Installer output in this source repo (consumers commit their own .specs/)
 .cursor/
 .claude/
 .specs/
