@@ -1,6 +1,6 @@
 {
   "name": "@luizsantiago/agentic-harness",
-  "version": "0.7.2",
+  "version": "0.7.3",
   "description": "Spec-driven harness for AI coding agents. SDD hub, 4 sister skills (task graphs, engineering, security, git handoff), per-phase procedures, and Python gates that stop incomplete work. Specify→Verify with an independent verifier, test-first, test-path evidence, .specs/ memory, grounded lessons, .cursorrules.",
   "type": "module",
   "bin": {
