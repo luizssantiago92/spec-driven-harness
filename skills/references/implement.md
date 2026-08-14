@@ -22,10 +22,11 @@ Execute one task at a time: test first, gate, commit, repeat. Always required.
 ## Before Starting
 
 1. Read this file completely.
-2. Run `python3 .specs/harness/scripts/validate_tasks.py` when a formal `tasks.md` exists.
-3. If Tasks was skipped, list the atomic steps inline now. More than 5 steps or real dependencies means the Tasks phase was skipped in error — stop and create `tasks.md`.
-4. If the breakdown exceeds roughly 8 tasks, offer sub-agent delegation per `task-graph-engineering.md` and the operational contract in `sub-agents.md`. Offer and wait; never auto-spawn.
-5. Confirm you are the only writer for each file this task names. Two parallel tasks never share a file in the same round.
+2. **Discover this repo’s test command** from `package.json`, `Makefile`, CI, or README — prefer the focused command the task `Gate` names. Do not assume `npm test` if the project uses another runner.
+3. Run `python3 .specs/harness/scripts/validate_tasks.py` when a formal `tasks.md` exists.
+4. If Tasks was skipped, list the atomic steps inline now. More than 5 steps or real dependencies means the Tasks phase was skipped in error — stop and create `tasks.md`.
+5. If the breakdown exceeds roughly 8 tasks, offer sub-agent delegation per `task-graph-engineering.md` and the operational contract in `sub-agents.md`. Offer and wait; never auto-spawn.
+6. Confirm you are the only writer for each file this task names. Two parallel tasks never share a file in the same round.
 
 ## Per-Task Cycle
 
@@ -58,6 +59,9 @@ Verifier judgment, not a structural gate. If any check is No, do not commit — 
 | **D Spec** | No extra behavior outside the spec? If the spec is wrong, stop and follow Spec Deviation (`SPEC_DEVIATION`) — do not adapt in code. |
 
 A gate that passes while A or D fails is not done.
+
+**Anti-rationalizations (judgment):** “test after code” → no, RED first (**A**). “Gate green = done” → still need **A**/**D**. “Nearby sibling files” → stay in `Files` (**B**). “Spec is slightly wrong” → Spec Deviation, never silent adapt (**D**).
+
 ## Gate Failure Playbook
 
 A failing gate is information. Do not skip, delete, or loosen a test to make it pass.

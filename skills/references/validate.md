@@ -120,6 +120,8 @@ The gate cannot judge whether a cited test actually asserts the criterion. That 
 
 **Gate-enforced vs verifier judgment.** `validate_state.py` enforces form: verdict scope, test-path evidence, REQ↔evidence lines, sensor outcomes on Medium+, open Gaps, Security `Result: fail`, open tasks. The following stay **verifier judgment** (not structural gates): whether each coverage row's test truly asserts the outcome, whether a lightweight Security path is justified, Interactive UAT / walkthrough success, and optional `## AppSec` / `## QA` sections. See the [gate stability contract](https://github.com/luizssantiago92/spec-driven-harness/blob/main/prd/gate-stability.md).
 
+**Red flags before PASS (judgment):** evidence only in fences/comments; open Gaps with PASS; soft `PASS WITH GAPS`; verdict buried under Sensor/Coverage; config path as evidence; surviving mutant or Medium+ without a kill — these already fail the gate or the reader.
+
 ## Template
 
 ```markdown
