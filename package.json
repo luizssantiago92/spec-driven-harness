@@ -1,12 +1,7 @@
 {
   "name": "@luizsantiago/agentic-harness",
-<<<<<<< HEAD
-  "version": "0.7.2",
-  "description": "Spec-driven harness for AI agents. Progressive skills load only the current phase (~66% fewer tokens vs dumping the full kit). Python gates block incomplete work; REQ↔task↔test evidence; Medium+ mutant sensor; adversarial matrix (0.7). Specify→Verify with .specs/ memory.",
-=======
   "version": "0.7.3",
-  "description": "Spec-driven harness for AI coding agents. SDD hub, 4 sister skills (task graphs, engineering, security, git handoff), per-phase procedures, and Python gates that stop incomplete work. Specify→Verify with an independent verifier, test-first, test-path evidence, .specs/ memory, grounded lessons, .cursorrules.",
->>>>>>> origin/main
+  "description": "Spec-driven harness for AI agents. Progressive skills load only the current phase (~66% fewer tokens vs dumping the full kit). Python gates block incomplete work; REQ↔task↔test evidence; Medium+ mutant sensor; adversarial matrix (0.7). Specify→Verify with .specs/ memory.",
   "type": "module",
   "bin": {
     "agentic-harness": "./index.js"
