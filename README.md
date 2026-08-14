@@ -191,7 +191,8 @@ Run `npx @luizsantiago/agentic-harness install` again. Existing memory and edite
 
 | Coming from | Manual step |
 | --- | --- |
-| A version before `0.6.5` | `PASS` with a surviving mutant fails. Medium+ `PASS` needs at least one `killed` (injected alone is not enough; `killed` must sit in the sensor section or on a mutant line). `Files: none` and `Gate: none` fail. Quoted/`../`/`/` paths normalize for overlap. Requirement IDs are collected only under `## Requirements`. Conflicting preamble vs `## Verdict` fails |
+| A version before `0.6.7` | Requirement IDs only under `## Requirements`. Quoted/`../` `Files` paths normalize for overlap. `killed`/`survived` must sit in the sensor section or on a mutant line. Conflicting preamble vs `## Verdict` fails |
+| A version before `0.6.5` | `PASS` with a surviving mutant fails. Medium+ `PASS` needs at least one `killed` (injected alone is not enough). `Files: none` and `Gate: none` fail. `/path` overlaps `path` |
 | A version before `0.6.3` | `Files` is required on every task. `Tests: none` fails. Verdict must sit in the preamble or under `## Verdict` — not under Discrimination Sensor |
 | A version before `0.6.2` | Medium+ Verify needs an outcome word (`killed` / `survived` / `injected`), not only a Discrimination Sensor heading. `Done when: —` fails. `./path` and `path` count as the same file for overlap |
 | A version before `0.6.0` | Tasks need `Done when`. Re-run `validate_tasks` against the sibling `spec.md` (every REQ needs a task). Independent tasks cannot share `Files`. Closing a Medium+ feature requires a discrimination-sensor result and same-line REQ ↔ test evidence in `validation.md` |
