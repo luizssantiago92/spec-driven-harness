@@ -182,3 +182,7 @@ Project rules: `.cursor/rules/engineering-baseline.mdc` (always applied in Curso
 | `/handoff` | `references/memory.md` | Update STATE, commit `.specs/`, no push |
 | `/sync-spec` | `git-handoff.md` | Commit current feature artifacts only |
 | `/lessons` | `references/lessons.md` | Record or load grounded lessons |
+
+## Credits
+
+Lineage and inspiration (CC-BY / MIT notices): see the repository [Credits](https://github.com/luizssantiago92/spec-driven-harness#credits) — TLC Spec-Driven, Addy Osmani agent-skills, graph-engineering.
