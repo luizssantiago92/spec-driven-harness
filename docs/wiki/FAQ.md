@@ -26,6 +26,12 @@ No. It means the **forms and proof links** look complete. You still judge produc
 
 No. They load on **Complex** work or clear risk (auth, PII, multi-step UI, etc.), **one at a time** (AppSec then QA). Tiny fixes skip them.
 
+## Does every spec have to look like EARS? Does every tasks file need the coverage table?
+
+The gate **requires** `SHALL` or `MUST` on each criterion. The EARS patterns (WHEN / IF / WHILE / always-on) are the recommended shape — missing them is a **warning**, not a hard fail.
+
+The **Test Coverage Matrix** and Execute **adequacy A–D** (does the test match the job, files, command, spec?) are authoring checklists. The Python tasks/state gates already cover REQ↔task and evidence; they do not parse those extra headings.
+
 ## What is “Author ≠ verifier”?
 
 The agent that wrote the code shouldn’t be the only one declaring victory. Verify is a fresh pass that asks for evidence, not confidence.

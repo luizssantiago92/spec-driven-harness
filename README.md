@@ -119,7 +119,7 @@ Structural gates freeze **form**, not meaning. See [`prd/gate-stability.md`](prd
 | Required sections/fields, IDs, dependency shape, normalized Files overlap | That a cited test asserts the criterion |
 | Exact `PASS`/`PASSED`, test-path evidence, Medium+ sensor outcomes (`design.md` with content, 4+ tasks, or 2+ phases — not the hub Complexity Router’s “Medium” label) | Real-world security beyond the recorded Security Review / AppSec result |
 | PASS blocked by open Gaps or Security `Result: fail` | Interactive UAT / walkthrough success; optional `## AppSec` / `## QA` quality (verifier judgment, not gated) |
-| Conventional commits; grounded lessons store rules | That `Done when` prose is philosophically binary |
+| Conventional commits; grounded lessons store rules | That `Done when` prose is philosophically binary; that EARS shape, the Tasks coverage-matrix headings, or Execute adequacy A–D ran (authoring / judgment) |
 
 After **0.7.0**, free-form gate audits only become PRs when a new failing case lands in `test/test_adversarial_gates.py` first.
 
@@ -145,11 +145,11 @@ SPECIFY → DISCUSS (conditional) → DESIGN (optional) → TASKS (optional) →
 
 | Phase | Command | Procedure | Cross-cutting skill | Gate |
 | --- | --- | --- | --- | --- |
-| Specify | `/specify` | `references/specify.md` | — | `validate_spec.py` |
+| Specify | `/specify` | `references/specify.md` (EARS patterns; `SHALL`/`MUST` gated) | — | `validate_spec.py` |
 | Discuss | `/discuss` | `references/discuss.md` | — | — |
 | Design | `/plan` | `references/design.md` | — | — |
-| Tasks | `/tasks` | `references/tasks.md` | `task-graph-engineering` | `validate_tasks.py` |
-| Execute | `/loop` | `references/implement.md` | `engineering-standards` | `check_commit.py` |
+| Tasks | `/tasks` | `references/tasks.md` (coverage matrix + gate commands, authoring) | `task-graph-engineering` | `validate_tasks.py` |
+| Execute | `/loop` | `references/implement.md` (adequacy A–D before commit) | `engineering-standards` | `check_commit.py` |
 | Verify | `/verify` | `references/validate.md` | `security-review` (+ conditional `appsec` then `qa-strategy`, one at a time) | `validate_state.py` |
 | Handoff | `/handoff` | `references/memory.md` | `git-handoff` | — |
 | Quick | `/quick` | `references/quick-mode.md` | — | `check_commit.py` |
@@ -179,9 +179,9 @@ Even when Tasks is skipped, Execute opens by listing the atomic steps. More than
 
 ## Execution contract
 
-1. **Test-first** — tests derive from acceptance criteria and assert the spec's outcome, never the implementation.
-2. **Gate before done** — the test runner decides, not self-assessment.
-3. **One atomic commit per task** — code, tests, and the task checkbox land together.
+1. **Test-first** — tests derive from acceptance criteria and assert the spec's outcome, never the implementation. Execute adequacy **A** is that check before each commit (judgment).
+2. **Gate before done** — the test runner decides, not self-assessment. Adequacy **C** is the task `Gate` command.
+3. **One atomic commit per task** — code, tests, and the task checkbox land together. Adequacy **B** is scope (`Files` vs the index); **D** is no silent spec deviation.
 4. **Author ≠ verifier** — after the last task, `/verify` runs in a clean context. Mandatory, never prompted.
 5. **Blast radius** — approving a spec or tasks authorizes local implementation and commits. `git push`, deploy, and destructive operations require an explicit go-ahead.
 
@@ -247,6 +247,7 @@ Run `npx @luizsantiago/agentic-harness install` again. Existing memory and edite
 | Coming from | Manual step |
 | --- | --- |
 | A version before AppSec/QA sister skills | Re-run install to receive `appsec.md` and `qa-strategy.md`. Sections in `validation.md` stay optional (judgment); no artifact migration |
+| A version before Specify EARS table / Tasks matrix template / Execute adequacy | Re-run install. Specs still need `SHALL`/`MUST` (gated). Coverage-matrix headings and A–D remain authoring/judgment — no artifact migration |
 | A version before `0.7.2` | Gaps placeholders accept markdown emphasis (`- **none**`, `- *none*`) |
 | A version before `0.7.0` | Stability baseline: shared path/markdown helpers, adversarial matrix in CI, skill PASS language aligned with gates. Free-form audits need a failing matrix case before a gate PR. Read `prd/gate-stability.md` |
 | A version before `0.6.8` | Evidence inside fences or HTML comments does not count. `Files` overlap is case-insensitive and unwraps markdown links. `PASS` with open `Gaps` or Security Review `Result: fail` fails |

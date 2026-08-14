@@ -21,6 +21,7 @@ Agents are good at generating code and bad at knowing when to stop. The harness 
 3. **Progressive disclosure** — load the current phase, not the whole skill kit (~70% fewer skill tokens per plan turn vs a full dump; ~80% less on a typical Medium feature vs naive full reloads)
 4. **Author ≠ verifier** — Verify runs in a clean context with test-path evidence
 5. **Risk-sized Verify** — OWASP checklist always; AppSec / QA / walkthrough only when the feature warrants it
+6. **Clearer specs and jobs** — EARS-shaped criteria, a REQ↔test table on Tasks, a short “may I commit?” check on Execute (guides — not extra Python brakes)
 
 ## Start here
 

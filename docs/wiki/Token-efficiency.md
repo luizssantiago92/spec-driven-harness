@@ -26,7 +26,7 @@ For a normal turn, roughly:
 
 Not: all eleven phase guides + every sister skill + last week’s chats + three other features’ specs.
 
-The kit on disk grew (more optional sisters). The **working set** rule did not: most turns still load one phase. Dumping everything is now about **~25k** skill tokens; a planning turn stays around **~7k** (~**70%** less).
+The kit on disk grew (optional sisters + slightly longer Specify/Tasks/Execute guides). The **working set** rule did not: most turns still load **one** phase. Dumping everything is about **~25k** skill tokens; a planning turn stays around **~7k** (~**70%** less). Specify, Tasks, or Execute each cost a bit more **in that turn only**.
 
 ## Why that helps you
 
