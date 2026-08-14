@@ -112,7 +112,7 @@ Structural gates freeze **form**, not meaning. See [`prd/gate-stability.md`](prd
 | Guarantees | Does not guarantee |
 | --- | --- |
 | Required sections/fields, IDs, dependency shape, normalized Files overlap | That a cited test asserts the criterion |
-| Exact `PASS`/`PASSED`, test-path evidence, Medium+ sensor outcomes | Real-world security beyond the recorded Security Review result |
+| Exact `PASS`/`PASSED`, test-path evidence, Medium+ sensor outcomes (`design.md` with content, 4+ tasks, or 2+ phases — not the hub Complexity Router’s “Medium” label) | Real-world security beyond the recorded Security Review result |
 | PASS blocked by open Gaps or Security `Result: fail` | Interactive UAT / walkthrough success |
 | Conventional commits; grounded lessons store rules | That `Done when` prose is philosophically binary |
 
@@ -182,7 +182,7 @@ Even when Tasks is skipped, Execute opens by listing the atomic steps. More than
 
 - **Spec-anchored check** — every criterion has a test asserting the outcome the spec defines
 - **Evidence-or-zero** — a requirement is done only with a `file:line` reference to a passing assertive **test** on the same coverage line as the requirement ID (`test/auth/token.test.ts:41`). A config path is not evidence. The verdict must be exactly `PASS` or `PASSED`.
-- **Discrimination sensor** — mutants injected into an isolated scratch copy, never `git stash`; a surviving mutant becomes a fix task. On Medium+ features the completion gate **blocks** if the sensor result is missing.
+- **Discrimination sensor** — mutants injected into an isolated scratch copy, never `git stash`; a surviving mutant becomes a fix task. On gate Medium+ features (`design.md` with content, 4+ tasks, or 2+ phases) the completion gate **blocks** if the sensor result is missing.
 - **Security review** — OWASP checklist, with a documented lightweight path for changes with no auth or API surface
 - **Bounded loop** — fix and re-verify at most three times, then escalate
 
