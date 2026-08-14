@@ -28,6 +28,8 @@ import {
   GIT_HANDOFF_FIXTURE,
   RULES_FIXTURE,
   SECURITY_FIXTURE,
+  APPSEC_FIXTURE,
+  QA_STRATEGY_FIXTURE,
   SKILL_FIXTURE,
   SPEC_GATE_FIXTURE,
   SPECIFY_REFERENCE_FIXTURE,
@@ -86,6 +88,8 @@ describe("install harness", () => {
           cwd,
           ".cursor/skills/security-review.md",
         );
+        const appsecSkill = path.join(cwd, ".cursor/skills/appsec.md");
+        const qaSkill = path.join(cwd, ".cursor/skills/qa-strategy.md");
         const gitHandoffSkill = path.join(
           cwd,
           ".cursor/skills/git-handoff.md",
@@ -110,6 +114,8 @@ describe("install harness", () => {
         assert.equal(await pathExists(cursorSkill), true);
         assert.equal(await pathExists(engineeringSkill), true);
         assert.equal(await pathExists(securitySkill), true);
+        assert.equal(await pathExists(appsecSkill), true);
+        assert.equal(await pathExists(qaSkill), true);
         assert.equal(await pathExists(gitHandoffSkill), true);
         assert.equal(await pathExists(taskGraphSkill), true);
         assert.equal(await pathExists(claudeSkill), true);
@@ -126,6 +132,8 @@ describe("install harness", () => {
           await fs.readFile(securitySkill, "utf8"),
           SECURITY_FIXTURE,
         );
+        assert.equal(await fs.readFile(appsecSkill, "utf8"), APPSEC_FIXTURE);
+        assert.equal(await fs.readFile(qaSkill, "utf8"), QA_STRATEGY_FIXTURE);
         assert.equal(
           await fs.readFile(gitHandoffSkill, "utf8"),
           GIT_HANDOFF_FIXTURE,
@@ -143,6 +151,8 @@ describe("install harness", () => {
         assert.match(rulesContent, /agent-architecture\.md/);
         assert.match(rulesContent, /engineering-standards\.md/);
         assert.match(rulesContent, /security-review\.md/);
+        assert.match(rulesContent, /appsec\.md/);
+        assert.match(rulesContent, /qa-strategy\.md/);
         assert.match(rulesContent, /git-handoff\.md/);
         assert.match(rulesContent, /task-graph-engineering\.md/);
         assert.match(rulesContent, /engineering-baseline\.mdc/);
@@ -365,6 +375,8 @@ describe("install harness", () => {
         const rulesContent = await fs.readFile(cursorRules, "utf8");
         assert.match(rulesContent, /engineering-standards\.md/);
         assert.match(rulesContent, /security-review\.md/);
+        assert.match(rulesContent, /appsec\.md/);
+        assert.match(rulesContent, /qa-strategy\.md/);
         assert.match(rulesContent, /git-handoff\.md/);
         assert.match(rulesContent, /task-graph-engineering\.md/);
         assert.match(rulesContent, /engineering-baseline\.mdc/);

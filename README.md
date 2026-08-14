@@ -62,6 +62,8 @@ Re-running refreshes skills, references and gate scripts, and upgrades the harne
 | `.cursor/skills/task-graph-engineering.md` | Task DAG, parallelism, diamond verify, sub-agent batches |
 | `.cursor/skills/engineering-standards.md` | Secure coding, code quality, one writer per file |
 | `.cursor/skills/security-review.md` | OWASP checklist for `/verify` |
+| `.cursor/skills/appsec.md` | Conditional AppSec (Complex / attack surface); load alone, before QA |
+| `.cursor/skills/qa-strategy.md` | Conditional QA strategy; never together with `appsec.md` |
 | `.cursor/skills/git-handoff.md` | Git sync, reconcile, session handoff |
 | `.claude/skills/**` | The same skills and references for Claude |
 | `.cursor/rules/engineering-baseline.mdc` | Always-applied Cursor project rule |
@@ -184,6 +186,8 @@ Even when Tasks is skipped, Execute opens by listing the atomic steps. More than
 - **Evidence-or-zero** — a requirement is done only with a `file:line` reference to a passing assertive **test** on the same coverage line as the requirement ID (`test/auth/token.test.ts:41`). A config path is not evidence. The verdict must be exactly `PASS` or `PASSED`.
 - **Discrimination sensor** — mutants injected into an isolated scratch copy, never `git stash`; a surviving mutant becomes a fix task. On gate Medium+ features (`design.md` with content, 4+ tasks, or 2+ phases) the completion gate **blocks** if the sensor result is missing.
 - **Security review** — OWASP checklist, with a documented lightweight path for changes with no auth or API surface
+- **Conditional AppSec / QA** — on Complex or risk surfaces, load `appsec.md` then `qa-strategy.md` one at a time (verifier judgment; not gated)
+- **Lean Interactive UAT** — on Complex + user-facing work, a short walkthrough after automated checks (verifier judgment)
 - **Bounded loop** — fix and re-verify at most three times, then escalate
 
 ## Memory
@@ -212,7 +216,9 @@ Artifacts are created lazily. An empty `design.md` claims a phase ran when it di
 | `agent-architecture.md` | Process | What to do and when: contract, phases, router |
 | `task-graph-engineering.md` | Topology | How jobs connect: DAG, stop rule, diamond verify, sub-agent batches |
 | `engineering-standards.md` | Quality | How code and commits are written |
-| `security-review.md` | Verification | Security during `/verify` |
+| `security-review.md` | Verification | OWASP checklist during `/verify` |
+| `appsec.md` | Conditional AppSec | Threat sketch on Complex / attack surface (judgment; one-at-a-time with QA) |
+| `qa-strategy.md` | Conditional QA | Smoke/regression focus after AppSec if both apply (judgment) |
 | `git-handoff.md` | Persistence | How memory reaches git |
 
 Each skill links to the others, and `.cursorrules` points at the hub, so the agent loads the set when planning or executing. Prefer the **Token efficiency** working set above over loading every skill on every turn — that is the cost win.
@@ -264,6 +270,8 @@ spec-driven-harness/
 │   ├── task-graph-engineering.md
 │   ├── engineering-standards.md
 │   ├── security-review.md
+│   ├── appsec.md                   # Conditional AppSec
+│   ├── qa-strategy.md              # Conditional QA
 │   └── git-handoff.md
 ├── rules/engineering-baseline.mdc
 ├── scripts/                        # Gate scripts (Python; npm ships *.py only)

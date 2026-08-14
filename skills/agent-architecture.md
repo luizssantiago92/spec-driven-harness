@@ -66,6 +66,17 @@ SPECIFY → DISCUSS (conditional) → DESIGN (optional) → TASKS (optional) →
 
 Context is a load rule, not a pipeline phase. Read it when the session is long or the feature has more than a handful of tasks. Sub-agents is the Execute scaling protocol — offer only when the task graph needs more than one batch; see `references/sub-agents.md`. Lessons is a FAIL-path step, not a sequential phase — see `references/lessons.md`.
 
+## Conditional sister skills
+
+Not in the default phase-map cell. Load only on `/verify` after `validate.md` + `security-review.md`, and **at most one in context at a time**.
+
+| Skill | Load when | Skip when |
+| --- | --- | --- |
+| `appsec.md` | **Complex**, or auth / payments / PII / secrets / upload / SSRF / network trust boundary | Quick; Simple without those surfaces; copy/docs/styling |
+| `qa-strategy.md` | **Complex**, or multi-step user-facing flow, or owner asked for regression/QA | Quick; Simple one-file; evidence-or-zero alone is enough |
+
+**Sequence.** If both triggers fire: AppSec → write `## AppSec` → **drop** `appsec.md` from the working set → QA → write `## QA`. Never load both together. Neither section is enforced by `validate_state.py` (verifier judgment).
+
 ## Complexity Router
 
 Complexity determines depth. Do not run every phase on every change.
@@ -150,6 +161,8 @@ Never skip to step 5 while steps 1–4 are available. Fabrication cascades throu
 | `task-graph-engineering.md` | Topology — task DAG, parallelism, diamond verify |
 | `engineering-standards.md` | Quality — secure coding, one writer per file, artifact language |
 | `security-review.md` | Verification — OWASP checklist for `/verify` |
+| `appsec.md` | Conditional AppSec — threat sketch; Complex / attack surface only |
+| `qa-strategy.md` | Conditional QA — smoke/regression; after AppSec if both apply |
 | `git-handoff.md` | Persistence — git sync, STATE template, session handoff |
 
 Project rules: `.cursor/rules/engineering-baseline.mdc` (always applied in Cursor).
@@ -164,7 +177,7 @@ Project rules: `.cursor/rules/engineering-baseline.mdc` (always applied in Curso
 | `/tasks` | `references/tasks.md` | Atomic task breakdown |
 | `/task-graph` | `task-graph-engineering.md` | Draw or revise the job DAG |
 | `/loop` | `references/implement.md` | Autonomous implementation loop |
-| `/verify` | `references/validate.md` | Independent technical validation; lean Interactive UAT on Complex + user-facing (verifier judgment) |
+| `/verify` | `references/validate.md` | Independent technical validation; lean UAT; conditional AppSec then QA (one at a time) |
 | `/quick` | `references/quick-mode.md` | Express lane for ≤3-file changes |
 | `/handoff` | `references/memory.md` | Update STATE, commit `.specs/`, no push |
 | `/sync-spec` | `git-handoff.md` | Commit current feature artifacts only |
