@@ -27,6 +27,14 @@ export const QA_STRATEGY_FIXTURE = `# QA Strategy (test fixture)
 Conditional smoke and regression focus
 `;
 
+export const CODE_SIMPLIFY_FIXTURE = `# Code Simplify (test fixture)
+Conditional simplify without behavior change
+`;
+
+export const SHIP_READY_FIXTURE = `# Ship Ready (test fixture)
+Conditional ship checklist; no push without go-ahead
+`;
+
 export const GIT_HANDOFF_FIXTURE = `# Git Handoff (test fixture)
 Git sync at phase boundaries
 `;
@@ -80,6 +88,8 @@ export const DEFAULT_FIXTURES = {
   "/skills/security-review.md": SECURITY_FIXTURE,
   "/skills/appsec.md": APPSEC_FIXTURE,
   "/skills/qa-strategy.md": QA_STRATEGY_FIXTURE,
+  "/skills/code-simplify.md": CODE_SIMPLIFY_FIXTURE,
+  "/skills/ship-ready.md": SHIP_READY_FIXTURE,
   "/skills/git-handoff.md": GIT_HANDOFF_FIXTURE,
   "/skills/task-graph-engineering.md": TASK_GRAPH_FIXTURE,
   "/skills/references/specify.md": SPECIFY_REFERENCE_FIXTURE,

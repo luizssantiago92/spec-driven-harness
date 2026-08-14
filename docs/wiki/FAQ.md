@@ -26,6 +26,10 @@ No. It means the **forms and proof links** look complete. You still judge produc
 
 No. They load on **Complex** work or clear risk (auth, PII, multi-step UI, etc.), **one at a time** (AppSec then QA). Tiny fixes skip them.
 
+## What about code-simplify and ship-ready?
+
+Optional sisters. **code-simplify** may load after a Medium+ task clears adequacy A–D, or when you ask to simplify without changing behavior. **ship-ready** loads only when you ask for a ship/deploy checklist — it does **not** authorize `git push` or deploy. Never hold more than one conditional sister (AppSec, QA, simplify, ship-ready) in the same window.
+
 ## Does every spec have to look like EARS? Does every tasks file need the coverage table?
 
 The gate **requires** `SHALL` or `MUST` on each criterion. The EARS patterns (WHEN / IF / WHILE / always-on) are the recommended shape — missing them is a **warning**, not a hard fail.

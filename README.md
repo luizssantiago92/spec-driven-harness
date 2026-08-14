@@ -3,9 +3,9 @@
 [![npm version](https://img.shields.io/npm/v/@luizsantiago/agentic-harness.svg)](https://www.npmjs.com/package/@luizsantiago/agentic-harness)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A **spec-driven harness** for AI coding agents — npm [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **0.7.x** (current **0.7.10**): adaptive phases from Specify to Verify, progressive skill loading, persistent `.specs/` memory, and structural Python gates that stop incomplete work.
+A **spec-driven harness** for AI coding agents — npm [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **0.7.x** (current **0.7.11**): adaptive phases from Specify to Verify, progressive skill loading, persistent `.specs/` memory, and structural Python gates that stop incomplete work.
 
-Built for **full-stack feature work** with an agent — API + UI + auth — without dumping the whole manual into every turn. Depth follows risk: Quick stays cheap; Complex can add AppSec, QA, and a lean walkthrough **one guide at a time**.
+Built for **full-stack feature work** with an agent — API + UI + auth — without dumping the whole manual into every turn. Depth follows risk: Quick stays cheap; Complex can add AppSec, QA, and a lean walkthrough **one guide at a time**. Optional **code-simplify** and **ship-ready** sisters load only when their triggers fire.
 
 The gates are what separate this from a prompt pack. An incomplete spec, a task without a success criterion, or a feature without test evidence exit non-zero — and the agent stops instead of declaring success.
 
@@ -13,11 +13,12 @@ The gates are what separate this from a prompt pack. An incomplete spec, a task 
 
 | Area | What you get |
 | --- | --- |
-| **Progressive disclosure** | Load the current phase, not the archive — ~**70%** fewer skill tokens on a plan turn vs a full dump (~25k → ~7k); ~**80%** less across a typical Medium feature |
+| **Progressive disclosure** | Load the current phase, not the archive — ~**70%** fewer skill tokens on a plan turn vs a full dump (~27k → ~7k); ~**80%** less across a typical Medium feature |
 | **Python gates (form)** | Specs need `SHALL`/`MUST`; tasks need fields + REQ coverage + Files overlap; commits are Conventional; Verify needs exact `PASS`/`PASSED`, test-path evidence, Medium+ mutant sensor; open Gaps or Security `Result: fail` block PASS. Contract: [`prd/gate-stability.md`](prd/gate-stability.md) |
-| **Authoring (judgment)** | EARS patterns on criteria (shape is a **warning**; missing `SHALL`/`MUST` still **blocks**); Tasks **Test Coverage Matrix** + **Gate Check Commands**; Execute adequacy **A–D** before each commit — not extra Python brakes |
+| **Authoring (judgment)** | EARS patterns on criteria (shape is a **warning**; missing `SHALL`/`MUST` still **blocks**); Tasks **Test Coverage Matrix** + **Gate Check Commands**; Execute adequacy **A–D** before each commit; standing Definition of Done — not extra Python brakes |
 | **Verify depth** | OWASP checklist always; conditional **AppSec** then **QA** (one at a time); lean interactive UAT on Complex user-facing work — verifier judgment, not `validate_state.py` |
-| **Install surface** | Cursor + Claude Code; 7 skills (hub + 6 sisters), 11 phase refs, 6 gate scripts; re-run install refreshes kit and keeps `.specs/` memory |
+| **Conditional extras** | `code-simplify` (Medium+ / owner ask); `ship-ready` (owner ship/deploy ask — does not authorize push); at most **one** conditional sister in context |
+| **Install surface** | Cursor + Claude Code; hub + 8 sisters, 11 phase refs, 6 gate scripts; re-run install refreshes kit and keeps `.specs/` memory |
 
 **Stability baseline 0.7** freezes that gate contract and ships an adversarial CI matrix. Free-form “find more gate bugs” only becomes a PR when a failing case lands in `test/test_adversarial_gates.py` first.
 
@@ -42,12 +43,13 @@ Dumping every skill and reference into every turn is the expensive default. This
 
 | Load pattern | What enters context | Relative size |
 | --- | --- | --- |
-| Naive full dump | Hub + all 11 phase refs + 6 sister skills + project rule | ~25k tokens |
+| Naive full dump | Hub + all 11 phase refs + 8 sister skills + project rule | ~27k tokens |
 | Progressive (plan turn) | Hub + current phase ref + mapped sister skill + `context-limits` + rule | ~7k tokens (~**70% less**) |
 | Execute lean | Current phase ref + sister skill + `context-limits` | ~4k tokens |
-| Verify + one conditional | Base Verify set + `appsec.md` **or** `qa-strategy.md` (never both at once) | ~+1k vs base Verify |
+| Execute + simplify | Execute lean + `code-simplify.md` (never with AppSec/QA/ship) | ~+0.9k vs Execute lean |
+| Verify + one conditional | Base Verify set + `appsec.md` **or** `qa-strategy.md` (never both at once; never ship-ready here) | ~+1k vs base Verify |
 
-On a typical Medium feature (plan → several execute loops → verify), progressive loading uses on the order of **~80% fewer** skill tokens than reloading the full kit every turn. Sub-agents receive only their task payload (`references/sub-agents.md`), and Verify starts with a **clean context** — Author ≠ verifier — so the author’s working set is not paid twice. Conditional AppSec/QA only join Complex or risk-surface Verify, and only **one at a time**.
+On a typical Medium feature (plan → several execute loops → verify), progressive loading uses on the order of **~80% fewer** skill tokens than reloading the full kit every turn. Sub-agents receive only their task payload (`references/sub-agents.md`), and Verify starts with a **clean context** — Author ≠ verifier — so the author’s working set is not paid twice. Conditional sisters (AppSec, QA, simplify, ship-ready) join only on their triggers, and only **one at a time**.
 
 These figures are measured from the shipped skill texts (chars÷4). Real sessions also save retries when gates catch incomplete artifacts early.
 
@@ -77,6 +79,8 @@ Re-running refreshes skills, references and gate scripts, and upgrades the harne
 | `.cursor/skills/security-review.md` | OWASP checklist for `/verify` |
 | `.cursor/skills/appsec.md` | Conditional AppSec (Complex / attack surface); load alone, before QA |
 | `.cursor/skills/qa-strategy.md` | Conditional QA strategy; never together with `appsec.md` |
+| `.cursor/skills/code-simplify.md` | Conditional simplify (Medium+ after A–D or owner ask); never with other conditionals |
+| `.cursor/skills/ship-ready.md` | Conditional ship checklist (owner ask); does not authorize push |
 | `.cursor/skills/git-handoff.md` | Git sync, reconcile, session handoff |
 | `.claude/skills/**` | The same skills and references for Claude |
 | `.cursor/rules/engineering-baseline.mdc` | Always-applied Cursor project rule |
@@ -233,8 +237,10 @@ Artifacts are created lazily. An empty `design.md` claims a phase ran when it di
 | `task-graph-engineering.md` | Topology | How jobs connect: DAG, stop rule, diamond verify, sub-agent batches |
 | `engineering-standards.md` | Quality | How code and commits are written |
 | `security-review.md` | Verification | OWASP checklist during `/verify` |
-| `appsec.md` | Conditional AppSec | Threat sketch on Complex / attack surface (judgment; one-at-a-time with QA) |
+| `appsec.md` | Conditional AppSec | Threat sketch on Complex / attack surface (judgment; one-at-a-time) |
 | `qa-strategy.md` | Conditional QA | Smoke/regression focus after AppSec if both apply (judgment) |
+| `code-simplify.md` | Conditional simplify | Clarity pass after A–D / owner ask; no behavior change (judgment) |
+| `ship-ready.md` | Conditional ship | Launch checklist on owner ask; does not authorize push (judgment) |
 | `git-handoff.md` | Persistence | How memory reaches git |
 
 Each skill links to the others, and `.cursorrules` points at the hub, so the agent loads the set when planning or executing. Prefer the **Token efficiency** working set above over loading every skill on every turn — that is the cost win.
@@ -257,6 +263,7 @@ Run `npx @luizsantiago/agentic-harness install` again. Existing memory and edite
 
 | Coming from | Manual step |
 | --- | --- |
+| A version before `code-simplify` / `ship-ready` sisters | Re-run install. Both are optional judgment loaders; no artifact migration |
 | A version before AppSec/QA sister skills | Re-run install to receive `appsec.md` and `qa-strategy.md`. Sections in `validation.md` stay optional (judgment); no artifact migration |
 | A version before Specify EARS table / Tasks matrix template / Execute adequacy | Re-run install. Specs still need `SHALL`/`MUST` (gated). Coverage-matrix headings and A–D remain authoring/judgment — no artifact migration |
 | A version before `0.7.2` | Gaps placeholders accept markdown emphasis (`- **none**`, `- *none*`) |
@@ -290,6 +297,8 @@ spec-driven-harness/
 │   ├── security-review.md
 │   ├── appsec.md                   # Conditional AppSec
 │   ├── qa-strategy.md              # Conditional QA
+│   ├── code-simplify.md            # Conditional simplify
+│   ├── ship-ready.md               # Conditional ship checklist
 │   └── git-handoff.md
 ├── rules/engineering-baseline.mdc
 ├── scripts/                        # Gate scripts (Python; npm ships *.py only)

@@ -163,6 +163,8 @@ Never skip to step 5 while steps 1–4 are available. Fabrication cascades throu
 | `security-review.md` | Verification — OWASP checklist for `/verify` |
 | `appsec.md` | Conditional AppSec — threat sketch; Complex / attack surface only |
 | `qa-strategy.md` | Conditional QA — smoke/regression; after AppSec if both apply |
+| `code-simplify.md` | Conditional simplify — after A–D on Medium+ or owner ask; no behavior change |
+| `ship-ready.md` | Conditional ship checklist — owner ask only; does not authorize push |
 | `git-handoff.md` | Persistence — git sync, STATE template, session handoff |
 
 Project rules: `.cursor/rules/engineering-baseline.mdc` (always applied in Cursor).
