@@ -62,6 +62,8 @@ A gate that passes while A or D fails is not done.
 
 **Anti-rationalizations (judgment):** “test after code” → no, RED first (**A**). “Gate green = done” → still need **A**/**D**. “Nearby sibling files” → stay in `Files` (**B**). “Spec is slightly wrong” → Spec Deviation, never silent adapt (**D**).
 
+**Optional simplify.** On Medium+ after A–D (or when the owner asks), offer to load **only** `code-simplify.md`, then drop it — never with AppSec/QA/ship-ready. Judgment; not gated.
+
 ## Gate Failure Playbook
 
 A failing gate is information. Do not skip, delete, or loosen a test to make it pass.

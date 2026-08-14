@@ -22,11 +22,12 @@ For a normal turn, roughly:
 - The guide for **this** phase only (specify, or build, or verify…)
 - At most one sister guide that phase needs (for example security at verify time)
 - On risky Verify only: **either** the AppSec guide **or** the QA guide — never both in the same window
+- On Execute (Medium+ / owner ask): optional **code-simplify** alone; on explicit ship ask: optional **ship-ready** alone — never stacked with AppSec/QA
 - The budget rules (don’t drag in sibling features “for orientation”)
 
 Not: all eleven phase guides + every sister skill + last week’s chats + three other features’ specs.
 
-The kit on disk grew (optional sisters + slightly longer Specify/Tasks/Execute guides). The **working set** rule did not: most turns still load **one** phase. Dumping everything is about **~25k** skill tokens; a planning turn stays around **~7k** (~**70%** less). Specify, Tasks, or Execute each cost a bit more **in that turn only**.
+The kit on disk grew (optional sisters + slightly longer Specify/Tasks/Execute guides). The **working set** rule did not: most turns still load **one** phase. Dumping everything is about **~27k** skill tokens; a planning turn stays around **~7k** (~**70%** less). Specify, Tasks, or Execute each cost a bit more **in that turn only**.
 
 ## Why that helps you
 
