@@ -1,60 +1,39 @@
 # Token efficiency
 
-AI chats bill you for **everything sitting in the window** — not just the clever answer.
+**Who this is for:** teams who care about **cost and focus**—not dumping the entire playbook into every chat turn.
 
-A common mistake is to paste the entire “agent manual” into every turn. That feels thorough. It’s also expensive and noisy.
+## The idea in one sentence
 
-This harness is built the other way: **load what you need for this step, leave the rest on disk.**
+Load **only the phase you’re in**, keep the written plan on disk, and pull in extra reviews **only when you ask**.
 
-## The kitchen analogy
+That’s the difference between “seatbelt” and “paste every skill into every message.”
 
-You don’t put every cookbook on the counter to make eggs.
+## Why chat dumps hurt
 
-You open **one recipe**, use the **one pan** you need, cook, put things away, then open the next recipe if dinner has more courses.
+If the agent reloads planning + building + checking + security + QA on every turn, you pay for text you aren’t using. Worse: the model’s attention spreads thin.
 
-That’s progressive disclosure.
+The harness fights that with:
 
-## What the agent is asked to load
+1. **Progressive skill loading** — one phase (or one sister) at a time  
+2. **`.specs/` on disk** — the plan doesn’t need to live only in the prompt  
+3. **Conditional sisters** — AppSec, QA, simplify, ship when needed; never all at once  
 
-For a normal turn, roughly:
+## Rough picture (order of magnitude)
 
-- The short “map” of the harness (the hub)
-- The guide for **this** phase only (specify, or build, or verify…)
-- At most one sister guide that phase needs (for example security at verify time)
-- On risky Verify only: **either** the AppSec guide **or** the QA guide — never both in the same window
-- On Execute (Medium+ / owner ask): optional **code-simplify** alone; on explicit ship ask: optional **ship-ready** alone — never stacked with AppSec/QA
-- The budget rules (don’t drag in sibling features “for orientation”)
+| Approach | What you feel |
+|----------|----------------|
+| Dump everything every turn | Expensive, noisy, easy to lose the thread |
+| Plan-heavy turn with one skill | Much smaller working set |
+| Medium feature, phase by phase | Large savings vs naive reload |
 
-Not: all eleven phase guides + every sister skill + last week’s chats + three other features’ specs.
+Exact numbers move with model and feature size. Treat published figures as **illustrative**, not a billing guarantee.
 
-The kit on disk grew (optional sisters + slightly longer Specify/Tasks/Execute guides). The **working set** rule did not: most turns still load **one** phase. Dumping everything is about **~27k** skill tokens; a planning turn stays around **~7k** (~**70%** less). Specify, Tasks, or Execute each cost a bit more **in that turn only**.
+## Sub-agents (optional)
 
-## Why that helps you
+For a **huge** build batch, you can split work across helpers. For a normal feature, one agent walking Specify → Verify is enough. Don’t spawn a fleet by default—that can *increase* cost.
 
-**Cheaper** — less text in context means fewer tokens burned per turn.  
-Measured from the shipped skill texts: a planning turn can use about **two-thirds less** (≈**70%**) skill text than dumping the full kit; a typical mid-size feature can use on the order of **~80% less** skill text than reloading everything every turn.
+## Related
 
-**Clearer** — the model focuses on “finish this job”, not “remember the whole religion”.
-
-**Safer at review time** — Verify is supposed to start **fresh**, so you don’t pay twice for the author’s whole working pile.
-
-## What you should still expect
-
-Progressive loading doesn’t make a bad prompt free.  
-Huge diffs, giant logs, and “read the whole repo for vibes” still cost money.
-
-The harness just refuses to be the thing that wastes tokens **by design**.
-
-## How to keep the win
-
-- One feature in focus  
-- One phase at a time  
-- One task’s files while building  
-- Don’t paste the full README into every message if the agent already has the hub installed  
-
-## Next
-
-- How the flow feels → [[How-it-works]]  
-- What the brakes do → [[Gates-and-guarantees]]  
-- Try it → [[Quick-start]]  
-- Back → [[Home]]
+- [How it works](How-it-works)  
+- [Gates and guarantees](Gates-and-guarantees)  
+- [FAQ](FAQ)

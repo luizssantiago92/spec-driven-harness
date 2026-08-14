@@ -1,41 +1,41 @@
 # Spec-Driven Harness
 
-A **spec-driven harness** for AI coding agents: adaptive phases (Specify → Verify), progressive skill loading, `.specs/` memory, and **Python gates** that stop incomplete work.
+**A seatbelt for AI coding agents.**
 
-Fit for **full-stack features** (API + UI + auth): the agent goes as deep as the risk needs — Quick stays light; Complex can add a short AppSec look, a QA focus, and a human walkthrough, **one guide at a time**.
+Agents are great at writing code and terrible at knowing when to stop. This harness gives them a simple loop: agree on the goal, break it into small jobs, prove each job, then let a fresh review ask for proof — not “trust me”.
 
-This is not "another prompt pack". Incomplete specs, tasks without done criteria, or Verify without test evidence **exit non-zero** — the agent must fix the artifact before claiming success.
+It is not another pile of prompts. If the write-up is incomplete or there is no real test evidence, the agent is supposed to **stop and fix it** before saying the feature is done.
+
+Works with **Cursor** and **Claude Code**. Install once; the project remembers where you left off.
 
 ## Install
 
     npx @luizsantiago/agentic-harness install
 
-Works with Cursor and Claude Code. Re-run to refresh skills and gates; project memory (`.specs/STATE.md`, lessons) is preserved.
+Re-run anytime to refresh the playbook. Your notes and decisions in `.specs/` stay put.
 
-## Why it exists
+## Why people use it
 
-Agents are good at generating code and bad at knowing when to stop. The harness adds:
-
-1. **Phases on demand** — only as deep as the work needs (Quick → Complex)
-2. **Structural gates** — form checks enforced by code, not vibes
-3. **Progressive disclosure** — load the current phase, not the whole skill kit (~70% fewer skill tokens per plan turn vs a full dump; ~80% less on a typical Medium feature vs naive full reloads)
-4. **Author ≠ verifier** — Verify runs in a clean context with test-path evidence
-5. **Risk-sized Verify** — OWASP checklist always; AppSec / QA / walkthrough only when the feature warrants it
-6. **Clearer specs and jobs** — EARS-shaped criteria, a REQ↔test table on Tasks, a short “may I commit?” check on Execute (guides — not extra Python brakes)
-7. **Optional simplify / ship** — clarity pass or launch checklist only when triggered; still one guide at a time
+1. **Only as deep as the work needs** — a typo fix stays light; a big feature gets more ceremony  
+2. **Brakes that actually fire** — incomplete paperwork fails a check, not a vibe  
+3. **Cheaper chats** — the agent opens **this step’s guide**, not the whole manual (~70% less skill text on a planning turn)  
+4. **Someone else checks the homework** — the writer of the code is not the only one who gets to say “done”  
+5. **Extra care when risk is high** — short security / QA looks, or a human walkthrough, only when it matters — **one guide at a time**  
+6. **Clearer asks** — sharp goals, a small job list, a “may I commit?” pause before each check-in  
+7. **Optional polish** — tidy the code without changing behavior, or a ship checklist when you ask — still one guide at a time  
 
 ## Start here
 
 | Page | Read when |
 | --- | --- |
-| [[How-it-works]] | You want the Specify → Verify flow |
-| [[Gates-and-guarantees]] | You want what gates block (and what they don't) |
-| [[Token-efficiency]] | You care about context cost |
-| [[Quick-start]] | You want a 10-minute first run |
+| [[How-it-works]] | You want the story from goal → done |
+| [[Gates-and-guarantees]] | You want what the brakes catch (and what they don’t) |
+| [[Token-efficiency]] | You care about chat cost / context |
+| [[Quick-start]] | You want ten minutes to first success |
 | [[FAQ]] | You have a concrete question |
 
 ## Links
 
-- [README](https://github.com/luizssantiago92/spec-driven-harness#readme)
+- [README](https://github.com/luizssantiago92/spec-driven-harness#readme) (technical detail)
 - [npm `@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness)
-- Gate contract: [`prd/gate-stability.md`](https://github.com/luizssantiago92/spec-driven-harness/blob/main/prd/gate-stability.md)
+- Gate contract for maintainers: [`prd/gate-stability.md`](https://github.com/luizssantiago92/spec-driven-harness/blob/main/prd/gate-stability.md)

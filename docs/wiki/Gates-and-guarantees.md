@@ -1,75 +1,57 @@
 # Gates and guarantees
 
-Gates are the harness’s **brakes**.
+**Who this is for:** anyone who wonders *“what does the harness actually enforce?”*
 
-Skills tell the agent *how* to work. Gates check that the paperwork is actually there before the agent moves on or says “we’re done”.
+The short answer: it **blocks** some incomplete work (missing files, empty stubs, weak evidence) and **guides** the rest (judgment, how you write specs). Not everything is a hard stop—and that’s intentional.
 
-If a gate fails, the agent is supposed to **stop, fix the file, and run the check again** — not shrug and keep coding.
+## Freeze (do not loosen)
 
-## Why brakes matter
+These guarantees are locked for the **0.7.x** line. Changing them needs a new major and a clear reason.
 
-AI is optimistic. It will happily invent a “done” that isn’t.
+| Guarantee | What it means in practice |
+|-----------|---------------------------|
+| **Six skills always install** | Planning, building, and checking aren’t optional pieces of the kit. |
+| **Specify before Verify** | You can’t “finish” without a written plan the harness can check against. |
+| **`.specs/` is the memory** | Plans and status live in the repo, not only in chat. |
+| **Structural gates stay on** | Empty plans, stub code, missing tests, and similar gaps fail the gate. |
+| **Conditional sisters** | Extra reviews (security, QA, simplify, ship) load only when you ask—and **one at a time**. |
+| **Python gate scripts stay frozen** | The automated checker’s behavior doesn’t drift casually. |
 
-Gates answer only one kind of question:
+Full freeze text: [ADR 0001](https://github.com/luizssantiago92/spec-driven-harness/blob/main/docs/adr/0001-harness-freeze-v0.7.md).
 
-> “Is this write-up complete enough that a careful human wouldn’t immediately send it back?”
+## What the gate **blocks** (hard)
 
-They do **not** answer:
+When you claim you’re done, the gate looks for real artifacts—not vibes:
 
-> “Is this the best product idea?” or “Is this test clever?”
+- Spec folder and plan documents present  
+- Status that matches a finished flow  
+- Code that isn’t an empty stub  
+- Tests that actually exercise something  
+- Evidence that validation ran  
 
-That’s still on you (and on the verifier’s judgment).
+If those aren’t there, **done** doesn’t stick.
 
-## What the brakes catch (in human terms)
+## What the gate **does not** fully enforce
 
-**Before you lock the goal**  
-Is the wish list written down? Are the must-haves clear? Did we say what’s *not* in this round?
+These stay in the **guides** (judgment and authoring quality):
 
-**Before you approve the to-do list**  
-Does every goal have a job? Does every job say where it changes, how we’ll know it’s finished, and what it waits on? Are two parallel jobs fighting over the same file?
+| Topic | Why it isn’t a hard gate |
+|-------|---------------------------|
+| How deep a discussion went | Conversation quality isn’t a file checksum. |
+| Exact shape of every plan section | Authoring skill, not a parser. |
+| Perfect task graphs | Guidance + templates; not a full dependency engine. |
+| “Did we talk enough before coding?” | Process habit—skills teach it; the gate doesn’t score chats. |
 
-**On every commit**  
-Does the commit message look like a normal engineering commit (clear type, not a novel ending with a period)?
+**Rule of thumb:** if it isn’t in the freeze table or the gate scripts, don’t promise users that the harness “guarantees” it.
 
-**Before you call the feature finished**  
-Is there a real pass/fail from a fresh review? Is there a pointer to a **test** that backs each goal? For bigger work (a design write-up, several tasks, or more than one phase group), did we poke the tests with a small “what if we break this?” check? Are leftover “still broken” notes still sitting under Gaps?
+## Adversarial matrix
 
-## What “PASS” means here
+A large suite of failure cases must keep failing. That stops “helpful” edits from accidentally making the gate too soft.
 
-**PASS** means: the forms are filled, the evidence is cited, and nothing obvious is left open in the report.
+Details: [`tests/adversarial/`](https://github.com/luizssantiago92/spec-driven-harness/tree/main/tests/adversarial) and [CONTRIBUTING](https://github.com/luizssantiago92/spec-driven-harness/blob/main/CONTRIBUTING.md).
 
-It does **not** mean: users will love it, security is perfect forever, or every test is deep.
+## Related
 
-If Gaps still lists real problems, or security was marked fail, that’s not a PASS — rewrite the verdict or fix the issues.
-
-A human walkthrough (click through the UI) helps on big user-facing work, but the harness **does not** run that walkthrough — the verifier still owns that call. Same for optional AppSec / QA write-ups: useful process, not a Python brake.
-
-## Guarantees (honest version)
-
-| The harness **does** | The harness **does not** |
-| --- | --- |
-| Stop incomplete specs and task lists | Invent your product vision |
-| Demand proof links to tests at the end | Judge if those tests are brilliant |
-| Keep parallel work from colliding on files | Run your app in production for you |
-| Save tokens by loading only the current phase | Magically make a weak idea strong |
-| Ask for a mutant/sensor result on bigger work | Run an interactive UI walkthrough for you |
-| Offer short AppSec / QA guides when risk is high | Guarantee real-world security or product QA by code alone |
-| Offer simplify or ship-ready checklists when triggered | Fail the Python gate if those optional guides were skipped; authorize push/deploy |
-| Ask for EARS-shaped criteria, a REQ↔test table, and a pre-commit adequacy check | Fail the Python gate if those authoring steps were skipped |
-
-## How it feels in practice
-
-You ask for a feature.  
-The agent writes the goal. A check runs.  
-It breaks the work into jobs. A check runs.  
-It builds job by job.  
-Another pass reviews with proof. A final check runs.
-
-Green checks don’t replace trust — they **remove the easy lies**.
-
-## Next
-
-- See the flow → [[How-it-works]]  
-- Try it in 10 minutes → [[Quick-start]]  
-- Context cost → [[Token-efficiency]]  
-- Back → [[Home]]
+- [How it works](How-it-works) — full journey and sisters  
+- [Token efficiency](Token-efficiency) — why not everything loads at once  
+- [FAQ](FAQ)

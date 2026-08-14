@@ -3,11 +3,13 @@
 [![npm version](https://img.shields.io/npm/v/@luizsantiago/agentic-harness.svg)](https://www.npmjs.com/package/@luizsantiago/agentic-harness)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-A **spec-driven harness** for AI coding agents — npm [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **0.7.x** (current **0.7.11**): adaptive phases from Specify to Verify, progressive skill loading, persistent `.specs/` memory, and structural Python gates that stop incomplete work.
+**A seatbelt for AI coding agents.** You agree on the goal in writing, break the work into small jobs, prove each job with a real check, then a fresh review asks for proof — not confidence. Automatic checks stop the agent from calling incomplete work “done”.
 
-Built for **full-stack feature work** with an agent — API + UI + auth — without dumping the whole manual into every turn. Depth follows risk: Quick stays cheap; Complex can add AppSec, QA, and a lean walkthrough **one guide at a time**. Optional **code-simplify** and **ship-ready** sisters load only when their triggers fire.
+Install once (`npx @luizsantiago/agentic-harness install`) and the same playbook runs in **Cursor** and **Claude Code**. The agent loads **one step’s guide** at a time instead of dumping the whole manual into every chat — so you spend less context on process and more on the feature.
 
-The gates are what separate this from a prompt pack. An incomplete spec, a task without a success criterion, or a feature without test evidence exit non-zero — and the agent stops instead of declaring success.
+npm package: [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **0.7.x** (current **0.7.14**).
+
+For the engineering contract (gates, evidence rules, upgrade tables), keep reading below — or take the plain-language tour on the [project wiki](https://github.com/luizssantiago92/spec-driven-harness/wiki).
 
 ### What's in 0.7.x
 
