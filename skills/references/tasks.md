@@ -37,9 +37,11 @@ Break the work into atomic tasks with real dependencies and binary done criteria
 3. **Delete fake edges.** For every "and then", ask whether the next task actually reads the previous task's output. If not, the edge is fake — remove it and the tasks can run in parallel. See `task-graph-engineering.md`.
 4. **Order tasks so dependencies come first.** Forward dependencies fail the gate. When grouping under `### Phase N`, a task must not depend on a task in a later phase.
 5. **Apply the stop rule.** Only split work that never reads its siblings' results; sequential work stays with one agent.
-6. **Cover every acceptance criterion.** Build the coverage matrix below before presenting the list. An unmapped criterion is a missing task.
+6. **Cover every acceptance criterion.** Fill `## Test Coverage Matrix` and `## Gate Check Commands` **before** presenting the list. An unmapped requirement is a missing task. Align each task `Tests` / `Gate` field with those sections.
 7. **Draw the graph** in `task-graph.md` when there are 3+ tasks or any parallel group.
 8. **Run the gate**, then present the breakdown for approval.
+
+**Authoring vs gate.** `validate_tasks.py` already enforces REQ coverage and `Tests`/`Gate` fields. The matrix and Gate Check Commands sections are an owner/verifier checklist (judgment) until a future form gate — do not skip them when Tasks ran.
 
 ## Gate
 
@@ -115,6 +117,17 @@ Do not invent phases to make the list look organized. Two tasks that can run in 
 - **Gate**: npm test
 - **Done when**: endpoint returns 200 for valid credentials
 - [ ] complete
+
+## Test Coverage Matrix
+| Requirement | Task | Tests | Notes |
+| --- | --- | --- | --- |
+| REQ-001 | T1, T2 | test/auth/token.test.ts, test/routes/login.test.ts | |
+
+## Gate Check Commands
+| Level | Command |
+| --- | --- |
+| Task | the per-task `Gate` field |
+| Feature | npm test |
 ```
 
 ## Granularity
@@ -142,15 +155,15 @@ Delete fake edges before drawing `task-graph.md`. Most first drafts hide two or 
 
 ## Coverage matrix
 
-Before approval, map criteria to tasks. Every row needs at least one task; every task needs at least one row.
+Before approval, map every spec requirement heading under `## Requirements` to at least one task. Every task `Tests` path should appear in the matrix. Fill `## Test Coverage Matrix` and `## Gate Check Commands` in `tasks.md` (see Template).
 
-| Criterion | Task | Test |
-| --- | --- | --- |
-| REQ-001 valid credentials → session | T2 | test/routes/login.test.ts |
-| REQ-001 invalid credentials → 401 `AUTH_INVALID` | T2 | test/routes/login.test.ts |
-| REQ-002 refresh rotates the token | T3 | test/routes/refresh.test.ts |
+| Requirement | Task | Tests | Notes |
+| --- | --- | --- | --- |
+| REQ-001 | T2 | test/routes/login.test.ts | valid credentials → session |
+| REQ-001 | T2 | test/routes/login.test.ts | invalid → 401 `AUTH_INVALID` |
+| REQ-002 | T3 | test/routes/refresh.test.ts | refresh rotates the token |
 
-A criterion with no row is unimplemented by construction. Do not present the breakdown until the matrix is complete.
+A requirement with no row is unimplemented by construction. Do not present the breakdown until the matrix is complete. The Python gate already fails uncovered REQ IDs; the table is for humans and Execute.
 
 `Files` lists on parallel tasks must be disjoint. If two tasks name the same file, they are one task, or they are sequential.
 

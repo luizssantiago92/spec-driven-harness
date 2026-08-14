@@ -18,18 +18,18 @@ If any of those steps is incomplete, the harness **stops the agent** until it’
 ### 1. Specify — “What are we building?”
 You and the agent agree on the outcome in writing: who it’s for, what must happen, what’s out of scope.
 
-No vague “make auth better”. Clear “when the user logs in with a valid password, they get a session”.
+No vague “make auth better”. Clear “when the user logs in with a valid password, they get a session” — and the same sharpness for errors, states, and always-on rules.
 
 ### 2. Discuss / Design — only when needed
 If something is unclear or the design is big, you pause and decide. Small fixes skip this. Big features don’t.
 
 ### 3. Tasks — “What’s the shopping list?”
-The work becomes a list of small, checkable jobs: which files change, how we’ll know it’s done, what depends on what.
+The work becomes a list of small, checkable jobs: which files change, how we’ll know it’s done, what depends on what. A short **coverage table** maps each goal to a job and a test so nothing in the spec is left without an owner.
 
 Two agents won’t accidentally edit the same file at the same time unless the list says they should wait for each other.
 
 ### 4. Execute — “Do the next job only”
-The agent picks **one** task, writes the test for the outcome, implements it, runs the project’s checks, and commits. Then the next task. No giant mystery PR.
+The agent picks **one** task, writes the test for the outcome, implements it, runs the project’s checks, and commits only if that test, file list, and command still match the job. Then the next task. No giant mystery PR.
 
 ### 5. Verify — “Would a stranger believe this is done?”
 A fresh review looks at the original goals and asks for **proof** (links to real tests), not confidence. If something’s still open, it’s a fail — not a soft “mostly fine”.

@@ -29,9 +29,19 @@ Capture WHAT to build as testable, traceable requirements. Always required.
 2. **Load confirmed lessons.** Run `python3 .specs/harness/scripts/lessons.py list --status confirmed` and apply every rule that matches this work. Candidates are not guidance.
 3. **Detect gray areas.** If the feature touches persistence, external calls, auth, payments, concurrency, or state transitions — or if intent is ambiguous — run `discuss.md` before finalizing.
 4. **Write requirements with stable IDs.** `REQ-001`, `AUTH-002` — prefix plus a zero-padded number. IDs never change once approved; retire them instead.
-5. **Write binary acceptance criteria.** Every criterion is objectively pass or fail. The gate **blocks** a criterion that does not state a required outcome with `SHALL` or `MUST`. EARS shape is the recommended form and is reported as a warning when missing:
-   `WHEN <trigger> THEN the system SHALL <observable outcome>`
-   Soft verbs (`should`, `will`, `can`, `may`) are not testable — rewrite them before confirming.
+5. **Write binary acceptance criteria.** Every criterion is objectively pass or fail. The gate **blocks** a criterion that does not state a required outcome with `SHALL` or `MUST`. Soft verbs (`should`, `will`, `can`, `may`) are not testable — rewrite them before confirming.
+   Prefer **EARS** (one pattern per criterion). The gate **warns** when a `SHALL`/`MUST` line has no `WHEN`/`IF` … `THEN` trigger; missing EARS is not a hard fail.
+
+   | Pattern | Shape | Use when |
+   | --- | --- | --- |
+   | Ubiquitous | The system SHALL [invariant] | Always-on constraints |
+   | Event-driven | WHEN [trigger] THEN the system SHALL [outcome] | A discrete action or event |
+   | State-driven | WHILE [state] the system SHALL [outcome] | Behavior that holds during a state |
+   | Optional-feature | WHERE [capability] the system SHALL [outcome] | Flag- or plan-gated behavior |
+   | Unwanted-behavior | IF [undesired] THEN the system SHALL [outcome] | Errors, invalid input, timeouts |
+   | Complex | WHILE [state], WHEN [trigger] the system SHALL [outcome] | Combined state + event |
+
+   One criterion = one behavior. Use concrete values (status, code, bound), not “gracefully” or “quickly”.
 6. **State out of scope explicitly.** This is what prevents scope creep during Execute.
 7. **Record assumptions.** Anything inferred rather than confirmed goes under `## Assumptions`. The section is required; write `- none` only when nothing was inferred.
 8. **Run the gate.** Fix every blocking issue before showing the spec to the owner.
@@ -58,11 +68,12 @@ Checks required sections (`Requirements`, `Assumptions`, `Out of Scope`), well-f
 ## Requirements
 
 ### REQ-001: [Short title]
-- **Acceptance Criteria**: WHEN [trigger] THEN the system SHALL [observable outcome]
-- WHEN [error trigger] THEN the system SHALL [error outcome]
+- **Acceptance Criteria**: WHEN [valid credentials are submitted] THEN the system SHALL [create a session]  <!-- event-driven -->
+- IF [the token is expired] THEN the system SHALL [return 401 with code TOKEN_EXPIRED]  <!-- unwanted-behavior -->
 
 ### REQ-002: [Short title]
-- **Acceptance Criteria**: WHEN [trigger] THEN the system SHALL [observable outcome]
+- **Acceptance Criteria**: WHILE [a session is active] the system SHALL [reject reuse of a rotated refresh token]  <!-- state-driven -->
+- The system SHALL [store passwords only as argon2 hashes]  <!-- ubiquitous -->
 
 ## Assumptions
 - [Anything inferred rather than confirmed]

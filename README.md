@@ -159,6 +159,8 @@ SPECIFY → DISCUSS (conditional) → DESIGN (optional) → TASKS (optional) →
 
 Context is a load rule, Sub-agents is the Execute scaling protocol, and Lessons is a FAIL-path step — none is a sequential pipeline phase.
 
+Specify prefers **EARS** patterns (event, error, state, invariant); `validate_spec.py` still only **blocks** missing `SHALL`/`MUST` (EARS shape is a warning). Tasks authoring fills a **Test Coverage Matrix** and **Gate Check Commands** before approval — the gate already enforces REQ coverage and `Tests`/`Gate` fields, not those section headings. Execute runs adequacy **A–D** (outcome, scope, gate, spec) before each commit; that is judgment, not `validate_state.py`.
+
 `/task-graph` draws the job DAG before `/loop`; `/sync-spec` commits the current feature's artifacts without a full handoff.
 
 ### Complexity router

@@ -171,12 +171,12 @@ Project rules: `.cursor/rules/engineering-baseline.mdc` (always applied in Curso
 
 | Command | Reference | Action |
 | --- | --- | --- |
-| `/specify` | `references/specify.md` | Define requirements and spec IDs |
+| `/specify` | `references/specify.md` | Define requirements; EARS patterns; `SHALL`/`MUST` |
 | `/discuss` | `references/discuss.md` | Resolve gray areas into `context.md` |
 | `/plan` | `references/design.md` | Create technical design |
-| `/tasks` | `references/tasks.md` | Atomic task breakdown |
+| `/tasks` | `references/tasks.md` | Atomic breakdown; coverage matrix (authoring) |
 | `/task-graph` | `task-graph-engineering.md` | Draw or revise the job DAG |
-| `/loop` | `references/implement.md` | Autonomous implementation loop |
+| `/loop` | `references/implement.md` | Autonomous loop; adequacy A–D before each commit |
 | `/verify` | `references/validate.md` | Independent technical validation; lean UAT; conditional AppSec then QA (one at a time) |
 | `/quick` | `references/quick-mode.md` | Express lane for ≤3-file changes |
 | `/handoff` | `references/memory.md` | Update STATE, commit `.specs/`, no push |
