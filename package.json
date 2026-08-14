@@ -1,6 +1,6 @@
 {
   "name": "@luizsantiago/agentic-harness",
-  "version": "0.7.5",
+  "version": "0.7.6",
   "description": "Spec-driven harness for AI agents. Progressive skills load only the current phase (~66% fewer tokens vs dumping the full kit). Python gates block incomplete work; REQ↔task↔test evidence; Medium+ mutant sensor; adversarial matrix (0.7). Specify→Verify with .specs/ memory.",
   "type": "module",
   "bin": {
