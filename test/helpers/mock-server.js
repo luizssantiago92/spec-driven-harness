@@ -19,6 +19,14 @@ export const SECURITY_FIXTURE = `# Security Review (test fixture)
 OWASP checklist for verify phase
 `;
 
+export const APPSEC_FIXTURE = `# AppSec (test fixture)
+Conditional threat sketch for Complex / attack surface
+`;
+
+export const QA_STRATEGY_FIXTURE = `# QA Strategy (test fixture)
+Conditional smoke and regression focus
+`;
+
 export const GIT_HANDOFF_FIXTURE = `# Git Handoff (test fixture)
 Git sync at phase boundaries
 `;
@@ -70,6 +78,8 @@ export const DEFAULT_FIXTURES = {
   "/skills/agent-architecture.md": SKILL_FIXTURE,
   "/skills/engineering-standards.md": ENGINEERING_FIXTURE,
   "/skills/security-review.md": SECURITY_FIXTURE,
+  "/skills/appsec.md": APPSEC_FIXTURE,
+  "/skills/qa-strategy.md": QA_STRATEGY_FIXTURE,
   "/skills/git-handoff.md": GIT_HANDOFF_FIXTURE,
   "/skills/task-graph-engineering.md": TASK_GRAPH_FIXTURE,
   "/skills/references/specify.md": SPECIFY_REFERENCE_FIXTURE,

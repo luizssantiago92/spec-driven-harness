@@ -18,7 +18,9 @@ When sub-agents are available, dispatch the verifier as a separate agent (see `t
 - `spec.md` acceptance criteria, `context.md` when it exists
 - The diff range for the feature
 - `security-review.md` for the security checklist
-- `context-limits.md` — load the spec, the diff, and the tests the spec names; do not load the author's chat
+- `appsec.md` only when Complex or an attack-surface trigger fires — then **drop** it before QA
+- `qa-strategy.md` only when Complex, multi-step UI, or an explicit regression ask — never together with `appsec.md`
+- `context-limits.md` — load the spec, the diff, and the tests the spec names; do not load the author's chat; at most one conditional sister at a time
 
 ## Output
 
@@ -47,7 +49,15 @@ Run the checklist in `security-review.md`. Features with no auth, API, input, pa
 
 A requirement is satisfied only with a `file:line` reference to an assertive test that passes. No reference means not done, regardless of how the code looks.
 
-### 5. Verdict
+### 5. Conditional AppSec (optional)
+
+If the hub AppSec trigger fires, load **only** `appsec.md`, write `## AppSec` (or `skipped — reason`), then **drop** that skill from context. Do not load `qa-strategy.md` yet. If the trigger does not fire, record a one-line skip. Judgment only — not gated.
+
+### 6. Conditional QA (optional)
+
+If the hub QA trigger fires, load **only** `qa-strategy.md` (after AppSec is done or skipped), write `## QA`, then continue. Judgment only — not gated.
+
+### 7. Verdict
 
 Write `validation.md`, then run the completion gate.
 
@@ -108,7 +118,7 @@ Checks that the report exists, the verdict is exactly PASS in the **preamble** (
 
 The gate cannot judge whether a cited test actually asserts the criterion. That judgment is the verifier's; a green gate with a weak assertion is still a FAIL in the report.
 
-**Gate-enforced vs verifier judgment.** `validate_state.py` enforces form: verdict scope, test-path evidence, REQ↔evidence lines, sensor outcomes on Medium+, open Gaps, Security `Result: fail`, open tasks. The following stay **verifier judgment** (not structural gates): whether each coverage row's test truly asserts the outcome, whether a lightweight Security path is justified, and Interactive UAT / walkthrough success. See the [gate stability contract](https://github.com/luizssantiago92/spec-driven-harness/blob/main/prd/gate-stability.md).
+**Gate-enforced vs verifier judgment.** `validate_state.py` enforces form: verdict scope, test-path evidence, REQ↔evidence lines, sensor outcomes on Medium+, open Gaps, Security `Result: fail`, open tasks. The following stay **verifier judgment** (not structural gates): whether each coverage row's test truly asserts the outcome, whether a lightweight Security path is justified, Interactive UAT / walkthrough success, and optional `## AppSec` / `## QA` sections. See the [gate stability contract](https://github.com/luizssantiago92/spec-driven-harness/blob/main/prd/gate-stability.md).
 
 ## Template
 
@@ -136,6 +146,18 @@ The gate cannot judge whether a cited test actually asserts the criterion. That 
 ## Security Review
 [Full checklist result, or the justified lightweight path.]
 
+## AppSec
+- Applied: yes | skipped — [reason]
+- Boundaries: ...
+- Top risks: ...
+- Result: pass | fail | escalate | skipped
+
+## QA
+- Applied: yes | skipped — [reason]
+- Smoke: ...
+- Regression focus: ...
+- Result: pass | fail | skipped
+
 ## Gaps
 [Ranked list, or "none".]
 
@@ -160,7 +182,7 @@ An unjustified lightweight path is a gap.
 
 ## Failure Handling
 
-**PASS requirements.** Write `Verdict: PASS` only when every coverage row passes (verifier judgment); no surviving mutant appears on a sensor/mutant line (gate blocks that); on Medium+ a sensor **outcome** is present and at least one mutant is `killed` (below Medium+ a missing outcome is a gate warning unless `--strict`); Security is pass or a justified lightweight path (gate blocks `Result: fail`; justification quality is verifier judgment); Gaps is `none` (gate blocks open Gaps bullets); Interactive UAT is pass or correctly skipped (verifier judgment; not gated); and `validate_state.py` exits 0. Anything else is FAIL — do not write PASS and list gaps underneath.
+**PASS requirements.** Write `Verdict: PASS` only when every coverage row passes (verifier judgment); no surviving mutant appears on a sensor/mutant line (gate blocks that); on Medium+ a sensor **outcome** is present and at least one mutant is `killed` (below Medium+ a missing outcome is a gate warning unless `--strict`); Security is pass or a justified lightweight path (gate blocks `Result: fail`; justification quality is verifier judgment); Gaps is `none` (gate blocks open Gaps bullets); AppSec/QA/Interactive UAT are pass or correctly skipped when their triggers apply (verifier judgment; not gated); and `validate_state.py` exits 0. Anything else is FAIL — do not write PASS and list gaps underneath.
 
 - FAIL verdict → gaps become fix tasks; return to `implement.md`.
 - The fix → re-verify loop is bounded to **3 iterations**, then escalate to the owner with the blocking gap.
@@ -168,7 +190,7 @@ An unjustified lightweight path is a gap.
 
 ## Interactive UAT
 
-Lean walkthrough for **Complex-tier user-facing** work (UI or a human-observable flow). Backend-only, infra, or library changes: skip and record one line in the report (`Interactive UAT: skipped — no user-facing surface`). Not Complex, or not user-facing: skip the same way.
+Lean walkthrough for **Complex-tier user-facing** work (UI or a human-observable flow). Backend-only, infra, or library changes: skip and record one line in the report (`Interactive UAT: skipped — no user-facing surface`). Not Complex, or not user-facing: skip the same way. Prefer running UAT **after** conditional AppSec/QA steps when those ran.
 
 **When applied**
 

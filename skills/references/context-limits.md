@@ -14,9 +14,10 @@ Treat context as a working set, not an archive. Prefer a complete read of a smal
 | Feature | This feature's `spec.md`; `context.md` / `design.md` / `tasks.md` only when that phase ran | Sibling feature specs |
 | Memory | `STATE.md` Next Step, Blockers, and `AD-NNN` that constrain this area; `lessons.py list --status confirmed` | Candidates, quarantined entries, other features' `validation.md` |
 | Code | Files named on the current task | The rest of the module "for orientation" |
-| Verify | Spec + diff range + the tests the spec names | The author's session notes |
+| Verify | Spec + diff range + the tests the spec names; `security-review.md` | The author's session notes |
+| Conditional sister | **At most one** of `appsec.md` or `qa-strategy.md`, and only when Verify triggers say so | Both at once; either on Quick/Simple without a trigger |
 
-If the working set no longer fits, drop code search leftovers first, then prior-phase artifacts you have already turned into the current artifact, then sister skills that are not in the phase map cell.
+If the working set no longer fits, drop code search leftovers first, then prior-phase artifacts you have already turned into the current artifact, then sister skills that are not in the phase map cell. Drop a finished conditional sister (AppSec) before loading QA.
 
 ## Load order
 
@@ -24,8 +25,9 @@ If the working set no longer fits, drop code search leftovers first, then prior-
 2. Open the hub only if the phase or the router is in doubt.
 3. Open the current phase reference completely.
 4. Open the sister skill the phase map names, if any.
-5. Open this feature's artifacts for the current phase — never two features at once.
-6. Open source files the current task lists.
+5. On Verify only: if an AppSec trigger fired, open `appsec.md`, act, then drop it before opening `qa-strategy.md` (never both). Skip both on Quick/Simple without triggers.
+6. Open this feature's artifacts for the current phase — never two features at once.
+7. Open source files the current task lists.
 
 Skip a step when its output is already in the working set from earlier in the same session.
 
@@ -62,7 +64,8 @@ A confused session produces a confused spec. Resetting context is cheaper than a
 
 ## Related
 
-- `agent-architecture.md` — phase map (which reference belongs to which phase)
+- `agent-architecture.md` — phase map (which reference belongs to which phase); conditional AppSec / QA
+- `appsec.md` / `qa-strategy.md` — conditional sisters (one at a time on Verify)
 - `memory.md` — resume protocol (what to reconcile before loading)
 - `task-graph-engineering.md` — what a sub-agent is allowed to receive
 - `references/implement.md` — per-task cycle (load only the current task's files)
