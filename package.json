@@ -1,6 +1,6 @@
 {
   "name": "@luizsantiago/agentic-harness",
-  "version": "0.7.11",
+  "version": "0.7.12",
   "description": "Spec-driven harness for AI agents (0.7). Progressive skills (~70% fewer tokens vs full dump). Python gates: SHALL/MUST, REQ↔task↔test evidence, Medium+ sensor, adversarial matrix. EARS + Tasks matrix + Execute A–D (authoring). Conditional AppSec/QA. Specify→Verify with .specs/ memory.",
   "type": "module",
   "bin": {
