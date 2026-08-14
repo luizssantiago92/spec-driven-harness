@@ -34,6 +34,8 @@ from _common import (
     mask_fenced_blocks,
     requirement_ids,
     resolve_feature_dir,
+    section_body,
+    visible_markdown,
 )
 
 GATE = "validate-state"
@@ -71,7 +73,6 @@ SECURITY_FAIL = re.compile(
     re.IGNORECASE | re.MULTILINE,
 )
 SECTION_HEADING = re.compile(r"^(?P<level>#{1,6})\s", re.MULTILINE)
-HTML_COMMENT = re.compile(r"<!--.*?-->", re.DOTALL)
 OPEN_TASK = re.compile(r"^\s*[-*]\s*\[ \]\s+(?P<label>.+)$", re.MULTILINE)
 TASK_HEADING = re.compile(
     r"^#{2,6}\s*T\d{1,6}\b", re.MULTILINE | re.IGNORECASE
@@ -93,7 +94,7 @@ MEDIUM_TASK_FLOOR = 4
 def validation_preamble(text: str) -> str:
     """Return the text before the first `##` section (fences already ignored)."""
 
-    visible = mask_fenced_blocks(text)
+    visible = visible_markdown(text)
     match = SECTION_START.search(visible)
     if not match:
         return visible
@@ -104,7 +105,7 @@ def find_verdict(text: str) -> re.Match[str] | None:
     """Accept Verdict only in the preamble or as a dedicated ## Verdict heading."""
 
     preamble = validation_preamble(text)
-    return VERDICT.search(preamble) or VERDICT_HEADING.search(mask_fenced_blocks(text))
+    return VERDICT.search(preamble) or VERDICT_HEADING.search(visible_markdown(text))
 
 
 def verdict_conflict(text: str) -> tuple[str, str] | None:
@@ -112,7 +113,7 @@ def verdict_conflict(text: str) -> tuple[str, str] | None:
 
     preamble = validation_preamble(text)
     preamble_match = VERDICT.search(preamble)
-    heading_match = VERDICT_HEADING.search(mask_fenced_blocks(text))
+    heading_match = VERDICT_HEADING.search(visible_markdown(text))
     if not preamble_match or not heading_match:
         return None
 
@@ -126,7 +127,7 @@ def verdict_conflict(text: str) -> tuple[str, str] | None:
 def sensor_focus(text: str) -> str:
     """Text where mutant outcomes must appear: sensor sections and mutant lines."""
 
-    visible = mask_fenced_blocks(text)
+    visible = visible_markdown(text)
     chunks: list[str] = []
 
     for match in SENSOR_SECTION.finditer(visible):
@@ -146,32 +147,10 @@ def sensor_focus(text: str) -> str:
     return "\n".join(chunks)
 
 
-def section_body(text: str, heading: re.Pattern[str]) -> str | None:
-    """Return the body of the first matching ## section, or None."""
-
-    match = heading.search(text)
-    if not match:
-        return None
-    level = len(match.group("level"))
-    start = match.end()
-    end = len(text)
-    for next_heading in SECTION_HEADING.finditer(text, start):
-        if len(next_heading.group("level")) <= level:
-            end = next_heading.start()
-            break
-    return text[start:end]
-
-
-def strip_html_comments(text: str) -> str:
-    """Blank HTML comments so evidence and verdicts inside them do not count."""
-
-    return HTML_COMMENT.sub(lambda match: "\n" * match.group(0).count("\n"), text)
-
-
 def find_evidence(text: str) -> list[str]:
     """Return test file:line references, ignoring fences, comments, URLs, and ports."""
 
-    visible = mask_fenced_blocks(strip_html_comments(text))
+    visible = visible_markdown(text)
     hits = EVIDENCE.findall(URL.sub(" ", visible))
     return [hit for hit in hits if TEST_EVIDENCE.search(hit.replace("\\", "/"))]
 
@@ -179,7 +158,7 @@ def find_evidence(text: str) -> list[str]:
 def open_gap_lines(text: str) -> list[str]:
     """Return non-empty Gaps bullets that are not an explicit none placeholder."""
 
-    body = section_body(mask_fenced_blocks(text), GAPS_SECTION)
+    body = section_body(visible_markdown(text), GAPS_SECTION)
     if body is None:
         return []
     gaps: list[str] = []
@@ -205,7 +184,7 @@ def open_gap_lines(text: str) -> list[str]:
 def security_blocks_pass(text: str) -> bool:
     """True when Security Review explicitly records a failing result."""
 
-    body = section_body(mask_fenced_blocks(text), SECURITY_SECTION)
+    body = section_body(visible_markdown(text), SECURITY_SECTION)
     if body is None:
         return False
     return bool(SECURITY_FAIL.search(body))
@@ -232,8 +211,8 @@ def requirement_evidence_gaps(spec_text: str, validation: str) -> list[str]:
     """Return requirement IDs that lack a same-line test evidence citation."""
 
     missing: list[str] = []
-    visible = mask_fenced_blocks(strip_html_comments(validation))
-    for requirement_id in requirement_ids(mask_fenced_blocks(spec_text)):
+    visible = visible_markdown(validation)
+    for requirement_id in requirement_ids(visible_markdown(spec_text)):
         covered = False
         for line in visible.splitlines():
             if requirement_id not in line:

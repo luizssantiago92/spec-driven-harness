@@ -53,7 +53,7 @@ Checks task IDs, required fields (including `Files` and `Done when`), dependency
 
 When a sibling `spec.md` exists, every requirement heading ID under `## Requirements` must appear in at least one task `Requirement` field. Independent tasks (no dependency path either way) must not share a path in `Files` (`./path`, `/path`, `../path`, quotes, markdown links, case variants, and `path` count as one).
 
-The gate does not check that `Done when` is philosophically binary — you do. A passing gate is necessary, not sufficient.
+The gate does not check that `Done when` is philosophically binary — you do. A passing gate is necessary, not sufficient. Path overlap uses the shared `normalize_file_path` helper (quotes, markdown links, `./`, `/`, `../`, drive letters, casefold).
 
 ## Execution Plan (phases)
 

@@ -32,6 +32,7 @@ from _common import (
     Report,
     find_placeholders,
     mask_fenced_blocks,
+    normalize_file_path,
     requirement_ids,
     resolve_artifact,
 )
@@ -134,33 +135,6 @@ def parse_files(value: str) -> list[str]:
         if path and path.lower() not in NONE_VALUES:
             files.append(path)
     return files
-
-
-def normalize_file_path(raw: str) -> str:
-    """Strip markdown/noise and collapse `./`, `/`, quotes, links, and `..` for overlap."""
-
-    cleaned = raw.strip().strip("`\"'").replace("\\", "/")
-    link = re.fullmatch(r"\[([^\]]*)\]\(([^)]+)\)", cleaned)
-    if link:
-        cleaned = link.group(2).strip().strip("`\"'")
-    while cleaned.startswith("./"):
-        cleaned = cleaned[2:]
-    cleaned = cleaned.lstrip("/")
-    cleaned = re.sub(r"^[A-Za-z]:/", "", cleaned)
-    cleaned = cleaned.rstrip("/")
-
-    parts: list[str] = []
-    for part in cleaned.split("/"):
-        if part in ("", "."):
-            continue
-        if part == "..":
-            if parts:
-                parts.pop()
-            continue
-        parts.append(part)
-    # Case-fold so Auth/Token.ts and auth/token.ts collide on overlap checks
-    # (macOS/Windows volumes; also stops agents from dodging with casing).
-    return "/".join(parts).casefold()
 
 
 def detect_cycle(graph: dict[str, list[str]]) -> list[str] | None:

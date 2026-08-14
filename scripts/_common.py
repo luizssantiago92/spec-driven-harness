@@ -105,9 +105,10 @@ REQUIREMENTS_HEADING = re.compile(
     re.MULTILINE | re.IGNORECASE,
 )
 ANY_HEADING = re.compile(r"^(?P<level>#{1,6})\s", re.MULTILINE)
+HTML_COMMENT = re.compile(r"<!--.*?-->", re.DOTALL)
 
 
-def _section_body(text: str, heading: re.Pattern[str]) -> str | None:
+def section_body(text: str, heading: re.Pattern[str]) -> str | None:
     """Return the body of the first matching section, or None if absent."""
 
     match = heading.search(text)
@@ -131,7 +132,7 @@ def requirement_ids(text: str) -> list[str]:
     NOTE-001-style notes never become coverage obligations.
     """
 
-    body = _section_body(text, REQUIREMENTS_HEADING)
+    body = section_body(text, REQUIREMENTS_HEADING)
     search_text = body if body is not None else text
     seen: set[str] = set()
     ordered: list[str] = []
@@ -141,6 +142,71 @@ def requirement_ids(text: str) -> list[str]:
             seen.add(requirement_id)
             ordered.append(requirement_id)
     return ordered
+
+
+def mask_fenced_blocks(text: str) -> str:
+    """Blank out fenced code so structural regexes ignore sample snippets.
+
+    Fence marker lines and their interiors become empty lines, so line numbers
+    stay aligned with the original document.
+    """
+
+    masked: list[str] = []
+    in_fence = False
+
+    for line in text.splitlines(keepends=True):
+        stripped = line.lstrip()
+        if stripped.startswith("```"):
+            in_fence = not in_fence
+            masked.append("\n" if line.endswith("\n") else "")
+            continue
+        if in_fence:
+            masked.append("\n" if line.endswith("\n") else "")
+            continue
+        masked.append(line)
+
+    return "".join(masked)
+
+
+def strip_html_comments(text: str) -> str:
+    """Blank HTML comments so evidence and verdicts inside them do not count."""
+
+    return HTML_COMMENT.sub(lambda match: "\n" * match.group(0).count("\n"), text)
+
+
+def visible_markdown(text: str) -> str:
+    """Markdown visible to structural gates: fences and HTML comments removed."""
+
+    return mask_fenced_blocks(strip_html_comments(text))
+
+
+def normalize_file_path(raw: str) -> str:
+    """Strip markdown/noise and collapse `./`, `/`, quotes, links, and `..`.
+
+    Result is case-folded so Auth/Token.ts and auth/token.ts collide on overlap
+    checks (macOS/Windows volumes; also stops casing dodges).
+    """
+
+    cleaned = raw.strip().strip("`\"'").replace("\\", "/")
+    link = re.fullmatch(r"\[([^\]]*)\]\(([^)]+)\)", cleaned)
+    if link:
+        cleaned = link.group(2).strip().strip("`\"'")
+    while cleaned.startswith("./"):
+        cleaned = cleaned[2:]
+    cleaned = cleaned.lstrip("/")
+    cleaned = re.sub(r"^[A-Za-z]:/", "", cleaned)
+    cleaned = cleaned.rstrip("/")
+
+    parts: list[str] = []
+    for part in cleaned.split("/"):
+        if part in ("", "."):
+            continue
+        if part == "..":
+            if parts:
+                parts.pop()
+            continue
+        parts.append(part)
+    return "/".join(parts).casefold()
 
 
 def _fail_usage(gate: str, target: str, message: str) -> None:
@@ -253,30 +319,6 @@ def read_artifact(raw_path: str, report_gate: str) -> tuple[Path, str]:
         sys.exit(EXIT_FAILED)
 
     return path, text
-
-
-def mask_fenced_blocks(text: str) -> str:
-    """Blank out fenced code so structural regexes ignore sample snippets.
-
-    Fence marker lines and their interiors become empty lines, so line numbers
-    stay aligned with the original document.
-    """
-
-    masked: list[str] = []
-    in_fence = False
-
-    for line in text.splitlines(keepends=True):
-        stripped = line.lstrip()
-        if stripped.startswith("```"):
-            in_fence = not in_fence
-            masked.append("\n" if line.endswith("\n") else "")
-            continue
-        if in_fence:
-            masked.append("\n" if line.endswith("\n") else "")
-            continue
-        masked.append(line)
-
-    return "".join(masked)
 
 
 def find_placeholders(text: str) -> list[str]:
