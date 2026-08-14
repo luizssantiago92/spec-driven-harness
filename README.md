@@ -9,6 +9,21 @@ The gates are what separate this from a prompt. An incomplete spec, a task witho
 
 **Stability baseline 0.7** freezes the gate contract and ships an adversarial CI matrix (`prd/gate-stability.md`). Free-form “find more gate bugs” only becomes a PR when a failing matrix case lands first.
 
+## Learn more
+
+Human-friendly tour on the [project wiki](https://github.com/luizssantiago92/spec-driven-harness/wiki) (less jargon than this README):
+
+| Page | About |
+| --- | --- |
+| [Home](https://github.com/luizssantiago92/spec-driven-harness/wiki/Home) | What it is and why it exists |
+| [How it works](https://github.com/luizssantiago92/spec-driven-harness/wiki/How-it-works) | Specify → Verify in plain language |
+| [Gates and guarantees](https://github.com/luizssantiago92/spec-driven-harness/wiki/Gates-and-guarantees) | What the brakes catch — and what they don’t |
+| [Token efficiency](https://github.com/luizssantiago92/spec-driven-harness/wiki/Token-efficiency) | Progressive loading and context cost |
+| [Quick start](https://github.com/luizssantiago92/spec-driven-harness/wiki/Quick-start) | First ten minutes |
+| [FAQ](https://github.com/luizssantiago92/spec-driven-harness/wiki/FAQ) | Common questions |
+
+Markdown sources for those pages also live in [`docs/wiki/`](docs/wiki/) so they can be reviewed in PRs.
+
 ## Token efficiency (progressive disclosure)
 
 Dumping every skill and reference into every turn is the expensive default. This harness is built so the agent **loads a working set**, not the archive — hub rule in `agent-architecture.md`, budget in `references/context-limits.md`:
@@ -255,6 +270,7 @@ spec-driven-harness/
 ├── prd/                            # Product specs for harness changes
 │   ├── harness-power-ups.md
 │   └── gate-stability.md           # What gates guarantee; audit freeze policy
+├── docs/wiki/                      # Human tour (mirror of GitHub Wiki pages)
 ├── test/
 │   ├── install.test.js             # Installer and CLI (Node)
 │   ├── test_gates.py               # Gates (Python)
