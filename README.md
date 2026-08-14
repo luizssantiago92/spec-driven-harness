@@ -323,7 +323,9 @@ Publishing is automated: **Actions → Publish to npm → Run workflow**, choosi
 
 ## Credits
 
-Task-graph patterns adapted from [graph-engineering](https://github.com/codejunkie99/graph-engineering) (MIT).
+- Spec-driven phases, `.specs/` memory, and structural gate ideas adapted from [tlc-spec-driven](https://github.com/tech-leads-club/agent-skills/tree/main/packages/skills-catalog/skills/(development)/tlc-spec-driven) (Tech Leads Club / [Felipe Rodrigues](https://github.com/felipfr), [CC-BY-4.0](https://creativecommons.org/licenses/by/4.0/)). This package hardens that lineage independently (0.7 gate contract, adversarial matrix, progressive install).
+- Lean discuss / Definition of Done / anti-rationalization / optional simplify–ship patterns inspired by [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) (MIT). Not a fork; no second skill router.
+- Task-graph patterns adapted from [graph-engineering](https://github.com/codejunkie99/graph-engineering) (MIT).
 
 ## License
 
