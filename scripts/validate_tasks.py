@@ -137,13 +137,24 @@ def parse_files(value: str) -> list[str]:
 
 
 def normalize_file_path(raw: str) -> str:
-    """Strip markdown/noise and collapse `./foo`, `/foo`, and `foo` for overlap."""
+    """Strip markdown/noise and collapse `./`, `/`, quotes, and `..` for overlap."""
 
-    cleaned = raw.strip().strip("`").replace("\\", "/")
+    cleaned = raw.strip().strip("`\"'").replace("\\", "/")
     while cleaned.startswith("./"):
         cleaned = cleaned[2:]
     cleaned = cleaned.lstrip("/")
-    return cleaned.rstrip("/")
+    cleaned = cleaned.rstrip("/")
+
+    parts: list[str] = []
+    for part in cleaned.split("/"):
+        if part in ("", "."):
+            continue
+        if part == "..":
+            if parts:
+                parts.pop()
+            continue
+        parts.append(part)
+    return "/".join(parts)
 
 
 def detect_cycle(graph: dict[str, list[str]]) -> list[str] | None:

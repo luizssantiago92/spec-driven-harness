@@ -519,6 +519,63 @@ class TasksGateTest(unittest.TestCase):
             ["REQ-001"],
         )
 
+    def test_assumption_requirement_headings_are_ignored(self):
+        spec = VALID_SPEC.replace(
+            "## Assumptions\n- Email is the only identity provider for this feature\n",
+            "## Assumptions\n### NOTE-002: Assumed SLA\n- assumed\n",
+        )
+        report = validate_tasks.build_report(
+            "tasks.md", VALID_TASKS, spec_text=spec
+        )
+        self.assertTrue(report.passed, report.errors)
+        self.assertEqual(_common.requirement_ids(spec), ["REQ-001"])
+
+    def test_quoted_file_paths_count_as_overlap(self):
+        tasks = """# Tasks
+
+### T1: Create session token module
+- **Requirement**: REQ-001
+- **Files**: `src/auth/token.ts`
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+- **Done when**: tokens sign
+
+### T2: Add login endpoint handler
+- **Requirement**: REQ-001
+- **Files**: "src/auth/token.ts"
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+- **Done when**: endpoint returns 200
+"""
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("both write" in error for error in report.errors))
+
+    def test_parent_relative_file_paths_count_as_overlap(self):
+        tasks = """# Tasks
+
+### T1: Create session token module
+- **Requirement**: REQ-001
+- **Files**: ../src/auth/token.ts
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+- **Done when**: tokens sign
+
+### T2: Add login endpoint handler
+- **Requirement**: REQ-001
+- **Files**: src/auth/token.ts
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+- **Done when**: endpoint returns 200
+"""
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("both write" in error for error in report.errors))
+
     def test_uncovered_spec_requirement_fails(self):
         spec = VALID_SPEC.replace(
             "## Assumptions\n",
@@ -789,6 +846,44 @@ class StateGateTest(unittest.TestCase):
         )
         self.assertFalse(report.passed)
         self.assertTrue(any("killed" in e for e in report.errors))
+
+    def test_killed_only_under_gaps_does_not_count(self):
+        tasks = "# Tasks\n\n" + "".join(
+            f"### T{i}: Add module number {i}\n"
+            f"- **Requirement**: REQ-001\n"
+            f"- **Files**: src/mod{i}.ts\n"
+            f"- **Depends on**: —\n"
+            f"- **Tests**: t.ts\n"
+            f"- **Gate**: npm test\n"
+            f"- **Done when**: module {i} works\n"
+            f"- [x] complete\n\n"
+            for i in range(1, 5)
+        )
+        validation = (
+            "# V\n- Verdict: PASS\n## Coverage\n"
+            "- REQ-001 - test/routes/login.test.ts:24\n"
+            "## Discrimination Sensor\n"
+            "- mutant injected for expiry check\n"
+            "## Gaps\n"
+            "- we later killed it somehow\n"
+        )
+        report = validate_state.build_report(
+            self._feature_dir(validation=validation, tasks=tasks)
+        )
+        self.assertFalse(report.passed)
+        self.assertTrue(any("killed" in e for e in report.errors))
+
+    def test_conflicting_preamble_and_heading_verdicts_fail(self):
+        validation = (
+            "# V\n- Verdict: PASS\n## Coverage\n"
+            "- REQ-001 - test/routes/login.test.ts:24\n"
+            "## Verdict\nFAIL\n"
+            "## Discrimination Sensor\n"
+            "- mutant killed\n"
+        )
+        report = validate_state.build_report(self._feature_dir(validation=validation))
+        self.assertFalse(report.passed)
+        self.assertTrue(any("conflicting" in e for e in report.errors))
 
     def test_empty_design_md_does_not_force_medium_plus(self):
         temp_dir = self._feature_dir(

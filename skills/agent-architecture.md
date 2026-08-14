@@ -1,6 +1,6 @@
 ---
 name: agent-architecture
-description: Spec-Driven Development hub for AI-assisted engineering. Five adaptive phases (Specify, Design, Tasks, Execute, Verify) with deterministic Python gates, independent verifier, discrimination sensor, evidence-or-zero, and persistent .specs/ memory. Triggers on "specify feature", "design", "break into tasks", "implement", "verify", "quick fix", "resume work", "handoff".
+description: Spec-Driven Development hub for AI-assisted engineering. Adaptive phases (Specify, Discuss, Design, Tasks, Execute, Verify) with deterministic Python gates, independent verifier, discrimination sensor, evidence-or-zero, and persistent .specs/ memory. Triggers on "specify feature", "design", "break into tasks", "implement", "verify", "quick fix", "resume work", "handoff".
 ---
 
 # Agent Architecture (Hub)
