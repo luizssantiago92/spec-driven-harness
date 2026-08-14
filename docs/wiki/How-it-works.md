@@ -34,6 +34,8 @@ The agent picks **one** task, writes the test for the outcome, implements it, ru
 ### 5. Verify — “Would a stranger believe this is done?”
 A fresh review looks at the original goals and asks for **proof** (links to real tests), not confidence. If something’s still open, it’s a fail — not a soft “mostly fine”.
 
+On a **Complex** feature with a real UI (or another human-observable flow), the verifier also writes a short step-by-step walkthrough. Backend-only work skips that.
+
 ## What you get day to day
 
 - Fewer “it works on my machine / in the chat” moments  

@@ -54,11 +54,12 @@ Announce the switch — do not silently expand a quick task into a feature.
 
 ## Verification Standard
 
-Quick mode compresses the process, never the standard:
+Quick mode compresses ceremony, not carelessness — but it is **not** the full Verify gate:
 
-- The change is proven by a test or by an explicit, documented manual check.
-- Evidence-or-zero still applies — `SUMMARY.md` cites `file:line` or the exact manual steps.
+- Prove the change with a test or an explicit, documented manual check.
+- Record evidence in `SUMMARY.md` (`file:line` or the exact manual steps). That is a **process** requirement; `validate_state.py` does not run on Quick artifacts.
 - Blast radius still applies — local commit only; `git push` and deploy need an explicit go-ahead.
+- If any Quick guardrail is exceeded, stop and route to `specify.md` (see When NOT to Use).
 
 ## Templates
 

@@ -184,6 +184,7 @@ Even when Tasks is skipped, Execute opens by listing the atomic steps. More than
 - **Evidence-or-zero** — a requirement is done only with a `file:line` reference to a passing assertive **test** on the same coverage line as the requirement ID (`test/auth/token.test.ts:41`). A config path is not evidence. The verdict must be exactly `PASS` or `PASSED`.
 - **Discrimination sensor** — mutants injected into an isolated scratch copy, never `git stash`; a surviving mutant becomes a fix task. On gate Medium+ features (`design.md` with content, 4+ tasks, or 2+ phases) the completion gate **blocks** if the sensor result is missing.
 - **Security review** — OWASP checklist, with a documented lightweight path for changes with no auth or API surface
+- **Lean Interactive UAT** — on Complex + user-facing work, a short walkthrough script after the automated pass (verifier judgment; `validate_state.py` does not run the walkthrough)
 - **Bounded loop** — fix and re-verify at most three times, then escalate
 
 ## Memory
