@@ -508,6 +508,52 @@ class TasksGateTest(unittest.TestCase):
         self.assertFalse(report.passed)
         self.assertTrue(any("both write" in error for error in report.errors))
 
+    def test_case_folded_file_paths_count_as_overlap(self):
+        tasks = """# Tasks
+
+### T1: Create session token module
+- **Requirement**: REQ-001
+- **Files**: src/Auth/Token.ts
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+- **Done when**: tokens sign
+
+### T2: Add login endpoint handler
+- **Requirement**: REQ-001
+- **Files**: src/auth/token.ts
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+- **Done when**: endpoint returns 200
+"""
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("both write" in error for error in report.errors))
+
+    def test_markdown_link_file_paths_count_as_overlap(self):
+        tasks = """# Tasks
+
+### T1: Create session token module
+- **Requirement**: REQ-001
+- **Files**: [token](src/auth/token.ts)
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+- **Done when**: tokens sign
+
+### T2: Add login endpoint handler
+- **Requirement**: REQ-001
+- **Files**: src/auth/token.ts
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+- **Done when**: endpoint returns 200
+"""
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("both write" in error for error in report.errors))
+
     def test_out_of_scope_requirement_headings_are_ignored(self):
         spec = VALID_SPEC + "\n### NOTE-001: Future social login\n- deferred\n"
         report = validate_tasks.build_report(
@@ -884,6 +930,48 @@ class StateGateTest(unittest.TestCase):
         report = validate_state.build_report(self._feature_dir(validation=validation))
         self.assertFalse(report.passed)
         self.assertTrue(any("conflicting" in e for e in report.errors))
+
+    def test_fenced_evidence_does_not_count(self):
+        validation = (
+            "# V\n- Verdict: PASS\n## Coverage\n"
+            "```\n- REQ-001 - test/routes/login.test.ts:24\n```\n"
+            "## Discrimination Sensor\n"
+            "- mutant killed\n"
+        )
+        report = validate_state.build_report(self._feature_dir(validation=validation))
+        self.assertFalse(report.passed)
+        self.assertTrue(any("evidence" in e for e in report.errors))
+
+    def test_html_comment_evidence_does_not_count(self):
+        validation = (
+            "# V\n- Verdict: PASS\n## Coverage\n"
+            "<!-- REQ-001 - test/routes/login.test.ts:24 -->\n"
+            "- covered somehow\n"
+            "## Discrimination Sensor\n"
+            "- mutant killed\n"
+        )
+        report = validate_state.build_report(self._feature_dir(validation=validation))
+        self.assertFalse(report.passed)
+        self.assertTrue(
+            any("evidence" in e or "REQ-001" in e for e in report.errors)
+        )
+
+    def test_pass_with_open_gaps_fails(self):
+        report = validate_state.build_report(
+            self._feature_dir(VALID_VALIDATION + "\n## Gaps\n- login still flaky\n")
+        )
+        self.assertFalse(report.passed)
+        self.assertTrue(any("Gaps" in e for e in report.errors))
+
+    def test_pass_with_security_fail_fails(self):
+        report = validate_state.build_report(
+            self._feature_dir(
+                VALID_VALIDATION
+                + "\n## Security Review\n- Result: fail\n- XSS unfixed\n"
+            )
+        )
+        self.assertFalse(report.passed)
+        self.assertTrue(any("Security Review" in e for e in report.errors))
 
     def test_empty_design_md_does_not_force_medium_plus(self):
         temp_dir = self._feature_dir(

@@ -67,9 +67,9 @@ A non-zero exit means stop, fix the artifact, and re-run.
 | Gate | Rejects |
 | --- | --- |
 | `validate_spec` | Missing `Requirements` / `Assumptions` / `Out of Scope`, a criterion without `SHALL` or `MUST`, malformed IDs, a requirement without acceptance criteria, unfilled template placeholders outside fenced samples |
-| `validate_tasks` | Missing required field (`Requirement`, `Files`, `Depends on`, `Tests`, `Gate`, `Done when`), `Files`/`Tests`/`Gate`/`Done when` set to none/—, unknown or forward dependency, dependency on a later phase, dependency cycle, a title on the vague-phrase list, uncovered spec requirement IDs (only headings under `## Requirements`), independent tasks sharing a `Files` path (`./path`, `/path`, `../path`, quotes, and `path` count as one) |
+| `validate_tasks` | Missing required field (`Requirement`, `Files`, `Depends on`, `Tests`, `Gate`, `Done when`), `Files`/`Tests`/`Gate`/`Done when` set to none/—, unknown or forward dependency, dependency on a later phase, dependency cycle, a title on the vague-phrase list, uncovered spec requirement IDs (only headings under `## Requirements`), independent tasks sharing a `Files` path (`./path`, `/path`, `../path`, quotes, markdown links, case variants, and `path` count as one) |
 | `check_commit` | Non-Conventional header, unknown type, header over 72 characters, trailing period |
-| `validate_state` | Missing `validation.md`, verdict other than exact `PASS`/`PASSED` (`PASS WITH GAPS` fails), verdict only under a non-Verdict section, conflicting preamble vs `## Verdict`, no **test** `file:line` evidence, a spec requirement without same-line test evidence, open task, `PASS` with a surviving mutant (sensor/mutant lines only), Medium+ `PASS` without a **killed** mutant there, Medium+ feature without a sensor **outcome** (`killed`/`survived`/`injected`) |
+| `validate_state` | Missing `validation.md`, verdict other than exact `PASS`/`PASSED` (`PASS WITH GAPS` fails), verdict only under a non-Verdict section, conflicting preamble vs `## Verdict`, no **test** `file:line` evidence (fences and HTML comments ignored), a spec requirement without same-line test evidence, open task, `PASS` with a surviving mutant (sensor/mutant lines only), Medium+ `PASS` without a **killed** mutant there, Medium+ feature without a sensor **outcome** (`killed`/`survived`/`injected`), `PASS` with open `Gaps` or Security Review `Result: fail` |
 | `lessons` | Add without `--source`, source other than `validation.md`, source outside `.specs/`, corrupt `lessons.json` (missing `title`/`rule`) |
 
 Fenced code samples and markdown tables are documentation, not criteria or tasks. `Depends on: REQ-T100` is a requirement id, not task `T100`. Evidence-or-zero accepts paths such as `test/auth/token.test.ts:41`, not `config.yaml:12`.
@@ -191,6 +191,7 @@ Run `npx @luizsantiago/agentic-harness install` again. Existing memory and edite
 
 | Coming from | Manual step |
 | --- | --- |
+| A version before `0.6.8` | Evidence inside fences or HTML comments does not count. `Files` overlap is case-insensitive and unwraps markdown links. `PASS` with open `Gaps` or Security Review `Result: fail` fails |
 | A version before `0.6.7` | Requirement IDs only under `## Requirements`. Quoted/`../` `Files` paths normalize for overlap. `killed`/`survived` must sit in the sensor section or on a mutant line. Conflicting preamble vs `## Verdict` fails |
 | A version before `0.6.5` | `PASS` with a surviving mutant fails. Medium+ `PASS` needs at least one `killed` (injected alone is not enough). `Files: none` and `Gate: none` fail. `/path` overlaps `path` |
 | A version before `0.6.3` | `Files` is required on every task. `Tests: none` fails. Verdict must sit in the preamble or under `## Verdict` — not under Discrimination Sensor |

@@ -51,7 +51,7 @@ python3 .specs/harness/scripts/validate_tasks.py          # single-feature proje
 
 Checks task IDs, required fields (including `Files` and `Done when`), dependency direction, later-phase dependencies, cycles, granularity smells, **spec requirement coverage**, and **Files overlap** across independent tasks. `Files`/`Tests`/`Gate`/`Done when` set to `none` or `—` fail. Non-zero exit means STOP.
 
-When a sibling `spec.md` exists, every requirement heading ID under `## Requirements` must appear in at least one task `Requirement` field. Independent tasks (no dependency path either way) must not share a path in `Files` (`./path`, `/path`, `../path`, quotes, and `path` count as one).
+When a sibling `spec.md` exists, every requirement heading ID under `## Requirements` must appear in at least one task `Requirement` field. Independent tasks (no dependency path either way) must not share a path in `Files` (`./path`, `/path`, `../path`, quotes, markdown links, case variants, and `path` count as one).
 
 The gate does not check that `Done when` is philosophically binary — you do. A passing gate is necessary, not sufficient.
 

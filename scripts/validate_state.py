@@ -15,6 +15,7 @@ Checks:
   * every spec requirement ID has test evidence on the same coverage line
   * the discrimination sensor result is recorded (blocking on Medium+ features)
   * PASS with a surviving mutant fails; Medium+ PASS requires at least one kill
+  * PASS with open Gaps or a failing Security Review result fails
   * open task checkboxes in tasks.md block completion
 
 Exit codes: 0 pass, 1 blocking issues, 2 usage error.
@@ -57,7 +58,20 @@ SENSOR_SECTION = re.compile(
     r"^(?P<level>#{2,6})\s*(?:Discrimination Sensor|Mutants?)\b",
     re.MULTILINE | re.IGNORECASE,
 )
+GAPS_SECTION = re.compile(
+    r"^(?P<level>#{2,6})\s*Gaps?\b",
+    re.MULTILINE | re.IGNORECASE,
+)
+SECURITY_SECTION = re.compile(
+    r"^(?P<level>#{2,6})\s*Security Review\b",
+    re.MULTILINE | re.IGNORECASE,
+)
+SECURITY_FAIL = re.compile(
+    r"^\s*[-*]?\s*\*{0,2}Result\*{0,2}\s*:\s*\*{0,2}(?P<value>fail|failed|failing)\b",
+    re.IGNORECASE | re.MULTILINE,
+)
 SECTION_HEADING = re.compile(r"^(?P<level>#{1,6})\s", re.MULTILINE)
+HTML_COMMENT = re.compile(r"<!--.*?-->", re.DOTALL)
 OPEN_TASK = re.compile(r"^\s*[-*]\s*\[ \]\s+(?P<label>.+)$", re.MULTILINE)
 TASK_HEADING = re.compile(
     r"^#{2,6}\s*T\d{1,6}\b", re.MULTILINE | re.IGNORECASE
@@ -132,11 +146,69 @@ def sensor_focus(text: str) -> str:
     return "\n".join(chunks)
 
 
-def find_evidence(text: str) -> list[str]:
-    """Return test file:line references, ignoring URLs that merely carry a port."""
+def section_body(text: str, heading: re.Pattern[str]) -> str | None:
+    """Return the body of the first matching ## section, or None."""
 
-    hits = EVIDENCE.findall(URL.sub(" ", text))
+    match = heading.search(text)
+    if not match:
+        return None
+    level = len(match.group("level"))
+    start = match.end()
+    end = len(text)
+    for next_heading in SECTION_HEADING.finditer(text, start):
+        if len(next_heading.group("level")) <= level:
+            end = next_heading.start()
+            break
+    return text[start:end]
+
+
+def strip_html_comments(text: str) -> str:
+    """Blank HTML comments so evidence and verdicts inside them do not count."""
+
+    return HTML_COMMENT.sub(lambda match: "\n" * match.group(0).count("\n"), text)
+
+
+def find_evidence(text: str) -> list[str]:
+    """Return test file:line references, ignoring fences, comments, URLs, and ports."""
+
+    visible = mask_fenced_blocks(strip_html_comments(text))
+    hits = EVIDENCE.findall(URL.sub(" ", visible))
     return [hit for hit in hits if TEST_EVIDENCE.search(hit.replace("\\", "/"))]
+
+
+def open_gap_lines(text: str) -> list[str]:
+    """Return non-empty Gaps bullets that are not an explicit none placeholder."""
+
+    body = section_body(mask_fenced_blocks(text), GAPS_SECTION)
+    if body is None:
+        return []
+    gaps: list[str] = []
+    for raw in body.splitlines():
+        line = raw.strip()
+        if not line.startswith(("-", "*")):
+            continue
+        cleaned = line.lstrip("-* ").strip()
+        if not cleaned or cleaned.lower() in {
+            "none",
+            "n/a",
+            "na",
+            "-",
+            "—",
+            "–",
+            "no gaps",
+        }:
+            continue
+        gaps.append(cleaned)
+    return gaps
+
+
+def security_blocks_pass(text: str) -> bool:
+    """True when Security Review explicitly records a failing result."""
+
+    body = section_body(mask_fenced_blocks(text), SECURITY_SECTION)
+    if body is None:
+        return False
+    return bool(SECURITY_FAIL.search(body))
 
 
 def is_medium_plus(feature_dir: Path) -> bool:
@@ -160,9 +232,10 @@ def requirement_evidence_gaps(spec_text: str, validation: str) -> list[str]:
     """Return requirement IDs that lack a same-line test evidence citation."""
 
     missing: list[str] = []
+    visible = mask_fenced_blocks(strip_html_comments(validation))
     for requirement_id in requirement_ids(mask_fenced_blocks(spec_text)):
         covered = False
-        for line in validation.splitlines():
+        for line in visible.splitlines():
             if requirement_id not in line:
                 continue
             if find_evidence(line):
@@ -271,6 +344,18 @@ def build_report(feature_dir: Path) -> Report:
         report.warn(
             "no discrimination sensor section found - confirm mutants were injected"
         )
+
+    if verdict in PASS_VERDICTS:
+        for gap in open_gap_lines(validation)[:10]:
+            report.error(
+                f"verdict is PASS but Gaps still lists '{gap}' - "
+                "resolve gaps or write FAIL"
+            )
+        if security_blocks_pass(validation):
+            report.error(
+                "verdict is PASS but Security Review result is fail - "
+                "resolve findings or write FAIL"
+            )
 
     tasks_path = feature_dir / "tasks.md"
     if tasks_path.exists():
