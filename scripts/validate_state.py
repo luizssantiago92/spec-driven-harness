@@ -162,20 +162,25 @@ def open_gap_lines(text: str) -> list[str]:
     if body is None:
         return []
     gaps: list[str] = []
+    none_values = {
+        "none",
+        "n/a",
+        "na",
+        "-",
+        "—",
+        "–",
+        "no gaps",
+    }
     for raw in body.splitlines():
         line = raw.strip()
-        if not line.startswith(("-", "*")):
+        marker = re.match(r"^[-*]\s+(.*)$", line)
+        if not marker:
             continue
-        cleaned = line.lstrip("-* ").strip()
-        if not cleaned or cleaned.lower() in {
-            "none",
-            "n/a",
-            "na",
-            "-",
-            "—",
-            "–",
-            "no gaps",
-        }:
+        # Do not use lstrip("-* ") — it eats emphasis markers on `**none**`.
+        cleaned = marker.group(1).strip().strip("`")
+        while len(cleaned) >= 2 and cleaned[0] == cleaned[-1] and cleaned[0] in "*_":
+            cleaned = cleaned[1:-1].strip()
+        if not cleaned or cleaned.lower() in none_values:
             continue
         gaps.append(cleaned)
     return gaps

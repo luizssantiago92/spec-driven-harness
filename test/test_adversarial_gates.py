@@ -322,6 +322,18 @@ class PassAlignFamilyTest(unittest.TestCase):
         )
         self.assertTrue(report.passed, report.errors)
 
+    def test_gaps_bold_none_allows_pass(self):
+        report = validate_state.build_report(
+            _feature(VALIDATION + "\n## Gaps\n- **none**\n")
+        )
+        self.assertTrue(report.passed, report.errors)
+
+    def test_gaps_italic_none_allows_pass(self):
+        report = validate_state.build_report(
+            _feature(VALIDATION + "\n## Gaps\n- *none*\n")
+        )
+        self.assertTrue(report.passed, report.errors)
+
 
 class SpecTasksFamilyTest(unittest.TestCase):
     def test_req_outside_requirements_ignored(self):
