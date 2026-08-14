@@ -191,7 +191,8 @@ Run `npx @luizsantiago/agentic-harness install` again. Existing memory and edite
 
 | Coming from | Manual step |
 | --- | --- |
-| A version before `0.6.2` | Medium+ Verify needs an outcome word (`killed` / `survived` / `injected`), not only a Discrimination Sensor heading. `Done when: —` and `Tests: none` fail. `Files` is required. `./path` and `path` count as the same file for overlap. Verdict must sit in the preamble or under `## Verdict` |
+| A version before `0.6.3` | `Files` is required on every task. `Tests: none` fails. Verdict must sit in the preamble or under `## Verdict` — not under Discrimination Sensor |
+| A version before `0.6.2` | Medium+ Verify needs an outcome word (`killed` / `survived` / `injected`), not only a Discrimination Sensor heading. `Done when: —` fails. `./path` and `path` count as the same file for overlap |
 | A version before `0.6.0` | Tasks need `Done when`. Re-run `validate_tasks` against the sibling `spec.md` (every REQ needs a task). Independent tasks cannot share `Files`. Closing a Medium+ feature requires a discrimination-sensor result and same-line REQ ↔ test evidence in `validation.md` |
 | A version before `0.5.4` | Re-run the gates. `PASS WITH GAPS` is no longer a pass; evidence must cite a test path; fenced samples and markdown tables are not criteria. `lessons.py --source` must live under `.specs/` |
 | A version before `0.5.0` | Default install no longer downloads from GitHub. Forks keep using `HARNESS_REPO_URL`. No artifact migration |
