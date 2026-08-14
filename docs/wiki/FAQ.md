@@ -1,70 +1,66 @@
 # FAQ
 
-Short answers to the questions people ask first.
+## What is this package, in plain language?
 
-## What is this, in one sentence?
+A **seatbelt for AI coding agents**. It makes them write down the plan, build against that plan, and prove the work before calling it done—so you get fewer half-finished “looks good” moments.
 
-A seatbelt for AI coding agents: written goals, small jobs, proof at the end, and automatic checks that stop “fake done”.
+## Is this a framework or a product I run in production?
 
-## Is it only for Cursor?
+It’s a **process kit** for agents (skills + docs + a completion gate). Your app is still your app. The harness shapes *how the agent works*, not your runtime stack.
 
-No. Install puts the same skills under `.cursor/` and `.claude/`, so Cursor and Claude Code both get the playbook.
+## Do I need to change how my team codes?
 
-## Do I need Python?
+You need agents (or humans driving agents) to follow **Specify → … → Verify** and keep plans under `.specs/`. Day-to-day languages and frameworks stay yours.
 
-Recommended. The soft rules live in the skills either way. Python runs the **automatic** gates that fail with a clear exit code. Without it, the agent should still follow the checklists by hand — just with less enforcement.
+## What’s the difference between the six core skills and the “sisters”?
 
-## Will it overwrite my project memory?
+| | Core (always there) | Sisters (on demand) |
+|--|---------------------|---------------------|
+| Role | Plan → build → prove done | Extra passes: security, QA, simplify, ship |
+| When | Every install | Only when you ask—and **one at a time** |
 
-Re-running install refreshes skills, guides, and gate scripts. It keeps your `STATE.md`, lessons, and project rules you’ve edited.
+## Will this stop every bad AI change?
 
-## Does a green gate mean the feature is perfect?
+No. It stops many **incomplete** finishes and empty stubs. Judgment, product taste, and review still matter. Sisters help when you want a deeper look.
 
-No. It means the **forms and proof links** look complete. You still judge product taste, test depth, and real-world risk. Optional AppSec / QA sections and UI walkthroughs are **judgment** too — the gate does not run them.
+## Why not load security and QA every time?
 
-## Do AppSec and QA skills always run?
+Cost and focus. Most turns don’t need a full audit. When you do, say so and load **one** sister.
 
-No. They load on **Complex** work or clear risk (auth, PII, multi-step UI, etc.), **one at a time** (AppSec then QA). Tiny fixes skip them.
+## How is this different from Test-Led Coding or Addy’s agent-skills?
 
-## What about code-simplify and ship-ready?
+| | This harness | TLC | Addy-style catalogs |
+|--|--------------|-----|---------------------|
+| Focus | Spec → prove done | Tests as the spine | Broad SDLC skill set |
+| Gate | Stronger on “really finished?” | Different emphasis | Usually lighter formal gate |
+| Stance | Standalone seatbelt | Inspired / credited | Inspired / credited |
 
-Optional sisters. **code-simplify** may load after a Medium+ task clears adequacy A–D, or when you ask to simplify without changing behavior. **ship-ready** loads only when you ask for a ship/deploy checklist — it does **not** authorize `git push` or deploy. Never hold more than one conditional sister (AppSec, QA, simplify, ship-ready) in the same window.
+See the README **Credits** section for licenses and links.
 
-## Does every spec have to look like EARS? Does every tasks file need the coverage table?
+## Can I use only part of the kit?
 
-The gate **requires** `SHALL` or `MUST` on each criterion. The EARS patterns (WHEN / IF / WHILE / always-on) are the recommended shape — missing them is a **warning**, not a hard fail.
+You can emphasize phases, but the **install ships the six core skills** together. Sisters stay optional. Loosening the freeze (e.g. dropping Specify) is a major-version decision—not a casual tweak.
 
-The **Test Coverage Matrix** and Execute **adequacy A–D** (does the test match the job, files, command, spec?) are authoring checklists. The Python tasks/state gates already cover REQ↔task and evidence; they do not parse those extra headings.
+## Where do I put my feature plans?
 
-## What is “Author ≠ verifier”?
+Under **`.specs/`** in the repo (see skill templates after install). That’s the shared memory across chats and teammates.
 
-The agent that wrote the code shouldn’t be the only one declaring victory. Verify is a fresh pass that asks for evidence, not confidence.
+## Does the gate replace code review?
 
-## Why do you talk about tokens so much?
+No. It checks **structure and evidence**. Humans (and sisters) still review quality, security nuance, and product fit.
 
-Because dumping the whole manual into every chat wastes money and attention. The harness tells the agent to load **this step’s guide**, not the entire shelf. See [[Token-efficiency]].
+## I’m not technical—can I still use this?
 
-## Can two agents work in parallel?
+Yes at a high level: ask your agent to **install the harness**, then to **specify before building** and **verify before done**. Engineers maintain the repo and the gate; you can still insist on the process in plain language.
 
-Yes, when the task list says so — and when they don’t fight over the same files. The harness treats file collisions between independent jobs as a stop sign.
+## Where should I start reading?
 
-## What if the agent ignores all of this?
+1. [Home](Home)  
+2. [Quick start](Quick-start)  
+3. [How it works](How-it-works)  
 
-Point it at the installed hub (`.cursor/skills/agent-architecture.md` or the Claude copy) and say: follow that workflow, run the gates, don’t skip Verify.
+Then [Gates](Gates-and-guarantees) / [Tokens](Token-efficiency) when you care about guarantees or cost.
 
-## Where is the “serious” technical contract?
+## Something broken or unclear?
 
-In the repo: the README, `prd/gate-stability.md`, and the Python scripts under `.specs/harness/scripts/` after install. This wiki is the human tour.
-
-## How do I upgrade?
-
-    npx @luizsantiago/agentic-harness install
-
-Same command. Skills and gates refresh; your feature memory stays.
-
-## Next
-
-- First run → [[Quick-start]]  
-- The story → [[How-it-works]]  
-- The brakes → [[Gates-and-guarantees]]  
-- Home → [[Home]]
+Open an issue on [GitHub](https://github.com/luizssantiago92/spec-driven-harness/issues). For contributing rules (especially the frozen gate), see [CONTRIBUTING](https://github.com/luizssantiago92/spec-driven-harness/blob/main/CONTRIBUTING.md).
