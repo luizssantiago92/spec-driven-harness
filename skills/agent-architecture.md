@@ -78,6 +78,8 @@ Complexity determines depth. Do not run every phase on every change.
 | **Complex** | New architecture, API surface, infra | Specify → Discuss → Design → Tasks → Execute → Verify |
 | **Parallel** | Splittable work, multiple agents | Above + `/task-graph` per `task-graph-engineering.md` |
 
+**Hub Medium vs gate Medium+.** Router tiers above choose phase depth (hub **Medium** = new feature, under 10 tasks). The completion gate’s **Medium+** is separate: `design.md` with content, **or** 4+ tasks, **or** 2+ phases — that is when a discrimination-sensor outcome is blocking. A hub-Medium feature with only three tasks can be below gate Medium+.
+
 **Rules**
 
 - **Specify and Verify are always required** — you must know WHAT was asked and prove it was delivered.
@@ -162,7 +164,7 @@ Project rules: `.cursor/rules/engineering-baseline.mdc` (always applied in Curso
 | `/tasks` | `references/tasks.md` | Atomic task breakdown |
 | `/task-graph` | `task-graph-engineering.md` | Draw or revise the job DAG |
 | `/loop` | `references/implement.md` | Autonomous implementation loop |
-| `/verify` | `references/validate.md` | Independent technical validation |
+| `/verify` | `references/validate.md` | Independent technical validation; lean Interactive UAT on Complex + user-facing (verifier judgment) |
 | `/quick` | `references/quick-mode.md` | Express lane for ≤3-file changes |
 | `/handoff` | `references/memory.md` | Update STATE, commit `.specs/`, no push |
 | `/sync-spec` | `git-handoff.md` | Commit current feature artifacts only |

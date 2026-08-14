@@ -84,7 +84,7 @@ Every FAIL names a gap type so the author knows which loop to re-enter.
 | Spec deviation | Implementation does something the spec forbids, or omits something it requires | Specify + Execute |
 | Security finding | Checklist item failed | Execute — fix, then re-verify |
 | Open task | `tasks.md` still has `- [ ]` | Execute — finish or drop the task with owner approval |
-| Sensor skipped | No mutant section in the report | Verify — run the sensor; do not pass |
+| Sensor skipped | No mutant outcome in the report | Verify — run the sensor. On **Medium+** (`design.md` with content, 4+ tasks, or 2+ phases) do not pass — the completion gate blocks. Below Medium+ the gate warns (`--strict` promotes); still run the sensor when risk warrants it |
 
 Rank gaps: security and spec deviation first, then surviving mutants, then missing evidence, then imprecise criteria. The author fixes in that order.
 
@@ -138,6 +138,13 @@ The gate cannot judge whether a cited test actually asserts the criterion. That 
 
 ## Gaps
 [Ranked list, or "none".]
+
+## Interactive UAT
+- Applied: yes | skipped — [reason]
+- Steps:
+  1. [action] → expect [observable]
+  2. [action] → expect [observable]
+- Result: pass | fail | skipped
 ```
 
 Lightweight security path (only when the feature has no auth, API, input, payment, or infrastructure surface):
@@ -153,7 +160,7 @@ An unjustified lightweight path is a gap.
 
 ## Failure Handling
 
-**PASS requirements.** Write `Verdict: PASS` only when every coverage row passes (verifier judgment), every mutant is killed (gate checks sensor/mutant lines), Security is pass or a justified lightweight path (gate blocks `Result: fail`; justification quality is verifier judgment), Gaps is `none` (gate blocks open Gaps bullets), and `validate_state.py` exits 0. Anything else is FAIL — do not write PASS and list gaps underneath.
+**PASS requirements.** Write `Verdict: PASS` only when every coverage row passes (verifier judgment), every mutant is killed (gate checks sensor/mutant lines), Security is pass or a justified lightweight path (gate blocks `Result: fail`; justification quality is verifier judgment), Gaps is `none` (gate blocks open Gaps bullets), Interactive UAT is pass or correctly skipped (verifier judgment; not gated), and `validate_state.py` exits 0. Anything else is FAIL — do not write PASS and list gaps underneath.
 
 - FAIL verdict → gaps become fix tasks; return to `implement.md`.
 - The fix → re-verify loop is bounded to **3 iterations**, then escalate to the owner with the blocking gap.
@@ -161,7 +168,15 @@ An unjustified lightweight path is a gap.
 
 ## Interactive UAT
 
-For user-facing features on the Complex tier, add a scripted walkthrough after the automated verdict: list the exact steps the owner should perform and the outcome to expect at each one. Automated PASS with a failed walkthrough is still a FAIL for the verifier — **Interactive UAT is verifier judgment; `validate_state.py` does not run the walkthrough.**
+Lean walkthrough for **Complex-tier user-facing** work (UI or a human-observable flow). Backend-only, infra, or library changes: skip and record one line in the report (`Interactive UAT: skipped — no user-facing surface`). Not Complex, or not user-facing: skip the same way.
+
+**When applied**
+
+1. After the automated coverage / sensor / security pass, write a numbered script: each step is `action → expected observable outcome`.
+2. If the owner is in the session, run **one step at a time** and wait for a reply. Otherwise hand them the script.
+3. Interpret replies as: **pass** (“yes” / “works” / “next”), **skip** (“can’t test” / “n/a”), or **issue** (anything else — log the words, add a Gaps bullet, open a fix task).
+
+**FAIL rule.** Automated structural PASS with a failed walkthrough is still a FAIL for the verifier: do not leave `Verdict: PASS` while UAT Result is fail. Put the issue under Gaps and return to Execute. **Interactive UAT is verifier judgment; `validate_state.py` does not require this section and does not run the walkthrough.**
 
 ## Next
 
