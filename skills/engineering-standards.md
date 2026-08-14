@@ -46,6 +46,10 @@ Chat language is a personal preference, not a harness rule. Set it as a global r
 - Test names describe scenario and expected outcome in English.
 - **Never weaken a test to make a gate pass** — no skipping, deleting, or loosening assertions.
 
+## Definition of Done (standing bar)
+
+Project-wide readiness — **judgment**, not `validate_state.py`. Clear acceptance criteria **and**: tests for this change pass; diff stays in task `Files`; lint/types if the project has them; no secrets/PII in source or logs; no debug dumps or dead commented code; honest Gaps (never PASS with open gaps).
+
 ## Parallel Work Guardrails
 
 - **One writer per file** — no two agents or jobs mutate the same file in the same round (see `task-graph-engineering.md`)

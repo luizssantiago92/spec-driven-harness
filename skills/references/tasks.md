@@ -27,19 +27,20 @@ Break the work into atomic tasks with real dependencies and binary done criteria
 ## Procedure
 
 1. **Write one task per deliverable.** A task is something you would hand to a single agent and check in one commit.
-2. **Give every task the full field set.** Authoring and the gate require all six:
+2. **Prefer vertical slices.** One thin verifiable path per task (e.g. register: schema + API + UI), not “all schema then all APIs then all UI”.
+3. **Give every task the full field set.** Authoring and the gate require all six:
    - `Requirement` — the spec ID it serves (gated)
    - `Files` — where the change lands (gated; required; `none` / `—` rejected; overlap across independent tasks blocks)
    - `Depends on` — real dependencies only, or `—` (gated; `—` means none)
    - `Tests` — the test file that proves it (gated; `none` / `—` rejected)
    - `Gate` — the command that must pass (gated; `none` / `—` rejected)
    - `Done when` — binary criterion (gated; `none` / `—` rejected)
-3. **Delete fake edges.** For every "and then", ask whether the next task actually reads the previous task's output. If not, the edge is fake — remove it and the tasks can run in parallel. See `task-graph-engineering.md`.
-4. **Order tasks so dependencies come first.** Forward dependencies fail the gate. When grouping under `### Phase N`, a task must not depend on a task in a later phase.
-5. **Apply the stop rule.** Only split work that never reads its siblings' results; sequential work stays with one agent.
-6. **Cover every acceptance criterion.** Fill `## Test Coverage Matrix` and `## Gate Check Commands` **before** presenting the list. An unmapped requirement is a missing task. Align each task `Tests` / `Gate` field with those sections.
-7. **Draw the graph** in `task-graph.md` when there are 3+ tasks or any parallel group.
-8. **Run the gate**, then present the breakdown for approval.
+4. **Delete fake edges.** For every "and then", ask whether the next task actually reads the previous task's output. If not, the edge is fake — remove it and the tasks can run in parallel. See `task-graph-engineering.md`.
+5. **Order tasks so dependencies come first.** Forward dependencies fail the gate. When grouping under `### Phase N`, a task must not depend on a task in a later phase.
+6. **Apply the stop rule.** Only split work that never reads its siblings' results; sequential work stays with one agent.
+7. **Cover every acceptance criterion.** Fill `## Test Coverage Matrix` and `## Gate Check Commands` **before** presenting the list. An unmapped requirement is a missing task. Align each task `Tests` / `Gate` field with those sections.
+8. **Draw the graph** in `task-graph.md` when there are 3+ tasks or any parallel group.
+9. **Run the gate**, then present the breakdown for approval.
 
 **Authoring vs gate.** `validate_tasks.py` already enforces REQ coverage and `Tests`/`Gate` fields. The matrix and Gate Check Commands sections are an owner/verifier checklist (judgment) until a future form gate — do not skip them when Tasks ran.
 

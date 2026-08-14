@@ -35,11 +35,13 @@ Also trigger when the owner's request has more than one reasonable interpretatio
 ## Procedure
 
 1. **List the gray areas** you found, grouped by dimension. Keep it short — no more than five at a time.
-2. **Offer concrete options**, not open questions. "Should the session expire after 24h, 7d, or on browser close?" beats "How should sessions work?"
-3. **State your recommendation and why.** The owner should be able to answer "yes" and move on.
-4. **Record the decision verbatim** in `context.md`, with the rationale and the date.
-5. **Fold consequences back into `spec.md`** as acceptance criteria — `context.md` records the decision; the spec records the testable outcome.
-6. **Escalate irreversible choices.** Anything expensive to undo gets an explicit confirmation (see the human gate in `task-graph-engineering.md`).
+2. **Ask one gray area at a time** (unless the owner asks for a batch).
+3. **Offer concrete options**, not open questions. "Should the session expire after 24h, 7d, or on browser close?" beats "How should sessions work?"
+4. **State your recommendation and why.** The owner should be able to answer "yes" and move on.
+5. **Wait for an explicit yes** or option letter before writing `context.md` — soft “sounds fine” is not enough.
+6. **Record the decision verbatim** in `context.md`, with the rationale and the date.
+7. **Fold consequences back into `spec.md`** as acceptance criteria — `context.md` records the decision; the spec records the testable outcome.
+8. **Escalate irreversible choices.** Anything expensive to undo gets an explicit confirmation (see the human gate in `task-graph-engineering.md`).
 
 ## Template
 
