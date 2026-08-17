@@ -1,6 +1,6 @@
 {
   "name": "@luizsantiago/agentic-harness",
-  "version": "0.7.16",
+  "version": "0.7.17",
   "description": "A seatbelt for AI coding agents. Agree on the goal, break it into small jobs, prove each one, then a fresh review — automatic checks stop fake “done”. Loads one step at a time to save context. Works in Cursor and Claude.",
   "type": "module",
   "bin": {
