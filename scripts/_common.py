@@ -322,17 +322,16 @@ def read_artifact(raw_path: str, report_gate: str) -> tuple[Path, str]:
 
 
 def find_placeholders(text: str) -> list[str]:
-    """Return unresolved placeholder tokens found outside fenced code."""
+    """Return unresolved placeholder tokens found in visible markdown.
+
+    Fenced samples and HTML comments are ignored, matching the other gates.
+    """
 
     found: list[str] = []
-    in_fence = False
 
-    for line_number, line in enumerate(text.splitlines(), start=1):
+    for line_number, line in enumerate(visible_markdown(text).splitlines(), start=1):
         stripped = line.strip()
-        if stripped.startswith("```"):
-            in_fence = not in_fence
-            continue
-        if in_fence or stripped.startswith("<!--"):
+        if not stripped:
             continue
         is_heading = stripped.startswith("#")
         for pattern in PLACEHOLDER_PATTERNS:

@@ -1,14 +1,17 @@
 import assert from "node:assert/strict";
+import { spawn } from "node:child_process";
 import fs from "node:fs/promises";
 import os from "node:os";
 import path from "node:path";
 import { describe, it } from "node:test";
+import { fileURLToPath } from "node:url";
 
 import {
   assertSafeAssetBase,
   assertSafeDownloadUrl,
   HARNESS_SCRIPTS_DIR,
   LESSONS_HEADER,
+  PACKAGE_VERSION,
   PINNED_REF,
   REFERENCE_ASSETS,
   REFERENCES_SUBDIR,
@@ -21,7 +24,7 @@ import {
 import { packagedAssetPath, resolveInstallSource } from "../lib/assets.js";
 import { downloadToFile } from "../lib/download.js";
 import { injectCursorRules } from "../lib/cursorrules.js";
-import { runGate } from "../lib/gates.js";
+import { hasPython, runGate } from "../lib/gates.js";
 import { install } from "../lib/install.js";
 import {
   createMockAssetServer,
@@ -471,6 +474,40 @@ describe("install harness", () => {
       }
     });
   });
+
+  it("refuses to create STATE.md through a dangling symlink", async () => {
+    const cwd = await createTempDir("ah-state-symlink-");
+    const secret = path.join(cwd, "secret.env");
+    await fs.mkdir(path.join(cwd, ".specs", "features"), { recursive: true });
+    await fs.symlink(secret, path.join(cwd, ".specs", "STATE.md"));
+
+    try {
+      await assert.rejects(
+        () => install({ cwd, silent: true }),
+        /symlink/,
+      );
+      assert.equal(await pathExists(secret), false);
+    } finally {
+      await fs.rm(cwd, { recursive: true, force: true });
+    }
+  });
+
+  it("refuses to write .cursorrules through a symlink", async () => {
+    const cwd = await createTempDir("ah-rules-symlink-");
+    const secret = path.join(cwd, "secret.env");
+    await fs.writeFile(secret, "SECRET=keep\n", "utf8");
+    await fs.symlink(secret, path.join(cwd, ".cursorrules"));
+
+    try {
+      await assert.rejects(
+        () => install({ cwd, silent: true }),
+        /symlink/,
+      );
+      assert.equal(await fs.readFile(secret, "utf8"), "SECRET=keep\n");
+    } finally {
+      await fs.rm(cwd, { recursive: true, force: true });
+    }
+  });
 });
 
 describe("asset source safety", () => {
@@ -589,6 +626,50 @@ describe("gate execution", () => {
       await fs.rm(cwd, { recursive: true, force: true });
     }
   });
+
+  it("runs gate scripts with options.cwd as the working directory", async (t) => {
+    if (!(await hasPython())) {
+      t.skip("Python 3 not found");
+      return;
+    }
+
+    const cwd = await createTempDir("harness-gate-cwd-");
+
+    try {
+      await install({ cwd, silent: true });
+
+      const featureDir = path.join(cwd, ".specs/features/auth");
+      await fs.mkdir(featureDir, { recursive: true });
+      await fs.writeFile(
+        path.join(featureDir, "spec.md"),
+        `# Spec: Authentication
+
+## Goal
+Let users sign in with email and password.
+
+## Requirements
+
+### REQ-001: Email login
+- **Acceptance Criteria**: WHEN a user submits valid credentials THEN the system SHALL create a session
+
+## Assumptions
+- Email is the only identity provider for this feature
+
+## Out of Scope
+- Social login providers
+`,
+        "utf8",
+      );
+
+      const code = await runGate("validate-spec", ["auth"], {
+        cwd,
+        stdio: "ignore",
+      });
+      assert.equal(code, 0);
+    } finally {
+      await fs.rm(cwd, { recursive: true, force: true });
+    }
+  });
 });
 
 describe("packaged assets", () => {
@@ -606,6 +687,17 @@ describe("packaged assets", () => {
     ]) {
       assert.ok(pkg.files.includes(entry), `package.json files missing ${entry}`);
     }
+  });
+
+  it("README current version matches package.json", async () => {
+    const readme = await fs.readFile(
+      new URL("../README.md", import.meta.url),
+      "utf8",
+    );
+    assert.match(
+      readme,
+      new RegExp(`current \\*\\*${PACKAGE_VERSION.replaceAll(".", "\\.")}\\*\\*`),
+    );
   });
 
   it("resolves install to the package when no override is set", () => {
@@ -692,6 +784,58 @@ describe("download safety", () => {
     );
   });
 
+  it("rejects a cross-origin redirect hop, including another local port", () => {
+    assert.throws(
+      () =>
+        assertSafeDownloadUrl(
+          "http://127.0.0.1:6379/payload",
+          "http://127.0.0.1:8080/skills/agent-architecture.md",
+        ),
+      /cross-origin redirect/,
+    );
+  });
+
+  it("allows a same-origin redirect hop", () => {
+    assert.equal(
+      assertSafeDownloadUrl(
+        "http://127.0.0.1:8080/b.md",
+        "http://127.0.0.1:8080/a.md",
+      ),
+      "http://127.0.0.1:8080/b.md",
+    );
+  });
+
+  it("rejects a redirect hop to a different local port", async () => {
+    const other = await createMockAssetServer();
+    try {
+      await withMockServer(
+        async (mockServer) => {
+          const dest = path.join(
+            await createTempDir("ah-redir-port-"),
+            "asset.md",
+          );
+          await assert.rejects(
+            () =>
+              downloadToFile(
+                `${mockServer.baseUrl}/skills/agent-architecture.md`,
+                dest,
+              ),
+            /disallowed URL|cross-origin redirect/,
+          );
+          assert.equal(await pathExists(dest), false);
+          await fs.rm(path.dirname(dest), { recursive: true, force: true });
+        },
+        {
+          redirects: {
+            "/skills/agent-architecture.md": `${other.baseUrl}/skills/agent-architecture.md`,
+          },
+        },
+      );
+    } finally {
+      await other.close();
+    }
+  });
+
   it("refuses to overwrite a destination symlink", async () => {
     const cwd = await createTempDir("ah-symlink-");
     const secret = path.join(cwd, "secret.env");
@@ -756,5 +900,47 @@ describe("reference catalog", () => {
       SCRIPT_ASSETS.some((asset) => asset.file === "lessons.py"),
       true,
     );
+  });
+});
+
+function runCli(args) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(
+      process.execPath,
+      [fileURLToPath(new URL("../index.js", import.meta.url)), ...args],
+      { stdio: ["ignore", "pipe", "pipe"] },
+    );
+    let stdout = "";
+    let stderr = "";
+    child.stdout.on("data", (chunk) => {
+      stdout += chunk;
+    });
+    child.stderr.on("data", (chunk) => {
+      stderr += chunk;
+    });
+    child.on("error", reject);
+    child.on("close", (code) => resolve({ code, stdout, stderr }));
+  });
+}
+
+describe("CLI", () => {
+  it("prints the package version", async () => {
+    const { code, stdout } = await runCli(["--version"]);
+    assert.equal(code, 0);
+    assert.equal(stdout.trim(), PACKAGE_VERSION);
+  });
+
+  it("prints usage on --help and exits 0", async () => {
+    const { code, stdout, stderr } = await runCli(["--help"]);
+    assert.equal(code, 0);
+    assert.match(stdout, /Usage: agentic-harness/);
+    assert.equal(stderr, "");
+  });
+
+  it("prints usage on stderr when no command is given", async () => {
+    const { code, stdout, stderr } = await runCli([]);
+    assert.equal(code, 1);
+    assert.equal(stdout, "");
+    assert.match(stderr, /Usage: agentic-harness/);
   });
 });
