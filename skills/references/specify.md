@@ -56,7 +56,7 @@ python3 .specs/harness/scripts/validate_spec.py [feature]
 python3 .specs/harness/scripts/validate_spec.py          # single-feature projects
 ```
 
-Checks required sections (`Requirements`, `Assumptions`, `Out of Scope`), well-formed IDs, a `SHALL`/`MUST` outcome per criterion, and unresolved placeholders. A criterion with `SHALL` but no `WHEN`/`IF` … `THEN` trigger is a warning. Non-zero exit means STOP.
+Checks required sections (`Requirements`, `Assumptions`, `Out of Scope`), well-formed IDs, a `SHALL`/`MUST` outcome per criterion, and unresolved placeholders. Sections, IDs, criteria, and placeholders are read from visible markdown — fenced samples and HTML comments do not count. A criterion with `SHALL` but no `WHEN`/`IF` … `THEN` trigger is a warning. Non-zero exit means STOP.
 
 ## Template
 

@@ -689,15 +689,19 @@ describe("packaged assets", () => {
     }
   });
 
-  it("README current version matches package.json", async () => {
+  it("README version series matches package.json major.minor", async () => {
     const readme = await fs.readFile(
       new URL("../README.md", import.meta.url),
       "utf8",
     );
+    const [major, minor] = PACKAGE_VERSION.split(".");
+    const series = `${major}.${minor}.x`;
     assert.match(
       readme,
-      new RegExp(`current \\*\\*${PACKAGE_VERSION.replaceAll(".", "\\.")}\\*\\*`),
+      new RegExp(`\\*\\*${series.replaceAll(".", "\\.")}\\*\\*`),
     );
+    // A pinned patch here fails `prepublishOnly` after `npm version` bumps package.json.
+    assert.doesNotMatch(readme, /current \*\*\d+\.\d+\.\d+\*\*/);
   });
 
   it("resolves install to the package when no override is set", () => {

@@ -7,7 +7,7 @@
 
 Install once (`npx @luizsantiago/agentic-harness install`) and the same playbook runs in **Cursor** and **Claude Code**. The agent loads **one step’s guide** at a time instead of dumping the whole manual into every chat — so you spend less context on process and more on the feature.
 
-npm package: [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **0.7.x** (current **0.7.16**).
+npm package: [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **0.7.x**. The badge above tracks the published patch.
 
 For the engineering contract (gates, evidence rules, upgrade tables), keep reading below — or take the plain-language tour on the [project wiki](https://github.com/luizssantiago92/spec-driven-harness/wiki).
 
