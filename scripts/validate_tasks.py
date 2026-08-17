@@ -31,10 +31,10 @@ from pathlib import Path
 from _common import (
     Report,
     find_placeholders,
-    mask_fenced_blocks,
     normalize_file_path,
     requirement_ids,
     resolve_artifact,
+    visible_markdown,
 )
 
 GATE = "validate-tasks"
@@ -201,7 +201,7 @@ def build_report(
     spec_text: str | None = None,
 ) -> Report:
     report = Report(gate=GATE, target=target)
-    visible = mask_fenced_blocks(text)
+    visible = visible_markdown(text)
     tasks = split_tasks(visible)
 
     if not tasks:
@@ -304,7 +304,7 @@ def build_report(
                 )
 
     if spec_text is not None:
-        spec_requirements = requirement_ids(mask_fenced_blocks(spec_text))
+        spec_requirements = requirement_ids(visible_markdown(spec_text))
         if spec_requirements:
             missing = [
                 requirement_id

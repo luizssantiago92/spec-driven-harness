@@ -15,7 +15,7 @@ Checks:
   * at least one well-formed requirement ID (REQ-001 style)
   * every requirement carries at least one acceptance criterion
   * every criterion states a required outcome (SHALL or MUST)
-  * no unresolved placeholders (TBD, TODO, <fill me>)
+  * no unresolved placeholders (TBD, TODO, <fill me>) outside fences and HTML comments
   * EARS shape (WHEN ... THEN ...) is reported as a warning
 
 Exit codes: 0 pass, 1 blocking issues, 2 usage error.
@@ -31,8 +31,8 @@ from _common import (
     Report,
     find_placeholders,
     has_section,
-    mask_fenced_blocks,
     resolve_artifact,
+    visible_markdown,
 )
 
 GATE = "validate-spec"
@@ -143,7 +143,7 @@ def acceptance_lines(body: str) -> list[str]:
 
 def build_report(target: str, text: str) -> Report:
     report = Report(gate=GATE, target=target)
-    visible = mask_fenced_blocks(text)
+    visible = visible_markdown(text)
 
     for section in REQUIRED_SECTIONS:
         if has_section(visible, section):

@@ -7,7 +7,7 @@
 
 Install once (`npx @luizsantiago/agentic-harness install`) and the same playbook runs in **Cursor** and **Claude Code**. The agent loads **one step’s guide** at a time instead of dumping the whole manual into every chat — so you spend less context on process and more on the feature.
 
-npm package: [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **0.7.x** (current **0.7.14**).
+npm package: [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **0.7.x** (current **0.7.16**).
 
 For the engineering contract (gates, evidence rules, upgrade tables), keep reading below — or take the plain-language tour on the [project wiki](https://github.com/luizssantiago92/spec-driven-harness/wiki).
 
@@ -94,7 +94,7 @@ Re-running refreshes skills, references and gate scripts, and upgrades the harne
 
 The npm package ships the CLI, skills, references, project rules and gate scripts. Install copies them from the package, so a later push to the default branch cannot change an install that already happened — upgrading the package is what changes the harness.
 
-Setting `HARNESS_REPO_URL` overrides the source (a fork, or the test suite) and is announced before anything is written. Remote fetches stay a trust boundary: HTTPS only (plain HTTP is accepted against `localhost` for the test suite), a 30s request timeout, and a 2 MB cap per asset.
+Setting `HARNESS_REPO_URL` overrides the source (a fork, or the test suite) and is announced before anything is written. Remote fetches stay a trust boundary: HTTPS only (plain HTTP is accepted against `localhost` for the test suite), redirect hops stay on the same origin, a 30s request timeout, and a 2 MB cap per asset. Installer writes refuse to follow a destination symlink (skills, memory files, and `.cursorrules`).
 
 ## Gates
 
@@ -118,8 +118,8 @@ A non-zero exit means stop, fix the artifact, and re-run.
 
 | Gate | Rejects |
 | --- | --- |
-| `validate_spec` | Missing `Requirements` / `Assumptions` / `Out of Scope`, a criterion without `SHALL` or `MUST`, malformed IDs, a requirement without acceptance criteria, unfilled template placeholders outside fenced samples |
-| `validate_tasks` | Missing required field (`Requirement`, `Files`, `Depends on`, `Tests`, `Gate`, `Done when`), `Files`/`Tests`/`Gate`/`Done when` set to none/—, unknown or forward dependency, dependency on a later phase, dependency cycle, a title on the vague-phrase list, uncovered spec requirement IDs (only headings under `## Requirements`), independent tasks sharing a `Files` path (`./path`, `/path`, `../path`, quotes, markdown links, case variants, and `path` count as one) |
+| `validate_spec` | Missing `Requirements` / `Assumptions` / `Out of Scope`, a criterion without `SHALL` or `MUST`, malformed IDs, a requirement without acceptance criteria, unfilled template placeholders outside fenced samples and HTML comments |
+| `validate_tasks` | Missing required field (`Requirement`, `Files`, `Depends on`, `Tests`, `Gate`, `Done when`), `Files`/`Tests`/`Gate`/`Done when` set to none/—, unknown or forward dependency, dependency on a later phase, dependency cycle, a title on the vague-phrase list, uncovered spec requirement IDs (only headings under `## Requirements`; fences and HTML comments ignored), independent tasks sharing a `Files` path (`./path`, `/path`, `../path`, quotes, markdown links, case variants, and `path` count as one) |
 | `check_commit` | Non-Conventional header, unknown type, header over 72 characters, trailing period |
 | `validate_state` | Missing `validation.md`, verdict other than exact `PASS`/`PASSED` (`PASS WITH GAPS` fails), verdict only under a non-Verdict section, conflicting preamble vs `## Verdict`, no **test** `file:line` evidence (fences and HTML comments ignored), a spec requirement without same-line test evidence, open task, `PASS` with a surviving mutant (sensor/mutant lines only), Medium+ `PASS` without a **killed** mutant there, Medium+ feature without a sensor **outcome** (`killed`/`survived`/`injected`), `PASS` with open `Gaps` or Security Review `Result: fail` |
 | `lessons` | Add without `--source`, source other than `validation.md`, source outside `.specs/`, corrupt `lessons.json` (missing `title`/`rule`) |

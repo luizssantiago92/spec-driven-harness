@@ -212,6 +212,14 @@ class SpecGateTest(unittest.TestCase):
         report = validate_spec.build_report("spec.md", spec)
         self.assertTrue(report.passed, report.errors)
 
+    def test_html_comment_todo_is_not_a_placeholder(self):
+        spec = VALID_SPEC.replace(
+            "- Social login providers",
+            "- Social login providers <!-- TODO: maybe later -->",
+        )
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertTrue(report.passed, report.errors)
+
     def test_markdown_table_rows_are_not_acceptance_criteria(self):
         spec = VALID_SPEC.replace(
             "### REQ-001: Email login\n",

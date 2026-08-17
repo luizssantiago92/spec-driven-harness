@@ -372,6 +372,46 @@ class SpecTasksFamilyTest(unittest.TestCase):
         self.assertFalse(report.passed)
         self.assertTrue(any("Done When" in e for e in report.errors))
 
+    def test_html_comment_requirements_section_does_not_count(self):
+        spec = """# Spec
+<!--
+## Requirements
+### REQ-001: Hidden
+- WHEN x THEN the system SHALL y
+-->
+## Assumptions
+- none
+## Out of Scope
+- none
+"""
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("Requirements" in e for e in report.errors))
+
+    def test_html_comment_task_does_not_count(self):
+        tasks = """# Tasks
+<!--
+### T1: Create session token module
+- **Requirement**: REQ-001
+- **Files**: src/auth/token.ts
+- **Depends on**: —
+- **Tests**: t.ts
+- **Gate**: npm test
+- **Done when**: tokens sign
+-->
+"""
+        report = validate_tasks.build_report("tasks.md", tasks)
+        self.assertFalse(report.passed)
+        self.assertTrue(any("no tasks found" in e for e in report.errors))
+
+    def test_html_comment_todo_is_not_a_placeholder(self):
+        spec = SPEC.replace(
+            "- Social login",
+            "- Social login <!-- TODO: maybe later -->",
+        )
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertTrue(report.passed, report.errors)
+
     def test_table_only_shall_is_not_a_criterion(self):
         spec = """# Spec
 ## Requirements
