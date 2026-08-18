@@ -43,6 +43,7 @@ Plain meaning on [[Quick-start]] and [[Gates-and-guarantees]].
 | [[Token-efficiency]] | You care about chat cost / context |
 | [[Quick-start]] | You want ten minutes to first success |
 | [[FAQ]] | You have a concrete question |
+| [[Companion-agentic-fullstack]] | You also use frontend / backend / data skills |
 
 ## Links
 

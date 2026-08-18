@@ -11,5 +11,6 @@ Plain-language tour of the Spec-Driven Harness. These Markdown files mirror the
 | `Token-efficiency.md` | Token-efficiency |
 | `Quick-start.md` | Quick-start |
 | `FAQ.md` | FAQ |
+| `Companion-agentic-fullstack.md` | Companion-agentic-fullstack |
 
 Edit here for review in a PR, then paste or sync into the Wiki when publishing.

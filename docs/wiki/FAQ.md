@@ -71,6 +71,10 @@ Yes at a high level: ask your agent to **install the harness**, then to **specif
 
 Then [Gates](Gates-and-guarantees) / [Tokens](Token-efficiency) when you care about guarantees or cost.
 
+## How do I use this with frontend or backend skills?
+
+This harness is stack-agnostic. Optional floor maps live in [`@luizsantiago/agentic-fullstack`](https://www.npmjs.com/package/@luizsantiago/agentic-fullstack): one Execute manual per layer, one layer per task. Pairing contract: [Companion: Agentic Fullstack](Companion-agentic-fullstack).
+
 ## Something broken or unclear?
 
 Open an issue on [GitHub](https://github.com/luizssantiago92/spec-driven-harness/issues). For contributing rules (especially the frozen gate), see [CONTRIBUTING](https://github.com/luizssantiago92/spec-driven-harness/blob/main/CONTRIBUTING.md).
