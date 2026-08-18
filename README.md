@@ -36,6 +36,7 @@ Human-friendly tour on the [project wiki](https://github.com/luizssantiago92/spe
 | [Token efficiency](https://github.com/luizssantiago92/spec-driven-harness/wiki/Token-efficiency) | Progressive loading and context cost |
 | [Quick start](https://github.com/luizssantiago92/spec-driven-harness/wiki/Quick-start) | First ten minutes |
 | [FAQ](https://github.com/luizssantiago92/spec-driven-harness/wiki/FAQ) | Common questions |
+| [Companion: Agentic Fullstack](https://github.com/luizssantiago92/spec-driven-harness/wiki/Companion-agentic-fullstack) | Optional frontend / backend / data floor map |
 
 Markdown sources for those pages also live in [`docs/wiki/`](docs/wiki/) so they can be reviewed in PRs.
 
