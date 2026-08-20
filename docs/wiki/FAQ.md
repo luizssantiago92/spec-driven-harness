@@ -12,12 +12,12 @@ It’s a **process kit** for agents (skills + docs + a completion gate). Your ap
 
 You need agents (or humans driving agents) to follow **Specify → … → Verify** and keep plans under `.specs/`. Day-to-day languages and frameworks stay yours.
 
-## What’s the difference between the six core skills and the “sisters”?
+## What’s the difference between always-on skills and on-demand sisters?
 
-| | Core (always there) | Sisters (on demand) |
+| | Always-on (every install) | Sisters (load on demand) |
 |--|---------------------|---------------------|
 | Role | Plan → build → prove done | Extra passes: security, QA, simplify, ship |
-| When | Every install | Only when you ask—and **one at a time** |
+| When | Hub + core sisters ship with every install | Load only when you ask—and **one at a time** |
 
 ## Will this stop every bad AI change?
 
@@ -39,7 +39,7 @@ See the README **Credits** section for licenses and links.
 
 ## Can I use only part of the kit?
 
-You can emphasize phases, but the **install ships the six core skills** together. Sisters stay optional. Loosening the freeze (e.g. dropping Specify) is a major-version decision—not a casual tweak.
+You can emphasize phases, but the **install ships the hub and sister skill files** together. On-demand sisters stay optional to *load*. Loosening the freeze (e.g. dropping Specify) is a major-version decision—not a casual tweak.
 
 ## Where do I put my feature plans?
 
@@ -77,4 +77,4 @@ This harness is stack-agnostic. Optional floor maps live in [`@luizsantiago/agen
 
 ## Something broken or unclear?
 
-Open an issue on [GitHub](https://github.com/luizssantiago92/spec-driven-harness/issues). For contributing rules (especially the frozen gate), see [CONTRIBUTING](https://github.com/luizssantiago92/spec-driven-harness/blob/main/CONTRIBUTING.md).
+Open an issue on [GitHub](https://github.com/luizssantiago92/spec-driven-harness/issues). For contributing rules (especially the frozen gate), see [CONTRIBUTING](../../CONTRIBUTING.md).

@@ -1,0 +1,38 @@
+# Contributing
+
+Thanks for improving the Spec-Driven Harness.
+
+## Basics
+
+- Keep artifacts in English (code, tests, commits, `.specs/`).
+- Prefer small, focused diffs.
+- Run `npm test` before opening a PR.
+
+## Gate stability (0.7.x)
+
+Structural gates are frozen for the 0.7 line. See [ADR 0001](docs/adr/0001-harness-freeze-v0.7.md) and [`prd/gate-stability.md`](prd/gate-stability.md).
+
+If you believe a gate false-passes:
+
+1. Add a failing case to [`test/test_adversarial_gates.py`](test/test_adversarial_gates.py) first.
+2. Confirm `npm test` fails on that case alone.
+3. Fix the gate or docs; keep the case green thereafter.
+
+Free-form audits without a matrix fixture do not open gate PRs.
+
+## Layout
+
+| Path | Role |
+| --- | --- |
+| `skills/` | Hub + sister skills |
+| `skills/references/` | Phase procedures |
+| `scripts/` | Deterministic Python gates |
+| `rules/` | Cursor project rules |
+| `test/` | Node install tests + Python gate / adversarial suites |
+
+## Local checks
+
+```bash
+npm install
+npm test
+```

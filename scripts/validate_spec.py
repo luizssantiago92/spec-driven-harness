@@ -28,10 +28,12 @@ import re
 import sys
 
 from _common import (
+    REQUIREMENTS_HEADING,
     Report,
     find_placeholders,
     has_section,
     resolve_artifact,
+    section_body,
     visible_markdown,
 )
 
@@ -60,27 +62,31 @@ REQUIRED_SECTIONS = ("Requirements", "Assumptions", "Out of Scope")
 
 
 def split_requirements(text: str) -> list[tuple[str, str, str]]:
-    """Return (id, title, body) for each requirement heading in document order.
+    """Return (id, title, body) for each requirement heading under ``## Requirements``.
 
-    A requirement body ends at the next heading of the same or higher level, so a
-    trailing section such as `## Out of Scope` is never absorbed into the last
-    requirement.
+    Headings under Assumptions, Out of Scope, or other sections are ignored so
+    NOTE-001-style notes never become acceptance-criteria obligations. A
+    requirement body ends at the next heading of the same or higher level.
     """
+
+    scoped = section_body(text, REQUIREMENTS_HEADING)
+    if scoped is None:
+        return []
 
     requirements: list[tuple[str, str, str]] = []
 
-    for match in REQUIREMENT_HEADING.finditer(text):
+    for match in REQUIREMENT_HEADING.finditer(scoped):
         level = len(match.group("level"))
         start = match.end()
-        end = len(text)
+        end = len(scoped)
 
-        for heading in ANY_HEADING.finditer(text, start):
+        for heading in ANY_HEADING.finditer(scoped, start):
             if len(heading.group("level")) <= level:
                 end = heading.start()
                 break
 
         requirements.append(
-            (match.group("id"), match.group("title").strip(), text[start:end])
+            (match.group("id"), match.group("title").strip(), scoped[start:end])
         )
 
     return requirements
