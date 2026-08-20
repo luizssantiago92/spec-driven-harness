@@ -351,6 +351,21 @@ class SpecTasksFamilyTest(unittest.TestCase):
             "## Assumptions\n### NOTE-002: Assumed SLA\n- assumed\n",
         )
         self.assertEqual(_common.requirement_ids(spec), ["REQ-001"])
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertTrue(report.passed, report.errors)
+        self.assertEqual(
+            [req_id for req_id, _, _ in validate_spec.split_requirements(spec)],
+            ["REQ-001"],
+        )
+
+    def test_req_outside_requirements_ignored_by_validate_spec(self):
+        spec = SPEC + "\n### NOTE-001: Future work\n- deferred\n"
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertTrue(report.passed, report.errors)
+        self.assertEqual(
+            [req_id for req_id, _, _ in validate_spec.split_requirements(spec)],
+            ["REQ-001"],
+        )
 
     def test_tests_none_fails(self):
         tasks = TASKS.replace("test/auth/token.test.ts", "none", 1)

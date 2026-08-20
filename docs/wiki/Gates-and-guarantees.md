@@ -10,14 +10,14 @@ These guarantees are locked for the **0.7.x** line. Changing them needs a new ma
 
 | Guarantee | What it means in practice |
 |-----------|---------------------------|
-| **Six skills always install** | Planning, building, and checking aren’t optional pieces of the kit. |
+| **Hub + sisters always install** | Planning, building, and checking aren’t optional pieces of the kit (hub + eight sister skills). |
 | **Specify before Verify** | You can’t “finish” without a written plan the harness can check against. |
 | **`.specs/` is the memory** | Plans and status live in the repo, not only in chat. |
 | **Structural gates stay on** | Empty plans, stub code, missing tests, and similar gaps fail the gate. |
 | **Conditional sisters** | Extra reviews (security, QA, simplify, ship) load only when you ask—and **one at a time**. |
 | **Python gate scripts stay frozen** | The automated checker’s behavior doesn’t drift casually. |
 
-Full freeze text: [ADR 0001](https://github.com/luizssantiago92/spec-driven-harness/blob/main/docs/adr/0001-harness-freeze-v0.7.md).
+Full freeze text: [ADR 0001](../adr/0001-harness-freeze-v0.7.md).
 
 ## What the gate **blocks** (hard)
 
@@ -67,7 +67,7 @@ These stay in the **guides** (judgment and authoring quality):
 
 A large suite of failure cases must keep failing. That stops “helpful” edits from accidentally making the gate too soft.
 
-Details: [`tests/adversarial/`](https://github.com/luizssantiago92/spec-driven-harness/tree/main/tests/adversarial) and [CONTRIBUTING](https://github.com/luizssantiago92/spec-driven-harness/blob/main/CONTRIBUTING.md).
+Details: [`test/test_adversarial_gates.py`](../../test/test_adversarial_gates.py) and [CONTRIBUTING](../../CONTRIBUTING.md).
 
 ## Related
 

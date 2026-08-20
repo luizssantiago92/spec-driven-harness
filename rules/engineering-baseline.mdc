@@ -21,6 +21,7 @@ Chat language is a personal preference. Set it in your own agent settings if you
 
 # Harness Skills
 
+<!-- harness-managed:skills-map:start -->
 | Skill | Purpose |
 | --- | --- |
 | `.cursor/skills/agent-architecture.md` | SDD hub — contract, phases, gates, complexity router |
@@ -28,7 +29,12 @@ Chat language is a personal preference. Set it in your own agent settings if you
 | `.cursor/skills/task-graph-engineering.md` | Task DAG, parallelism, verify topology |
 | `.cursor/skills/engineering-standards.md` | Code quality, secure coding, git hygiene |
 | `.cursor/skills/security-review.md` | Security checklist for verification |
+| `.cursor/skills/appsec.md` | Application security sister (load on demand) |
+| `.cursor/skills/qa-strategy.md` | QA strategy sister (load on demand) |
+| `.cursor/skills/code-simplify.md` | Simplification sister (load on demand) |
+| `.cursor/skills/ship-ready.md` | Ship-ready sister (load on demand) |
 | `.cursor/skills/git-handoff.md` | Git sync and session handoff |
+<!-- harness-managed:skills-map:end -->
 
 # Deterministic Gates
 

@@ -137,10 +137,20 @@ class SpecGateTest(unittest.TestCase):
         self.assertTrue(any("placeholder" in error for error in report.errors))
 
     def test_duplicate_requirement_id_fails(self):
-        spec = VALID_SPEC + "\n### REQ-001: Duplicate\n- WHEN x THEN system SHALL y\n"
+        spec = VALID_SPEC.replace(
+            "## Assumptions",
+            "### REQ-001: Duplicate\n"
+            "- WHEN x THEN system SHALL y\n\n"
+            "## Assumptions",
+        )
         report = validate_spec.build_report("spec.md", spec)
         self.assertFalse(report.passed)
         self.assertTrue(any("duplicate" in error for error in report.errors))
+
+    def test_duplicate_outside_requirements_is_ignored(self):
+        spec = VALID_SPEC + "\n### REQ-001: Duplicate after OOS\n- WHEN x THEN system SHALL y\n"
+        report = validate_spec.build_report("spec.md", spec)
+        self.assertTrue(report.passed, report.errors)
 
     def test_missing_assumptions_fails(self):
         spec = VALID_SPEC.replace(
@@ -583,6 +593,12 @@ class TasksGateTest(unittest.TestCase):
         )
         self.assertTrue(report.passed, report.errors)
         self.assertEqual(_common.requirement_ids(spec), ["REQ-001"])
+        spec_report = validate_spec.build_report("spec.md", spec)
+        self.assertTrue(spec_report.passed, spec_report.errors)
+        self.assertEqual(
+            [req_id for req_id, _, _ in validate_spec.split_requirements(spec)],
+            ["REQ-001"],
+        )
 
     def test_quoted_file_paths_count_as_overlap(self):
         tasks = """# Tasks

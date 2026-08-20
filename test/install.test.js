@@ -307,7 +307,7 @@ describe("install harness", () => {
     }
   });
 
-  it("offline reinstall refreshes skills but keeps memory and edited rules", async () => {
+  it("offline reinstall refreshes skills but keeps memory and user rule prose", async () => {
     const cwd = await createTempDir("harness-offline-rerun-");
     const originalOverride = process.env.HARNESS_REPO_URL;
     delete process.env.HARNESS_REPO_URL;
@@ -329,7 +329,10 @@ describe("install harness", () => {
 
       assert.equal(await fs.readFile(lessonsFile, "utf8"), "# Custom lessons\n");
       assert.equal(await fs.readFile(stateFile, "utf8"), "# Custom state\n");
-      assert.equal(await fs.readFile(baselineRule, "utf8"), "# Custom rules\n");
+      const baseline = await fs.readFile(baselineRule, "utf8");
+      assert.match(baseline, /# Custom rules/);
+      assert.match(baseline, /harness-managed:skills-map:start/);
+      assert.match(baseline, /appsec\.md/);
 
       const hub = await fs.readFile(
         path.join(cwd, ".cursor/skills/agent-architecture.md"),
@@ -346,7 +349,7 @@ describe("install harness", () => {
     }
   });
 
-  it("does not overwrite existing STATE.md, LESSONS.md, or project rules on re-run", async () => {
+  it("does not overwrite existing STATE.md or LESSONS.md; refreshes skills map in rules", async () => {
     await withMockServer(async (mockServer) => {
       const cwd = await createTempDir("harness-idempotent-");
 
@@ -371,7 +374,50 @@ describe("install harness", () => {
           await fs.readFile(lessonsFile, "utf8"),
           "# Custom lessons\n",
         );
-        assert.equal(await fs.readFile(baselineRule, "utf8"), "# Custom rules\n");
+        const baseline = await fs.readFile(baselineRule, "utf8");
+        assert.match(baseline, /# Custom rules/);
+        assert.match(baseline, /qa-strategy\.md/);
+      } finally {
+        await fs.rm(cwd, { recursive: true, force: true });
+      }
+    });
+  });
+
+  it("reinstall refreshes a stale Harness Skills table without markers", async () => {
+    await withMockServer(async (mockServer) => {
+      const cwd = await createTempDir("harness-baseline-stale-");
+
+      try {
+        await install({ cwd, repoUrl: mockServer.baseUrl, silent: true });
+
+        const baselineRule = path.join(
+          cwd,
+          ".cursor/rules/engineering-baseline.mdc",
+        );
+        await fs.writeFile(
+          baselineRule,
+          `# Engineering Baseline
+
+# Harness Skills
+
+| Skill | Purpose |
+| --- | --- |
+| \`.cursor/skills/agent-architecture.md\` | hub only |
+
+# Deterministic Gates
+
+keep me
+`,
+          "utf8",
+        );
+
+        await install({ cwd, repoUrl: mockServer.baseUrl, silent: true });
+
+        const baseline = await fs.readFile(baselineRule, "utf8");
+        assert.match(baseline, /harness-managed:skills-map:start/);
+        assert.match(baseline, /appsec\.md/);
+        assert.match(baseline, /# Deterministic Gates/);
+        assert.match(baseline, /keep me/);
       } finally {
         await fs.rm(cwd, { recursive: true, force: true });
       }
