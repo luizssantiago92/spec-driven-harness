@@ -108,6 +108,347 @@ npx @luizsantiago/agentic-harness validate-spec 001-add-csv-export-to-reports
 
 ---
 
+## Other agent commands (same idea as `/specify`)
+
+Every command below is **for the agent in chat**, not something you memorize in the terminal. Each loads one reference file from `.cursor/skills/references/`. The agent runs gates and CLI helpers for you.
+
+**Typical order:**
+
+```
+/explore? → /specify → /discuss? → /plan? → /tasks? → /analyze → /loop → /verify → /archive
+```
+
+---
+
+### `/quick` — tiny changes only (≤3 files)
+
+**Purpose:** Bug fix, copy tweak, or config change — no full spec ceremony.
+
+**Chat:**
+
+```
+/quick
+
+Fix the typo on the settings page title. One file only.
+```
+
+**Agent:** Implements → runs tests → `check-commit` → done. No `feature-init`, no `spec.md`.
+
+**CLI:** `check-commit --message "..."` only (agent runs it).
+
+**Skip when:** More than 3 files, new dependencies, auth/payments/data — use `/specify` instead.
+
+---
+
+### `/explore` — think before you commit to a feature (optional)
+
+**Purpose:** Research ideas, compare approaches, or spike — **no production code**.
+
+**Chat:**
+
+```
+/explore
+
+Should we use WebSockets or SSE for live report updates? Compare trade-offs.
+```
+
+**Agent:** Writes notes; may update `STATE.md`. Does not open a feature folder unless you proceed to `/specify`.
+
+**CLI:** None required.
+
+**Skip when:** You already know what to build — go straight to `/specify`.
+
+---
+
+### `/discuss` — resolve gray areas (conditional)
+
+**Purpose:** Lock product decisions before the spec is final — auth rules, data model, edge cases.
+
+**Chat:**
+
+```
+/discuss
+
+For CSV export: max rows? Empty date range behavior? Who can export — any user or admins only?
+```
+
+**Agent:** Produces `.specs/features/…/context.md` with your answers. Runs inside or right after Specify when triggers fire (auth, payments, persistence, ambiguity).
+
+**CLI:** None required.
+
+**Skip when:** Requirements are already unambiguous.
+
+---
+
+### `/plan` — technical design (optional, Complex tier)
+
+**Purpose:** Document architecture, APIs, and patterns **before** tasks — when there are real design decisions.
+
+**Chat:**
+
+```
+/plan
+
+Design the CSV export API: endpoint shape, streaming vs buffer, error codes.
+```
+
+**Agent:** Writes `.specs/features/…/design.md`. You approve before `/tasks`.
+
+**CLI:** None required.
+
+**Skip when:** Simple, localized change with no new patterns.
+
+---
+
+### `/tasks` — break work into provable jobs (Medium+)
+
+**Purpose:** Turn the approved spec into atomic tasks — each with files, tests, gate, and binary “done when”.
+
+**Chat:**
+
+```
+/tasks
+
+Break the CSV export feature into implementable tasks.
+```
+
+**Agent:**
+
+1. Writes `tasks.md` (and `task-graph.md` if 3+ tasks)
+2. Runs `analyze-artifacts` + `validate-tasks`
+3. **Stops for your approval** before `/loop`
+
+**CLI (optional):**
+
+| Command | Role |
+| --- | --- |
+| `analyze-artifacts [feature]` | Spec ↔ tasks consistency |
+| `validate-tasks [feature]` | Task shape, REQ coverage, file overlap |
+
+**Skip when:** ≤3 obvious steps — Execute lists them inline (if >5 steps appear, come back and run `/tasks`).
+
+---
+
+### `/task-graph` — parallel work topology (3+ tasks)
+
+**Purpose:** Draw which jobs can run in parallel and which need a separate verifier — not a separate product phase, but a planning step inside Tasks.
+
+**Chat:**
+
+```
+/task-graph
+
+Show the DAG for the CSV export tasks and mark parallel groups.
+```
+
+**Agent:** Writes or updates `.specs/features/…/task-graph.md` per `task-graph-engineering.md`.
+
+**CLI:** Enforced by `validate-tasks` when there are 3+ tasks (file must exist).
+
+---
+
+### `/analyze` — cross-check before you approve tasks
+
+**Purpose:** Catch drift between spec, design, and tasks **before** implementation starts.
+
+**Chat:**
+
+```
+/analyze
+
+Check spec and tasks are consistent before I approve.
+```
+
+**Agent:** Runs `analyze-artifacts`; reports gaps; fixes or escalates.
+
+**CLI:** `analyze-artifacts [feature]` (agent runs it).
+
+**Skip when:** Tasks phase was skipped (Simple tier).
+
+---
+
+### `/loop` — implement one task at a time (Execute)
+
+**Purpose:** Production code and tests — **one task, one commit**, test-first.
+
+**Chat:**
+
+```
+/loop
+
+Implement task T1 from tasks.md.
+```
+
+**Agent per task:**
+
+1. Read only that task’s files
+2. Test first → implement → run task `Gate`
+3. `check-commit` → mark task done in `tasks.md`
+4. Repeat until all tasks complete → then `/verify`
+
+**CLI (agent runs each commit):**
+
+| Command | Role |
+| --- | --- |
+| `check-commit --message "feat(scope): …"` | Conventional Commits gate |
+
+**Skip when:** Nothing to implement yet — finish `/specify` and `/tasks` first.
+
+---
+
+### `/verify` — independent proof (always required)
+
+**Purpose:** Someone who **did not write the code** checks the spec was met — with test `file:line` evidence, not “trust me”.
+
+**Chat:**
+
+```
+/verify
+
+Verify the CSV export feature against spec.md. Fresh context — you did not implement this.
+```
+
+**Agent:**
+
+1. New / clean context (author ≠ verifier)
+2. Writes `.specs/features/…/validation.md` with verdict **PASS** or gaps
+3. Runs `validate-state`
+4. On FAIL → fix tasks → bounded re-verify (max 3 rounds)
+
+**CLI (optional):**
+
+| Command | Role |
+| --- | --- |
+| `validate-state [feature]` | Gate: PASS + evidence shape |
+
+**Never skip** (except Quick tier uses a lighter path inside `quick-mode.md`).
+
+---
+
+### `/archive` — fold finished work into project memory
+
+**Purpose:** After Verify **PASS**, merge the feature spec into long-lived domain truth and update the roadmap.
+
+**Chat:**
+
+```
+/archive
+
+Archive the CSV export feature into the reports domain.
+```
+
+**Agent:**
+
+1. Runs `archive-feature` (or you run it once)
+2. Updates `.specs/domains/…/spec.md`, `ROADMAP.md`, resets `STATE.md`
+
+**CLI:**
+
+```bash
+npx @luizsantiago/agentic-harness archive-feature 001-add-csv-export-to-reports
+```
+
+**Skip when:** Verify has not passed.
+
+---
+
+### `/converge` — spec and code drifted (recovery)
+
+**Purpose:** Re-sync when implementation discovered the spec or tasks are wrong.
+
+**Chat:**
+
+```
+/converge
+
+The API shape changed during implementation. Reconcile spec, tasks, and what was built.
+```
+
+**Agent:** Runs `analyze-artifacts`; proposes spec/task updates; **you approve** before more `/loop`.
+
+**CLI:** `analyze-artifacts [feature]`
+
+---
+
+### `/handoff` — end of session
+
+**Purpose:** Persist decisions and next step so the **next** chat can continue without guessing.
+
+**Chat:**
+
+```
+/handoff
+
+Update STATE.md — next step is task T3, blocked on API review.
+```
+
+**Agent:** Updates `.specs/STATE.md`; commits `.specs/` locally (Tier 0 — no push without your OK).
+
+**CLI:** None required.
+
+---
+
+### `/project-init` — brownfield: map an existing repo (once)
+
+**Purpose:** Existing codebase — generate `PROJECT.md`, optional domain stubs, `ROADMAP`, config.
+
+**Chat:**
+
+```
+/project-init
+
+Scan this repo and scaffold .specs/ project memory.
+```
+
+**Agent:** Runs brownfield procedure in `references/project-init.md`.
+
+**CLI:**
+
+```bash
+npx @luizsantiago/agentic-harness project-init
+# preview: project-init --dry-run
+```
+
+**When:** Once per repo, before the first `/specify` on legacy code.
+
+---
+
+### `/constitution` — project principles (once)
+
+**Purpose:** Governing rules (quality bar, stack choices, non-negotiables) referenced by every later spec.
+
+**Chat:**
+
+```
+/constitution
+
+Draft principles: English artifacts, test-first, no secrets in repo.
+```
+
+**Agent:** Writes `.specs/project/CONSTITUTION.md`.
+
+**When:** New greenfield project or team onboarding.
+
+---
+
+### `/lessons` — learn from verify failures
+
+**Purpose:** Record grounded lessons when Verify fails — so the next feature does not repeat the mistake.
+
+**Chat:**
+
+```
+/lessons
+
+Add a lesson from the validation gaps in this feature.
+```
+
+**Agent:** Uses `lessons.py`; confirmed lessons appear in `LESSONS.md`.
+
+**CLI:** `lessons add` / `lessons list` (agent runs them).
+
+---
+
 ## What this package is (and is not)
 
 | This package | Not this package |
@@ -118,28 +459,16 @@ npx @luizsantiago/agentic-harness validate-spec 001-add-csv-export-to-reports
 
 ---
 
-## How work flows
+## How work flows (summary)
 
-### Feature pipeline (phases)
+| Tier | Path |
+| --- | --- |
+| **Quick** | `/quick` → verify → commit |
+| **Simple** | `/specify` → `/loop` → `/verify` |
+| **Medium** | `/specify` → `/tasks` → `/loop` → `/verify` → `/archive` |
+| **Complex** | + `/discuss`, `/plan`, optional AppSec/QA on verify |
 
-```
-EXPLORE? → SPECIFY → DISCUSS? → DESIGN? → TASKS? → ANALYZE → EXECUTE → VERIFY → ARCHIVE
-```
-
-| Tier | When | Path |
-| --- | --- | --- |
-| **Quick** | ≤3 files | Describe → implement → verify → commit |
-| **Simple** | Small change | Specify → Execute → Verify |
-| **Medium** | New feature | Specify → Tasks → Execute → Verify |
-| **Complex** | Architecture / APIs | + Discuss, Design, optional AppSec/QA |
-
-### The Execute loop (`/loop`)
-
-Inside the agent (not a CLI command): pick **one task** → test first → implement → gate → **one commit** → repeat. Then **Verify** in a **fresh context**.
-
-### Operational loops
-
-Repo maintenance (triage, CI, deps) — see [loop patterns](docs/guide/loop-patterns.md). Separate from feature work.
+Operational loops (CI, triage): [loop patterns](docs/guide/loop-patterns.md).
 
 ---
 

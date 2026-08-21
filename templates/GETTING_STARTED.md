@@ -5,7 +5,7 @@ You installed the **Spec-Driven Harness**. You do **not** need to memorize CLI c
 ## What to do now
 
 1. Open **Cursor** or **Claude Code** in this project.
-2. Start with **Specify** — the written agreement before any code:
+2. Start with **Specify**:
 
    ```
    /specify
@@ -14,42 +14,47 @@ You installed the **Spec-Driven Harness**. You do **not** need to memorize CLI c
    Out of scope: PDF export.
    ```
 
-   Or in plain language:
+3. Review `.specs/features/…/spec.md` and **approve** before implementation.
 
-   > Specify a feature: users can export reports as CSV. Keep PDF out of scope.
+## Agent commands (chat — not terminal)
 
-3. Review the draft in `.specs/features/…/spec.md`. Approve only when you agree with every requirement.
-
-The agent loads **one phase at a time**, writes plans under `.specs/`, and runs automatic checks before calling work “done”.
-
-## What you rarely run yourself
-
-| Command | Only when |
+| Command | Purpose |
 | --- | --- |
-| `npx @luizsantiago/agentic-harness install` | First time, or after upgrading the package |
-| `feature-init "…"` | Optional — `/specify` usually runs this for you |
-| `validate-spec [feature]` | Optional — double-check the spec gate yourself |
-| `doctor` | Something looks broken after install |
+| `/quick` | Tiny fix (≤3 files) — skip full spec |
+| `/explore` | Research before committing to a feature |
+| `/specify` | Written requirements — **start here** for real work |
+| `/discuss` | Resolve gray product decisions |
+| `/plan` | Technical design (Complex) |
+| `/tasks` | Job list with tests and “done when” |
+| `/task-graph` | Parallel work DAG (3+ tasks) |
+| `/analyze` | Spec ↔ tasks check before approval |
+| `/loop` | Implement **one task at a time** |
+| `/verify` | Independent proof (fresh context) |
+| `/archive` | Fold PASS feature into domain memory |
+| `/converge` | Recover when spec and code drifted |
+| `/handoff` | Update STATE.md end of session |
+| `/project-init` | Map existing repo (brownfield, once) |
+| `/constitution` | Project principles (once) |
+| `/lessons` | Learn from verify failures |
 
-**Gates** (`validate-spec`, `validate-tasks`, …) are usually run **by the agent** at the right phase. You can run them manually to double-check paperwork.
+Full detail for each command: repository **README** (Agent commands section).
 
-## Existing codebase (brownfield)?
+## CLI you might run yourself
 
-Optional, once:
+| Command | When |
+| --- | --- |
+| `install` | First time or upgrade |
+| `project-init` | Brownfield repo (optional) |
+| `doctor` | Install looks broken |
+| `validate-spec` / `validate-state` | Double-check gates manually |
 
-```bash
-npx @luizsantiago/agentic-harness project-init
-```
-
-That generates `PROJECT.md` and domain stubs so the agent understands the repo.
+Everything else is normally run **by the agent**.
 
 ## Where things live
 
 | Path | Purpose |
 | --- | --- |
-| `.cursor/skills/agent-architecture.md` | Hub — start here |
-| `.specs/STATE.md` | Where the project left off |
+| `.cursor/skills/agent-architecture.md` | Hub — phase map |
+| `.specs/STATE.md` | Where you left off |
 | `.specs/features/` | One folder per feature |
-| `.specs/harness/scripts/` | Automatic checks (gates) |
-
-More detail: repository README and `docs/guide/` (if you cloned the harness repo).
+| `.specs/harness/scripts/` | Automatic gates |
