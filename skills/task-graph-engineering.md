@@ -150,7 +150,7 @@ Route **irreversible** actions through explicit human approval:
 | --- | --- |
 | `/tasks` | Identify fake edges; mark parallel groups; link to REQ IDs |
 | `/task-graph` | Draw or revise the DAG in `task-graph.md` |
-| `/loop` | Execute respecting graph — parallel where safe, sequential where required |
+| `/loop` | Execute graph — `loop-plan` each round; parallel sub-agents when files are disjoint |
 | `/verify` | Diamond verify node — clean context, diverse checks |
 | `/handoff` | Commit `task-graph.md` with other `.specs/` artifacts |
 

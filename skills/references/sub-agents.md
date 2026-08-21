@@ -5,8 +5,9 @@ Operational protocol for multi-agent Execute. Sister material to `task-graph-eng
 
 ## When to Use
 
+- `loop-plan` shows a parallel group with 2+ ready tasks (disjoint `Files`)
+- `task-graph.md` marks a parallel group and the owner accepted the split
 - `tasks.md` packs into more than one ~7-task batch (roughly more than 8 tasks total)
-- The owner accepted a `/task-graph` split with parallel groups
 - Diamond verify needs a fresh context that never wrote the code
 
 ## When NOT to Use

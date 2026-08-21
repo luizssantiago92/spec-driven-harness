@@ -1043,10 +1043,11 @@ describe("CLI", () => {
     assert.match(stderr, /Usage: spec-seatbelt/);
   });
 
-  it("lists project-init, preset, init-config, archive-feature, phase-context, and doctor in help", async () => {
+  it("lists project-init, preset, init-config, archive-feature, phase-context, doctor, and loop-plan in help", async () => {
     const { code, stdout } = await runCli(["--help"]);
     assert.equal(code, 0);
     assert.match(stdout, /project-init/);
+    assert.match(stdout, /loop-plan/);
     assert.match(stdout, /feature-init/);
     assert.match(stdout, /archive-feature/);
     assert.match(stdout, /phase-context/);

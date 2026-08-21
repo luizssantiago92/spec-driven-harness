@@ -24,7 +24,7 @@ After install, read **`.specs/GETTING_STARTED.md`** in your repo — it explains
 
 **Requirements:** Node.js 18+. Python 3.10+ for automatic gates (without Python the agent still follows the same checklists).
 
-npm: [`@luizsantiago/spec-seatbelt`](https://www.npmjs.com/package/@luizsantiago/spec-seatbelt) **2.0.x**
+npm: [`@luizsantiago/spec-seatbelt`](https://www.npmjs.com/package/@luizsantiago/spec-seatbelt) **2.1.x**
 
 ---
 
@@ -267,29 +267,31 @@ Check spec and tasks are consistent before I approve.
 
 ---
 
-### `/loop` — implement one task at a time (Execute)
+### `/loop` — orchestrate Execute (parallel when safe)
 
-**Purpose:** Production code and tests — **one task, one commit**, test-first.
+**Purpose:** Implement approved tasks — the agent **reads `task-graph.md`**, runs **`loop-plan`** each round, and dispatches **sub-agents for parallel groups** (disjoint files) or works **inline** one task at a time when not.
 
 **Chat:**
 
 ```
 /loop
 
-Implement task T1 from tasks.md.
+Run loop-plan, then implement the next wave for the CSV export feature.
+Use sub-agents for any parallel group.
 ```
 
-**Agent per task:**
+**Agent each round:**
 
-1. Read only that task’s files
-2. Test first → implement → run task `Gate`
-3. `check-commit` → mark task done in `tasks.md`
-4. Repeat until all tasks complete → then `/verify`
+1. `loop-plan [feature]` — next wave + parallel groups
+2. **Parallel group (2+ tasks):** dispatch sub-agents (owner confirms) per `sub-agents.md`
+3. **Single task:** test first → implement → gate → `check-commit` → mark `[x]` in `tasks.md`
+4. Merge after parallel rounds; repeat until done → `/verify`
 
-**CLI (agent runs each commit):**
+**CLI (agent runs):**
 
 | Command | Role |
 | --- | --- |
+| `loop-plan [feature] [--json]` | Next runnable wave; flags parallel groups |
 | `check-commit --message "feat(scope): …"` | Conventional Commits gate |
 
 **Skip when:** Nothing to implement yet — finish `/specify` and `/tasks` first.
@@ -498,7 +500,7 @@ The agent loads **one working set per turn**, not the full library.
 | --- | --- |
 | `specify.md` | Written requirements |
 | `tasks.md` | Job breakdown |
-| `implement.md` | **`/loop`** — one task at a time |
+| `implement.md` | **`/loop`** — orchestrate waves; parallel sub-agents when safe |
 | `validate.md` | Independent verify |
 | `explore.md`, `discuss.md`, `design.md`, `analyze.md`, `archive.md`, … | Other phases |
 
@@ -529,7 +531,7 @@ Details: [Gates and guarantees](docs/guide/Gates-and-guarantees.md) · [`prd/gat
 | ---: | ---: | --- |
 | Full dump (don’t) | ~31k | — |
 | Specify turn | ~9k | Planning |
-| Execute `/loop` | ~4k | One task |
+| Execute `/loop` | ~4k | One task or one parallel wave |
 | Verify | ~6k | Review |
 
 ~71% / ~86% savings vs full dump (CI: `test_token_cost.test.js`). [Token efficiency](docs/guide/Token-efficiency.md)
@@ -598,6 +600,7 @@ npx @luizsantiago/spec-seatbelt install
 
 | Version | Highlights |
 | --- | --- |
+| **2.1.x** (`spec-seatbelt`) | `loop-plan` — parallel waves + sub-agent orchestration in `/loop` |
 | **2.0.x** (`spec-seatbelt`) | Package rename from `agentic-harness`; CLI is `spec-seatbelt` |
 | **1.0.x** (`spec-seatbelt`) | First rename commit (superseded by 2.0.0 — use 2.0.x) |
 | **1.3.x** (`agentic-harness`) | Last release under the old name — use `spec-seatbelt` going forward |

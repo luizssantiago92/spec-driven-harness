@@ -8,7 +8,7 @@ import { PACKAGE_VERSION, CLI_NAME } from "./lib/constants.js";
 import { phaseContext } from "./lib/config.js";
 import { doctor } from "./lib/doctor.js";
 import { featureInit } from "./lib/feature.js";
-import { GATE_COMMANDS, runGate } from "./lib/gates.js";
+import { GATE_COMMANDS, AUX_COMMANDS, runGate, runHarnessScript } from "./lib/gates.js";
 import { install } from "./lib/install.js";
 import {
   initProjectConfig,
@@ -49,6 +49,8 @@ Commands:
   validate-spec [spec.md|feature]    Closure gate for a feature spec
   analyze-artifacts [feature]        Cross-artifact consistency before task approval
   validate-tasks [tasks.md|feature]  Granularity gate for a task breakdown
+  loop-plan [tasks.md|feature]       Next Execute wave — parallel groups + sub-agent hints
+    [--json]                         Machine-readable plan for agents
   validate-state [feature]           Completion gate before declaring a feature done
   check-commit --message "<msg>"     Conventional Commits gate
   lessons <add|list|penalize|prune|status>  Lessons engine
@@ -310,6 +312,14 @@ if (command === "--version" || command === "-v" || command === "version") {
   } catch (err) {
     console.error(`❌ ${err.message}`);
     process.exit(1);
+  }
+} else if (AUX_COMMANDS.includes(command)) {
+  try {
+    const code = await runHarnessScript(command, args);
+    process.exit(code);
+  } catch (err) {
+    console.error(`❌ ${err.message}`);
+    process.exit(2);
   }
 } else if (GATE_COMMANDS.includes(command)) {
   try {
