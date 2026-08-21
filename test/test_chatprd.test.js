@@ -7,13 +7,14 @@ import { fileURLToPath } from "node:url";
 import { describe, it } from "node:test";
 
 import {
+  CHATPRD_ACCESS_TOKEN_ENV,
   CHATPRD_API_KEY_ENV,
   CHATPRD_FIXTURE_ENV,
   ChatPrdUnavailableError,
   formatPreviewOutput,
   mapPrdToPreview,
   pullPrdPreview,
-  requireChatPrdApiKey,
+  requireChatPrdToken,
 } from "../lib/chatprd.js";
 
 async function createTempDir(prefix) {
@@ -21,19 +22,24 @@ async function createTempDir(prefix) {
 }
 
 describe("chatprd pull spike", () => {
-  it("requireChatPrdApiKey rejects missing env", () => {
+  it("requireChatPrdToken rejects missing env", () => {
+    const previousAccess = process.env[CHATPRD_ACCESS_TOKEN_ENV];
     const previous = process.env[CHATPRD_API_KEY_ENV];
+    delete process.env[CHATPRD_ACCESS_TOKEN_ENV];
     delete process.env[CHATPRD_API_KEY_ENV];
 
     assert.throws(
-      () => requireChatPrdApiKey(),
+      () => requireChatPrdToken(),
       (err) => {
         assert.ok(err instanceof ChatPrdUnavailableError);
-        assert.match(err.message, /CHATPRD_API_KEY/);
+        assert.match(err.message, /CHATPRD_ACCESS_TOKEN/);
         return true;
       },
     );
 
+    if (previousAccess !== undefined) {
+      process.env[CHATPRD_ACCESS_TOKEN_ENV] = previousAccess;
+    }
     if (previous !== undefined) {
       process.env[CHATPRD_API_KEY_ENV] = previous;
     }
@@ -77,6 +83,7 @@ describe("chatprd pull spike", () => {
       });
 
       assert.equal(result.dryRun, true);
+      assert.equal(result.source, "fixture");
       assert.equal(result.preview.title, "Billing");
       const output = formatPreviewOutput(result);
       assert.match(output, /"acceptanceCriteria"/);
@@ -94,18 +101,27 @@ describe("chatprd pull spike", () => {
     }
   });
 
-  it("pullPrdPreview fails when fixture env is missing", async () => {
+  it("pullPrdPreview fails MCP auth when fixture env is missing", async () => {
     const previousKey = process.env[CHATPRD_API_KEY_ENV];
     const previousFixture = process.env[CHATPRD_FIXTURE_ENV];
     process.env[CHATPRD_API_KEY_ENV] = "test-key";
     delete process.env[CHATPRD_FIXTURE_ENV];
 
+    const fetchImpl = async () => ({
+      ok: false,
+      status: 401,
+      json: async () => ({
+        error: "invalid_token",
+        error_description: "No authorization provided",
+      }),
+    });
+
     try {
       await assert.rejects(
-        () => pullPrdPreview({ prdId: "x", dryRun: true }),
+        () => pullPrdPreview({ prdId: "x", dryRun: true, fetchImpl }),
         (err) => {
           assert.ok(err instanceof ChatPrdUnavailableError);
-          assert.match(err.message, /MCP server not reachable/);
+          assert.match(err.message, /authentication failed/i);
           return true;
         },
       );
@@ -137,6 +153,6 @@ describe("chatprd pull spike", () => {
     }
 
     assert.notEqual(result.status, 0);
-    assert.match(result.stderr, /CHATPRD_API_KEY/);
+    assert.match(result.stderr, /CHATPRD_ACCESS_TOKEN|CHATPRD_API_KEY/);
   });
 });

@@ -4,14 +4,14 @@ schema: spec-driven
 branch_prefix: feat
 
 chatprd_org_id: ""
-# Secrets: set CHATPRD_API_KEY in the environment (never store API keys in this file).
+# Secrets: set CHATPRD_ACCESS_TOKEN (preferred) or CHATPRD_API_KEY in the environment (never store tokens in this file).
 
 context: |
   Stack: Node.js 18+, TypeScript
   Test command: npm test
   Lint: npm run lint
   Branch prefix: feat
-  ChatPRD (optional): set chatprd_org_id above; authenticate MCP in Cursor; API key via CHATPRD_API_KEY env
+  ChatPRD (optional): set chatprd_org_id above; MCP in Cursor or CHATPRD_ACCESS_TOKEN env for CLI pull
 
 rules:
   specify:

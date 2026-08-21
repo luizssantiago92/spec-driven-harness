@@ -72,7 +72,7 @@ Commands:
     [--no-domain]                    Skip domain spec merge
     [--no-state]                     Skip STATE reset
   phase-context <phase>              Print .specs/config.yaml context + rules for a phase
-  chatprd pull --prd-id <id> --dry-run   Preview PRD→EARS mapping (spike; requires CHATPRD_API_KEY)
+  chatprd pull --prd-id <id> --dry-run   Preview PRD→EARS mapping (CHATPRD_ACCESS_TOKEN or fixture)
   validate-spec [spec.md|feature]    Closure gate for a feature spec
   analyze-artifacts [feature]        Cross-artifact consistency before task approval
   validate-tasks [tasks.md|feature]  Granularity gate for a task breakdown

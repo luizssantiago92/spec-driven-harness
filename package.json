@@ -1,6 +1,6 @@
 {
   "name": "@luizsantiago/agentic-harness",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "A seatbelt for AI coding agents. Agree on the goal, break it into small jobs, prove each one, then a fresh review — automatic checks stop fake “done”. Loads one step at a time to save context. Works in Cursor and Claude.",
   "type": "module",
   "bin": {
@@ -12,7 +12,7 @@
   "scripts": {
     "harness": "node index.js",
     "test": "npm run test:node && npm run test:gates",
-    "test:node": "node --test test/install.test.js test/test_feature_init.test.js test/test_config.test.js test/test_archive.test.js test/test_delta_merge.test.js test/test_presets.test.js test/test_brownfield.test.js test/test_chatprd.test.js",
+    "test:node": "node --test test/install.test.js test/test_feature_init.test.js test/test_config.test.js test/test_archive.test.js test/test_delta_merge.test.js test/test_presets.test.js test/test_brownfield.test.js test/test_chatprd.test.js test/test_chatprd_mcp.test.js test/test_chatprd_parse.test.js",
     "test:gates": "node test/run-gate-tests.mjs",
     "prepublishOnly": "npm test"
   },
