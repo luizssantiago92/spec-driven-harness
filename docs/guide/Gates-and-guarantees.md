@@ -47,7 +47,7 @@ npx @luizsantiago/spec-seatbelt lessons list --status confirmed
 | `check-commit` | Sloppy commit titles |
 | `lessons list --status confirmed` | Nothing broken — lists hard-won rules to reuse |
 
-Fail → fix the file → re-run. Full reject lists: [README Gates](https://github.com/luizssantiago92/spec-seatbelt#gates).
+Fail → fix the file → re-run. Full reject lists: [Gates reference](gates.md) · [README Gates](https://github.com/luizssantiago92/spec-seatbelt#gates-summary).
 
 
 ## What the gate **does not** fully enforce
@@ -71,6 +71,6 @@ Details: [`test/test_adversarial_gates.py`](../../test/test_adversarial_gates.py
 
 ## Related
 
-- [How it works](How-it-works) — full journey and sisters  
-- [Token efficiency](Token-efficiency) — why not everything loads at once  
-- [FAQ](FAQ)
+- [How it works](How-it-works.md) — full journey and sisters  
+- [Token efficiency](Token-efficiency.md) — why not everything loads at once  
+- [FAQ](FAQ.md)

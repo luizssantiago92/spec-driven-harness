@@ -14,6 +14,8 @@ Works with **Cursor** and **Claude Code**. Install once; the project remembers w
 
 Re-run anytime to refresh the playbook. Your notes and decisions in `.specs/` stay put.
 
+After install, `npx @luizsantiago/spec-seatbelt doctor` scores readiness (skills, gates, config) and suggests the next step.
+
 ## Why people use it
 
 1. **Only as deep as the work needs** — a typo fix stays light; a big feature gets more ceremony  

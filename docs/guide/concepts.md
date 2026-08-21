@@ -40,7 +40,7 @@ Without the seatbelt, agents often jump to code and say “done”. With it, **i
 | 3 | Repeat until all tasks done → `/verify` |
 
 - **`loop-plan`** reads `tasks.md` and returns the next runnable tasks (respecting dependencies and file ownership).
-- **Parallel groups** run only when tasks touch **disjoint files** — see [task graph](#graph-engineering).
+- **Parallel groups** run only when tasks touch **disjoint files** — see [graph engineering](#graph-engineering-parallel-work).
 - **Correction loop:** if tests fail, fix and retry (bounded) before escalating to you.
 
 Operational loops (CI triage, dependency sweeps) are a different idea — see [loop-patterns.md](loop-patterns.md).

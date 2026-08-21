@@ -4,11 +4,15 @@ Get from zero to “the seatbelt is watching” in about ten minutes.
 
 ## 1. Install
 
-In your project folder:
+In your project folder (not in the Spec Seatbelt source repo):
 
     npx @luizsantiago/spec-seatbelt install
 
 You should see a playbook land for Cursor (and Claude if you use it), plus a `.specs/` folder where the project keeps notes and the automatic checks.
+
+Optional sanity check:
+
+    npx @luizsantiago/spec-seatbelt doctor
 
 ## 2. Tell your agent what you want
 
@@ -70,7 +74,7 @@ Replace `auth` with your feature folder name under `.specs/features/`. A non-zer
 | `check-commit` | The commit title looks Conventional (type, length, no trailing period) |
 | `lessons list` | Show rules the team already promoted — candidates stay hidden |
 
-More gates (tasks, “are we actually done?”) live in the [README Gates section](https://github.com/luizssantiago92/spec-seatbelt#gates).
+More gates (tasks, loop-plan, “are we actually done?”): [Gates reference](gates.md) · [README Gates section](https://github.com/luizssantiago92/spec-seatbelt#gates-summary).
 
 ## If something feels stuck
 
