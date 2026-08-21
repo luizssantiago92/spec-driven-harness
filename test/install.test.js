@@ -946,6 +946,7 @@ describe("reference catalog", () => {
       "context-limits.md",
       "lessons.md",
       "sub-agents.md",
+      "chatprd-sync.md",
     ]) {
       assert.equal(
         REFERENCE_ASSETS.some((asset) => asset.file === file),
@@ -954,7 +955,7 @@ describe("reference catalog", () => {
       );
     }
 
-    assert.equal(REFERENCE_ASSETS.length, 17);
+    assert.equal(REFERENCE_ASSETS.length, 18);
     assert.equal(
       SCRIPT_ASSETS.some((asset) => asset.file === "lessons.py"),
       true,
@@ -1050,5 +1051,6 @@ describe("CLI", () => {
     assert.match(stdout, /init-config/);
     assert.match(stdout, /preset list/);
     assert.match(stdout, /analyze-artifacts/);
+    assert.match(stdout, /chatprd pull/);
   });
 });

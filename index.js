@@ -2,6 +2,11 @@
 
 import { archiveFeature } from "./lib/archive.js";
 import { projectInit } from "./lib/brownfield.js";
+import {
+  ChatPrdUnavailableError,
+  formatPreviewOutput,
+  pullPrdPreview,
+} from "./lib/chatprd.js";
 import { PACKAGE_VERSION } from "./lib/constants.js";
 import { phaseContext } from "./lib/config.js";
 import { featureInit } from "./lib/feature.js";
@@ -12,6 +17,33 @@ import {
   listPresets,
   loadPresetText,
 } from "./lib/presets.js";
+
+/**
+ * @param {string[]} args
+ */
+async function runChatprdCommand(args) {
+  const sub = args[0];
+  if (sub !== "pull") {
+    throw new Error('Unknown chatprd subcommand. Use: chatprd pull --prd-id <id> --dry-run');
+  }
+
+  let prdId = "";
+  let dryRun = false;
+
+  for (let i = 1; i < args.length; i++) {
+    const arg = args[i];
+    if (arg === "--prd-id") {
+      prdId = args[++i] ?? "";
+    } else if (arg === "--dry-run") {
+      dryRun = true;
+    } else {
+      throw new Error(`Unknown chatprd pull flag: ${arg}`);
+    }
+  }
+
+  const result = await pullPrdPreview({ prdId, dryRun });
+  process.stdout.write(formatPreviewOutput(result));
+}
 
 const USAGE = `Usage: agentic-harness <command> [args]
 
@@ -40,6 +72,7 @@ Commands:
     [--no-domain]                    Skip domain spec merge
     [--no-state]                     Skip STATE reset
   phase-context <phase>              Print .specs/config.yaml context + rules for a phase
+  chatprd pull --prd-id <id> --dry-run   Preview PRD→EARS mapping (spike; requires CHATPRD_API_KEY)
   validate-spec [spec.md|feature]    Closure gate for a feature spec
   analyze-artifacts [feature]        Cross-artifact consistency before task approval
   validate-tasks [tasks.md|feature]  Granularity gate for a task breakdown
@@ -282,6 +315,17 @@ if (command === "--version" || command === "-v" || command === "version") {
     const output = await phaseContext(phase);
     process.stdout.write(output);
   } catch (err) {
+    console.error(`❌ ${err.message}`);
+    process.exit(1);
+  }
+} else if (command === "chatprd") {
+  try {
+    await runChatprdCommand(args);
+  } catch (err) {
+    if (err instanceof ChatPrdUnavailableError) {
+      console.error(`❌ ${err.message}`);
+      process.exit(1);
+    }
     console.error(`❌ ${err.message}`);
     process.exit(1);
   }
