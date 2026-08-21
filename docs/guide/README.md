@@ -27,7 +27,7 @@ Plain-language guides for Spec Seatbelt **2.2.x**. Start at [Home](Home.md).
 | --- | --- |
 | [loop-patterns.md](loop-patterns.md) | Feature vs operational loops; `doctor` score |
 | [ecosystem.md](ecosystem.md) | Where Spec Seatbelt sits |
-| [Companion-agentic-fullstack.md](Companion-agentic-fullstack.md) | Agentic Fullstack pairing |
+| [Companion-fullstack-floor-map.md](Companion-fullstack-floor-map.md) | Full Stack Floor Map pairing |
 | [brownfield-context.md](brownfield-context.md) | KG & RepoGraph deferral |
 | [FAQ.md](FAQ.md) | Common questions |
 | [credits.md](credits.md) | Full attribution |

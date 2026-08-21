@@ -73,7 +73,7 @@ Then [Gates and guarantees](Gates-and-guarantees.md) / [Token efficiency](Token-
 
 ## How do I use this with frontend or backend skills?
 
-Spec Seatbelt is stack-agnostic. Optional floor maps live in [`@luizsantiago/agentic-fullstack`](https://www.npmjs.com/package/@luizsantiago/agentic-fullstack): one Execute manual per layer, one layer per task. Pairing contract: [Companion: Agentic Fullstack](Companion-agentic-fullstack.md).
+Spec Seatbelt is stack-agnostic. Optional floor maps live in [`@luizsantiago/fullstack-floor-map`](https://www.npmjs.com/package/@luizsantiago/fullstack-floor-map): one Execute manual per Floor, one Floor per task, optional specialist depth. Pairing contract: [Companion: Full Stack Floor Map](Companion-fullstack-floor-map.md).
 
 ## Something looks wrong after install?
 
