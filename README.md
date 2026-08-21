@@ -31,7 +31,6 @@ npx @luizsantiago/spec-seatbelt install
 | `.cursor/skills/` + `.claude/skills/` | Hub, phase references, sister skills |
 | `.specs/seatbelt/scripts/` | Python gate scripts |
 | `.specs/STATE.md`, `.specs/features/`, … | Project memory |
-| `.specs/GETTING_STARTED.md` | **Start here** after install — first steps in plain language |
 | `.cursor/rules/engineering-baseline.mdc` | Always-on Cursor rule |
 
 Re-run `install` anytime to refresh skills; your `.specs/` decisions and `STATE.md` are kept.
@@ -163,7 +162,7 @@ Full reference: **[Gates](docs/guide/gates.md)** · [Gates and guarantees](docs/
 | [FAQ](docs/guide/FAQ.md) | Common questions |
 | [Changelog](docs/CHANGELOG.md) | Full version history |
 
-After install, open **`.specs/GETTING_STARTED.md`** in your project for the shortest path to first success.
+Start after install: [Quick start](docs/guide/Quick-start.md) · [Agent commands](docs/guide/agent-commands.md)
 
 ---
 
