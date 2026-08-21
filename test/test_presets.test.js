@@ -103,6 +103,16 @@ describe("presets", () => {
     );
   });
 
+  it("init-config extends stub keeps override docs out of phase-context", async () => {
+    const cwd = await createTempDir("init-config-phase-");
+    await initProjectConfig({ cwd, preset: "node-ts" });
+
+    const { phaseContext } = await import("../lib/config.js");
+    const output = await phaseContext("specify", { cwd });
+    assert.match(output, /Node.js/);
+    assert.doesNotMatch(output, /# overrides:/);
+  });
+
   it("feature-init uses branch prefix from resolved config", async () => {
     const cwd = await createTempDir("feature-prefix-");
     await initMemoryHarness(cwd);

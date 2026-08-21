@@ -73,6 +73,21 @@ rules:
     assert.deepEqual(config?.rules?.tasks?.[0], "Every REQ must appear in the Test Coverage Matrix");
   });
 
+  it("does not absorb unindented comments into context block", () => {
+    const yaml = `extends: node-ts
+
+context: |
+  Team: Acme
+
+# overrides:
+#   rules:
+`;
+
+    const config = parseHarnessConfig(yaml);
+    assert.equal(config.extends, "node-ts");
+    assert.equal(config.context?.trim(), "Team: Acme");
+  });
+
   it("phaseContext returns empty notice when config is missing", async () => {
     const cwd = await createTempDir("config-missing-");
     const output = await phaseContext("specify", { cwd });
