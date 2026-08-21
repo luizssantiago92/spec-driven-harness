@@ -40,4 +40,4 @@ Same as `python3 .specs/harness/scripts/validate_layer_routing.py your-feature`.
 - After commit: drop the layer skill.
 - Verify: **no** Fullstack skills. Use this harness’s Verify stack only.
 
-Full playbook: [agentic-fullstack wiki — How to use](https://github.com/luizssantiago92/agentic-fullstack/wiki/How-to-use).
+Full playbook: [agentic-fullstack repository](https://github.com/luizssantiago92/agentic-fullstack).

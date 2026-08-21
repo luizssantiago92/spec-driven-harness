@@ -7,7 +7,7 @@
 
 npm package: [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **1.2.x**. Works in **Cursor** and **Claude Code**. The agent loads **one phase at a time** (~70% fewer skill tokens than dumping the full kit every turn).
 
-**New here?** Start with the [project wiki](https://github.com/luizssantiago92/spec-driven-harness/wiki) (plain language). This README is the engineering reference.
+**New here?** Start with [docs/guide/Home.md](docs/guide/Home.md) (plain language). This README is the engineering reference.
 
 ## What you get
 
@@ -87,7 +87,7 @@ Scripts live in `.specs/harness/scripts/`. Non-zero exit = stop and fix the arti
 | `validate-state` | Missing verify report, non-PASS verdict, missing test evidence |
 | `lessons` | Ungrounded lesson entries |
 
-Gates check **form**, not whether the feature is morally correct. Full tables and guarantees: [Gates and guarantees](https://github.com/luizssantiago92/spec-driven-harness/wiki/Gates-and-guarantees) and [`prd/gate-stability.md`](prd/gate-stability.md).
+Gates check **form**, not whether the feature is morally correct. Full tables and guarantees: [docs/guide/Gates-and-guarantees.md](docs/guide/Gates-and-guarantees.md) and [`prd/gate-stability.md`](prd/gate-stability.md).
 
 ## What install writes
 
@@ -103,14 +103,14 @@ Asset provenance: install copies from the **npm package**, not live GitHub. Over
 
 ## Learn more
 
-| Wiki page | Topic |
+| Guide | Topic |
 | --- | --- |
-| [Quick start](https://github.com/luizssantiago92/spec-driven-harness/wiki/Quick-start) | First ten minutes |
-| [How it works](https://github.com/luizssantiago92/spec-driven-harness/wiki/How-it-works) | Phases in plain language |
-| [Token efficiency](https://github.com/luizssantiago92/spec-driven-harness/wiki/Token-efficiency) | Why progressive loading matters |
-| [FAQ](https://github.com/luizssantiago92/spec-driven-harness/wiki/FAQ) | Everyday questions |
+| [Quick start](docs/guide/Quick-start.md) | First ten minutes |
+| [How it works](docs/guide/How-it-works.md) | Phases in plain language |
+| [Token efficiency](docs/guide/Token-efficiency.md) | Why progressive loading matters |
+| [FAQ](docs/guide/FAQ.md) | Everyday questions |
 
-Sources for wiki pages: [`docs/wiki/`](docs/wiki/).
+Full index: [`docs/guide/`](docs/guide/).
 
 ## Upgrading
 
