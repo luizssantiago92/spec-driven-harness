@@ -9,6 +9,7 @@ describe("install next steps", () => {
     assert.match(text, /Open Cursor or Claude Code/);
     assert.match(text, /Specify/);
     assert.match(text, /GETTING_STARTED\.md/);
+    assert.match(text, /Quick-start/);
     assert.match(text, /Optional CLI/);
     assert.doesNotMatch(text, /validate-spec/);
   });
