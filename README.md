@@ -24,7 +24,7 @@ After install, read **`.specs/GETTING_STARTED.md`** in your repo — it explains
 
 **Requirements:** Node.js 18+. Python 3.10+ for automatic gates (without Python the agent still follows the same checklists).
 
-npm: [`@luizsantiago/spec-seatbelt`](https://www.npmjs.com/package/@luizsantiago/spec-seatbelt) **2.0.x**
+npm: [`@luizsantiago/spec-seatbelt`](https://www.npmjs.com/package/@luizsantiago/spec-seatbelt) **2.1.x**
 
 ---
 
@@ -600,6 +600,7 @@ npx @luizsantiago/spec-seatbelt install
 
 | Version | Highlights |
 | --- | --- |
+| **2.1.x** (`spec-seatbelt`) | `loop-plan` — parallel waves + sub-agent orchestration in `/loop` |
 | **2.0.x** (`spec-seatbelt`) | Package rename from `agentic-harness`; CLI is `spec-seatbelt` |
 | **1.0.x** (`spec-seatbelt`) | First rename commit (superseded by 2.0.0 — use 2.0.x) |
 | **1.3.x** (`agentic-harness`) | Last release under the old name — use `spec-seatbelt` going forward |
