@@ -4,39 +4,24 @@ After `install`, the agent does **not** load the whole library every turn. It lo
 
 ## Architecture overview
 
-```mermaid
-flowchart TB
-  subgraph always["Always available"]
-    HUB["agent-architecture.md<br/>Hub — contract & router"]
-    BASE["engineering-baseline.mdc<br/>Cursor always-on rule"]
-  end
-
-  subgraph phase["One phase at a time (references/)"]
-    R1[specify.md]
-    R2[tasks.md]
-    R3[implement.md]
-    R4[validate.md]
-    R5[explore, discuss, design, …]
-  end
-
-  subgraph sisters["Sisters — load on demand"]
-    ES[engineering-standards.md]
-    TG[task-graph-engineering.md]
-    SR[security-review.md]
-    GH[git-handoff.md]
-    C1[appsec.md]
-    C2[qa-strategy.md]
-    C3[code-simplify.md]
-    C4[ship-ready.md]
-  end
-
-  HUB -->|"Complexity Router picks tier"| phase
-  HUB --> sisters
-  phase --> ES
-  phase --> TG
-  R4 --> SR
-  R4 -.->|"one at a time"| C1
-  R4 -.-> C2
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  ALWAYS ON                                                      │
+│  · agent-architecture.md  (hub — contract & router)             │
+│  · engineering-baseline.mdc  (Cursor rule → points at hub)      │
+└───────────────────────────────┬─────────────────────────────────┘
+                                │
+              Complexity Router picks depth (Quick → Complex)
+                                │
+         ┌──────────────────────┼──────────────────────┐
+         │                      │                      │
+         ▼                      ▼                      ▼
+┌─────────────────┐   ┌─────────────────┐   ┌─────────────────┐
+│ ONE REFERENCE   │   │ SISTER SKILLS   │   │ GATES           │
+│ references/     │   │ on demand       │   │ at boundaries   │
+│ specify.md      │   │ standards,      │   │ validate-spec,  │
+│ implement.md …  │   │ security, graph │   │ loop-plan …     │
+└─────────────────┘   └─────────────────┘   └─────────────────┘
 ```
 
 ## Hub — `agent-architecture.md`
@@ -96,23 +81,22 @@ Loaded **one per turn** (plus hub). Each file is a step-by-step procedure.
 
 ## Progressive loading (why tokens stay low)
 
-```mermaid
-sequenceDiagram
-  participant You
-  participant Agent
-  participant Hub
-  participant Phase
-  participant Sister
+```
+YOU          /specify "add CSV export"
+ │
+ ▼
+AGENT ──► read hub (contract + router)
+ │
+ ├──► read specify.md only  (~9k tokens this turn)
+ │
+ ├──► run validate-spec
+ │
+ └──► show spec.md ──► wait for your approval
 
-  You->>Agent: /specify feature X
-  Agent->>Hub: Read contract + router
-  Agent->>Phase: Read specify.md (full file)
-  Note over Agent,Sister: engineering-standards optional on Specify
-  Agent->>Agent: validate-spec gate
-  Agent->>You: spec.md for approval
+Compare: dumping every skill + reference every turn ≈ 31k tokens
 ```
 
-A **Specify** turn loads ~5 files (~9k est. tokens). Dumping every skill and reference every turn would be ~31k tokens — see [Token efficiency](Token-efficiency.md).
+A **Specify** turn loads ~5 files (~9k est. tokens). See [Token efficiency](Token-efficiency.md).
 
 ## Where files land after install
 

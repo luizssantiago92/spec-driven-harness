@@ -64,7 +64,7 @@ More: [Token efficiency](docs/guide/Token-efficiency.md)
 
 ## How the pieces fit together
 
-Four ideas stack — full explanation with diagrams: **[Concepts](docs/guide/concepts.md)**
+Four ideas stack — full explanation: **[Concepts](docs/guide/concepts.md)**
 
 | Idea | One line |
 | --- | --- |
@@ -72,13 +72,7 @@ Four ideas stack — full explanation with diagrams: **[Concepts](docs/guide/con
 | **Seatbelt** | This package — skills + gates that stop incomplete work |
 | **Loop** | Execute in waves via `loop-plan`; parallel sub-agents when files are disjoint |
 | **Graph** | `task-graph.md` — which tasks can run in parallel without file collisions |
-
-```mermaid
-flowchart LR
-  SD[Spec-driven<br/>what & proof] --> SB[Seatbelt<br/>skills + gates]
-  SB --> LP[Loop<br/>loop-plan waves]
-  LP --> TG[Graph<br/>parallel DAG]
-```
+| **Memory** | `.specs/` in your repo — specs, state, and decisions survive across chats |
 
 **You** approve specs and tasks. **The agent** runs gates and implements. **Gates** exit non-zero when paperwork or evidence is missing.
 
@@ -106,11 +100,22 @@ Diagram and rules: [Concepts → Complexity tiers](docs/guide/concepts.md#comple
 
 Install copies a **hub** (`agent-architecture.md`), **phase references** (`references/*.md`), and **sister skills** (security, task-graph, …). The agent loads **one phase file at a time**.
 
-```mermaid
-flowchart TB
-  HUB[Hub — contract & router] --> REF[One reference<br/>specify / tasks / implement / …]
-  HUB --> SIS[Sister skills<br/>on demand]
-  REF --> GATE[Gates at boundaries]
+```
+┌─────────────────────────────────────────────────────────────┐
+│  HUB · agent-architecture.md                                │
+│  Contract · complexity router · when to run gates           │
+└──────────────┬──────────────────────────┬───────────────────┘
+               │                          │
+       ┌───────▼────────┐         ┌───────▼────────┐
+       │ ONE REFERENCE  │         │ SISTER SKILLS  │
+       │ (current phase)│         │ load on demand │
+       │ specify.md …   │         │ security, graph│
+       └───────┬────────┘         └────────────────┘
+               │
+       ┌───────▼────────┐
+       │ GATES          │
+       │ phase boundary │
+       └────────────────┘
 ```
 
 | Layer | Examples |
@@ -120,7 +125,7 @@ flowchart TB
 | Sisters | `engineering-standards.md`, `task-graph-engineering.md`, `security-review.md`, … |
 | Conditional | `appsec.md`, `qa-strategy.md` — **one at a time** |
 
-Full map and diagrams: **[Skills and hub](docs/guide/skills-and-hub.md)**
+Full map: **[Skills and hub](docs/guide/skills-and-hub.md)**
 
 ---
 
@@ -128,13 +133,18 @@ Full map and diagrams: **[Skills and hub](docs/guide/skills-and-hub.md)**
 
 Scripts in `.specs/seatbelt/scripts/`. **Exit ≠ 0 → stop and fix.**
 
-```mermaid
-flowchart LR
-  VS[validate-spec] --> VT[validate-tasks]
-  VT --> LP[loop-plan]
-  LP --> CC[check-commit]
-  CC --> LP
-  LP --> VST[validate-state]
+```
+PLANNING              BUILDING                 CLOSING
+────────              ────────                 ───────
+feature-init
+     │
+validate-spec ──► validate-tasks ──► loop-plan ◄────┐
+     │                   │               │          │
+analyze-artifacts        │          check-commit ──┘
+                         │
+                    validate-state ──► archive-feature
+                         │
+                      lessons (after FAIL)
 ```
 
 | Gate | Blocks |
@@ -214,7 +224,7 @@ Spec Seatbelt adapts open ideas; we did not invent spec-driven phases, loop desi
 
 ### Adjacent (not vendored)
 
-[DeepCode](https://github.com/HKUDS/DeepCode) · [RepoGraph](https://github.com/ozyyshr/RepoGraph) · [harness/harness-skills](https://github.com/harness/harness-skills) (**Harness.io** — different product, similar name)
+[DeepCode](https://github.com/HKUDS/DeepCode) · [RepoGraph](https://github.com/ozyyshr/RepoGraph)
 
 Extended attribution: [docs/guide/credits.md](docs/guide/credits.md)
 
