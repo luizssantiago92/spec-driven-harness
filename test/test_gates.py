@@ -1144,6 +1144,70 @@ class FeatureResolveTest(unittest.TestCase):
         self.assertIn("auth", output)
         self.assertIn("billing", output)
 
+    def test_three_tasks_without_task_graph_fails_on_disk(self):
+        feature = self._write_feature("auth", tasks="""# Tasks
+
+### T1: Create session token module
+- **Requirement**: REQ-001
+- **Files**: src/auth/token.ts
+- **Depends on**: —
+- **Tests**: test/auth/token.test.ts
+- **Gate**: npm test
+- **Done when**: module signs and verifies tokens
+
+### T2: Add login endpoint handler
+- **Requirement**: REQ-001
+- **Files**: src/routes/login.ts
+- **Depends on**: T1
+- **Tests**: test/routes/login.test.ts
+- **Gate**: npm test
+- **Done when**: endpoint returns 200 for valid credentials
+
+### T3: Add logout endpoint handler
+- **Requirement**: REQ-001
+- **Files**: src/routes/logout.ts
+- **Depends on**: T1
+- **Tests**: test/routes/logout.test.ts
+- **Gate**: npm test
+- **Done when**: endpoint clears the session
+""")
+        with _chdir(self.root):
+            code, output = _run_main(lambda: validate_tasks.main([str(feature)]))
+        self.assertEqual(code, 1)
+        self.assertIn("task-graph.md", output)
+
+    def test_three_tasks_with_task_graph_passes_on_disk(self):
+        feature = self._write_feature("auth", tasks="""# Tasks
+
+### T1: Create session token module
+- **Requirement**: REQ-001
+- **Files**: src/auth/token.ts
+- **Depends on**: —
+- **Tests**: test/auth/token.test.ts
+- **Gate**: npm test
+- **Done when**: module signs and verifies tokens
+
+### T2: Add login endpoint handler
+- **Requirement**: REQ-001
+- **Files**: src/routes/login.ts
+- **Depends on**: T1
+- **Tests**: test/routes/login.test.ts
+- **Gate**: npm test
+- **Done when**: endpoint returns 200 for valid credentials
+
+### T3: Add logout endpoint handler
+- **Requirement**: REQ-001
+- **Files**: src/routes/logout.ts
+- **Depends on**: T1
+- **Tests**: test/routes/logout.test.ts
+- **Gate**: npm test
+- **Done when**: endpoint clears the session
+""")
+        (feature / "task-graph.md").write_text("# Task Graph\n", encoding="utf-8")
+        with _chdir(self.root):
+            code, _ = _run_main(lambda: validate_tasks.main([str(feature)]))
+        self.assertEqual(code, 0)
+
     def test_validate_tasks_main_accepts_a_feature_name(self):
         self._write_feature("auth", tasks=VALID_TASKS)
         with _chdir(self.root):

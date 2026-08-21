@@ -45,6 +45,7 @@ These are **optional steps** except where your feature tier needs them. Think of
 | `preset list` / `preset show <name>` | Choosing a stack preset | Lists or prints preset YAML (branch prefix, test command, phase rules) |
 | `project-init` | **Brownfield** — repo already has code | Scans stack, writes `PROJECT.md`, optional domain stubs, `ROADMAP`, and config. Use `--dry-run` to preview |
 | `phase-context specify` | Optional before a phase | Prints your `config.yaml` context + rules for that phase |
+| `doctor` | After install or upgrade | Audits skills, gates, config, STATE; prints Harness Ready score + next actions |
 
 ### Per feature
 
@@ -109,6 +110,10 @@ Asset provenance: install copies from the **npm package**, not live GitHub. Over
 | [How it works](docs/guide/How-it-works.md) | Phases in plain language |
 | [Token efficiency](docs/guide/Token-efficiency.md) | Why progressive loading matters |
 | [FAQ](docs/guide/FAQ.md) | Everyday questions |
+| [Loop patterns](docs/guide/loop-patterns.md) | Feature vs operational loops |
+| [Ecosystem map](docs/guide/ecosystem.md) | How this fits harness / loop / graph tooling |
+| [Brownfield context](docs/guide/brownfield-context.md) | Why KG / RepoGraph are deferred |
+| [Credits](docs/guide/credits.md) | Full attribution list |
 
 Full index: [`docs/guide/`](docs/guide/).
 
@@ -142,9 +147,17 @@ Publish: GitHub Actions workflow on release tags (see `.github/workflows/publish
 
 ## Credits
 
-- [tlc-spec-driven](https://github.com/tech-leads-club/agent-skills/tree/main/packages/skills-catalog/skills/(development)/tlc-spec-driven) (CC-BY-4.0) — phases, memory, gate lineage
-- [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) (MIT) — discuss / DoD patterns
-- [graph-engineering](https://github.com/codejunkie99/graph-engineering) (MIT) — task-graph ideas
+Lineage and borrowed patterns — see [docs/guide/credits.md](docs/guide/credits.md) for the full list.
+
+| Source | License | Contribution |
+| --- | --- | --- |
+| [tlc-spec-driven](https://github.com/tech-leads-club/agent-skills/tree/main/packages/skills-catalog/skills/(development)/tlc-spec-driven) | CC-BY-4.0 | Phases, memory, gate lineage |
+| [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) | MIT | Discuss / DoD patterns |
+| [graph-engineering](https://github.com/codejunkie99/graph-engineering) | MIT | Task-graph topology (adapted in `task-graph-engineering.md`) |
+| [loop-engineering](https://github.com/cobusgreyling/loop-engineering) | MIT | Operational loop patterns; `doctor` readiness metaphor |
+| [awesome-harness-engineering](https://github.com/ai-boost/awesome-harness-engineering) | CC0 | Ecosystem taxonomy reference |
+
+Research/adjacent (not vendored): [DeepCode](https://github.com/HKUDS/DeepCode), [RepoGraph](https://github.com/ozyyshr/RepoGraph). **Not** [harness/harness-skills](https://github.com/harness/harness-skills) (Harness.io CI/CD — different product).
 
 ## License
 
