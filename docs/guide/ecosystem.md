@@ -1,6 +1,6 @@
 # Ecosystem map
 
-Where the Spec-Driven Harness sits among harness, loop, and graph engineering — and what we deliberately **do not** try to be.
+Where the Spec Seatbelt sits among harness, loop, and graph engineering — and what we deliberately **do not** try to be.
 
 ## Layers
 
@@ -12,7 +12,7 @@ Where the Spec-Driven Harness sits among harness, loop, and graph engineering �
 │  Operational loops (cadence, triage, CI, cost)              │
 │  e.g. loop-engineering                                      │
 ├─────────────────────────────────────────────────────────────┤
-│  Spec + gates + memory  ←  @luizsantiago/agentic-harness    │
+│  Spec + gates + memory  ←  @luizsantiago/spec-seatbelt    │
 ├─────────────────────────────────────────────────────────────┤
 │  Code context (repo graphs, search)                         │
 │  e.g. RepoGraph                                             │

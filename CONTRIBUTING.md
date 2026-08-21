@@ -1,6 +1,6 @@
 # Contributing
 
-Thanks for improving the Spec-Driven Harness.
+Thanks for improving the Spec Seatbelt.
 
 ## Basics
 

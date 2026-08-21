@@ -29,11 +29,11 @@ Fold a verified feature back into long-lived project memory after Verify PASS.
 
 ## Procedure
 
-0. **Load project context (optional)** — `npx @luizsantiago/agentic-harness phase-context archive` when `.specs/config.yaml` exists.
+0. **Load project context (optional)** — `npx @luizsantiago/spec-seatbelt phase-context archive` when `.specs/config.yaml` exists.
 1. **Confirm PASS** — `validate_state.py [feature]` exit 0.
 2. **Run archive CLI (Tier 0)** — merges domain truth and updates ROADMAP + STATE:
    ```bash
-   npx @luizsantiago/agentic-harness archive-feature [feature] [--domain <slug>]
+   npx @luizsantiago/spec-seatbelt archive-feature [feature] [--domain <slug>]
    ```
    Flags: `--no-roadmap`, `--no-domain`, `--no-state` for partial runs; `--skip-verify` for recovery only.
 3. **Review domain diff** — owner approves the merged `.specs/domains/[domain]/spec.md` before Tier 1 push.

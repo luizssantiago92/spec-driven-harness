@@ -48,7 +48,7 @@ Gates live in `.specs/harness/scripts/` (Python 3). **The agent runs them** at p
 | `project-init` | Optional — brownfield repo with existing code |
 | `doctor` | Install looks broken |
 
-Everything else (`validate-spec`, `validate-tasks`, `check-commit`, …) is normally run **by the agent**, not memorized from this file. Full list: `npx @luizsantiago/agentic-harness --help` or `.specs/GETTING_STARTED.md`.
+Everything else (`validate-spec`, `validate-tasks`, `check-commit`, …) is normally run **by the agent**, not memorized from this file. Full list: `npx @luizsantiago/spec-seatbelt --help` or `.specs/GETTING_STARTED.md`.
 
 Non-zero gate exit = STOP. Without Python, the agent performs the same checks manually.
 

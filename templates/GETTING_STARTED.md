@@ -1,6 +1,6 @@
 # Getting started
 
-You installed the **Spec-Driven Harness**. You do **not** need to memorize CLI commands.
+You installed the **Spec Seatbelt**. You do **not** need to memorize CLI commands.
 
 ## What to do now
 

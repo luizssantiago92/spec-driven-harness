@@ -671,7 +671,7 @@ describe("gate execution", () => {
     try {
       await assert.rejects(
         () => runGate("validate-spec", ["spec.md"], { cwd }),
-        /Run `npx @luizsantiago\/agentic-harness install`/,
+        /Run `npx @luizsantiago\/spec-seatbelt install`/,
       );
     } finally {
       await fs.rm(cwd, { recursive: true, force: true });
@@ -1032,7 +1032,7 @@ describe("CLI", () => {
   it("prints usage on --help and exits 0", async () => {
     const { code, stdout, stderr } = await runCli(["--help"]);
     assert.equal(code, 0);
-    assert.match(stdout, /Usage: agentic-harness/);
+    assert.match(stdout, /Usage: spec-seatbelt/);
     assert.equal(stderr, "");
   });
 
@@ -1040,7 +1040,7 @@ describe("CLI", () => {
     const { code, stdout, stderr } = await runCli([]);
     assert.equal(code, 1);
     assert.equal(stdout, "");
-    assert.match(stderr, /Usage: agentic-harness/);
+    assert.match(stderr, /Usage: spec-seatbelt/);
   });
 
   it("lists project-init, preset, init-config, archive-feature, phase-context, and doctor in help", async () => {

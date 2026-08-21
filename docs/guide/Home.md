@@ -1,4 +1,4 @@
-# Spec-Driven Harness
+# Spec Seatbelt
 
 **A seatbelt for AI coding agents.**
 
@@ -10,7 +10,7 @@ Works with **Cursor** and **Claude Code**. Install once; the project remembers w
 
 ## Install
 
-    npx @luizsantiago/agentic-harness install
+    npx @luizsantiago/spec-seatbelt install
 
 Re-run anytime to refresh the playbook. Your notes and decisions in `.specs/` stay put.
 
@@ -27,9 +27,9 @@ Re-run anytime to refresh the playbook. Your notes and decisions in `.specs/` st
 ## Everyday brakes (after install)
 
 ```bash
-npx @luizsantiago/agentic-harness validate-spec auth
-npx @luizsantiago/agentic-harness check-commit --message "feat(auth): add token refresh"
-npx @luizsantiago/agentic-harness lessons list --status confirmed
+npx @luizsantiago/spec-seatbelt validate-spec auth
+npx @luizsantiago/spec-seatbelt check-commit --message "feat(auth): add token refresh"
+npx @luizsantiago/spec-seatbelt lessons list --status confirmed
 ```
 
 Plain meaning on [Quick start](Quick-start.md) and [Gates and guarantees](Gates-and-guarantees.md).
@@ -48,5 +48,5 @@ Plain meaning on [Quick start](Quick-start.md) and [Gates and guarantees](Gates-
 ## Links
 
 - [README](https://github.com/luizssantiago92/spec-driven-harness#readme) (technical detail)
-- [npm `@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness)
+- [npm `@luizsantiago/spec-seatbelt`](https://www.npmjs.com/package/@luizsantiago/spec-seatbelt)
 - Gate contract for maintainers: [`prd/gate-stability.md`](https://github.com/luizssantiago92/spec-driven-harness/blob/main/prd/gate-stability.md)
