@@ -67,7 +67,7 @@ test(auth): add session expiry edge case
 Validate the message before committing:
 
 ```bash
-python3 .specs/harness/scripts/check_commit.py --message "feat(auth): add token refresh"
+python3 .specs/seatbelt/scripts/check_commit.py --message "feat(auth): add token refresh"
 ```
 
 Optionally wire it as a git `commit-msg` hook so the rule holds without agent involvement.

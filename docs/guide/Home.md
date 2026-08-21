@@ -47,6 +47,6 @@ Plain meaning on [Quick start](Quick-start.md) and [Gates and guarantees](Gates-
 
 ## Links
 
-- [README](https://github.com/luizssantiago92/spec-driven-harness#readme) (technical detail)
+- [README](https://github.com/luizssantiago92/spec-seatbelt#readme) (technical detail)
 - [npm `@luizsantiago/spec-seatbelt`](https://www.npmjs.com/package/@luizsantiago/spec-seatbelt)
-- Gate contract for maintainers: [`prd/gate-stability.md`](https://github.com/luizssantiago92/spec-driven-harness/blob/main/prd/gate-stability.md)
+- Gate contract for maintainers: [`prd/gate-stability.md`](https://github.com/luizssantiago92/spec-seatbelt/blob/main/prd/gate-stability.md)

@@ -593,7 +593,7 @@ Always-on: `.cursor/rules/engineering-baseline.mdc`
 
 ## Gates (automatic brakes)
 
-Scripts in `.specs/harness/scripts/`. Exit ≠ 0 → stop and fix.
+Scripts in `.specs/seatbelt/scripts/`. Exit ≠ 0 → stop and fix.
 
 | Gate | Blocks |
 | --- | --- |
@@ -660,7 +660,7 @@ Most users only touch **`install`**, optionally **`project-init`** or **`doctor`
 | --- | --- |
 | `.specs/GETTING_STARTED.md` | **Start here** after install |
 | `.cursor/skills/` | Hub + references |
-| `.specs/harness/scripts/` | Gates |
+| `.specs/seatbelt/scripts/` | Gates |
 | `.specs/STATE.md` | Handoff between sessions |
 
 Re-run `install` to refresh skills; `STATE.md` and your edits are kept.
@@ -692,15 +692,15 @@ npx @luizsantiago/spec-seatbelt install
 | **0.9.x** | `archive-feature`, delta merge |
 | **0.8.x** | `feature-init`, git tiers |
 
-[Releases](https://github.com/luizssantiago92/spec-driven-harness/releases)
+[Releases](https://github.com/luizssantiago92/spec-seatbelt/releases)
 
 ---
 
 ## Development
 
 ```bash
-git clone https://github.com/luizssantiago92/spec-driven-harness.git
-cd spec-driven-harness && npm test
+git clone https://github.com/luizssantiago92/spec-seatbelt.git
+cd spec-seatbelt && npm test
 npm run seatbelt -- install
 ```
 

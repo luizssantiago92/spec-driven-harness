@@ -80,4 +80,4 @@ If Complex + user-facing, follow **Interactive UAT** in `validate.md` after this
 - `references/validate.md` — Verify + lean UAT; sequential AppSec → QA load rule
 - `appsec.md` — conditional AppSec (run before this skill when both apply)
 - `references/context-limits.md` — at most one conditional sister in context
-- [Gate stability](https://github.com/luizssantiago92/spec-driven-harness/blob/main/prd/gate-stability.md) — QA / UAT are non-guarantees
+- [Gate stability](https://github.com/luizssantiago92/spec-seatbelt/blob/main/prd/gate-stability.md) — QA / UAT are non-guarantees

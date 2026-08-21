@@ -27,7 +27,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/luizssantiago92/spec-driven-harness.git"
+    "url": "git+https://github.com/luizssantiago92/spec-seatbelt.git"
   },
   "keywords": [
     "ai",
@@ -36,7 +36,6 @@
     "claude",
     "spec-driven",
     "seatbelt",
-    "harness",
     "cli"
   ],
   "author": "luizsantiago",

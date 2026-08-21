@@ -6,7 +6,7 @@ import { describe, it } from "node:test";
 
 import { mergeHarnessConfigs, resolveHarnessConfig } from "../lib/config.js";
 import { featureInit } from "../lib/feature.js";
-import { initMemoryHarness } from "../lib/memory.js";
+import { initSeatbeltMemory } from "../lib/memory.js";
 import {
   initProjectConfig,
   listPresets,
@@ -115,7 +115,7 @@ describe("presets", () => {
 
   it("feature-init uses branch prefix from resolved config", async () => {
     const cwd = await createTempDir("feature-prefix-");
-    await initMemoryHarness(cwd);
+    await initSeatbeltMemory(cwd);
     await initProjectConfig({ cwd, preset: "node-ts" });
 
     const result = await featureInit("auth flow", { cwd, skipBranch: true });

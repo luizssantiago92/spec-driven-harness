@@ -32,7 +32,7 @@ This harness CLI does **not** absorb the layer check. After tasks exist:
 
     npx @luizsantiago/agentic-fullstack validate-layers your-feature
 
-Same as `python3 .specs/harness/scripts/validate_layer_routing.py your-feature`. The script sits next to harness gates but is **owned by Fullstack** — harness re-install must not delete it.
+Same as `python3 .specs/seatbelt/scripts/validate_layer_routing.py your-feature`. The script sits next to harness gates but is **owned by Fullstack** — harness re-install must not delete it.
 
 ## Execute and Verify
 

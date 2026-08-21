@@ -77,4 +77,4 @@ This harness is stack-agnostic. Optional floor maps live in [`@luizsantiago/agen
 
 ## Something broken or unclear?
 
-Open an issue on [GitHub](https://github.com/luizssantiago92/spec-driven-harness/issues). For contributing rules (especially the frozen gate), see [CONTRIBUTING](../../CONTRIBUTING.md).
+Open an issue on [GitHub](https://github.com/luizssantiago92/spec-seatbelt/issues). For contributing rules (especially the frozen gate), see [CONTRIBUTING](../../CONTRIBUTING.md).

@@ -8,7 +8,7 @@ import { PACKAGE_VERSION, CLI_NAME } from "./lib/constants.js";
 import { phaseContext } from "./lib/config.js";
 import { doctor } from "./lib/doctor.js";
 import { featureInit } from "./lib/feature.js";
-import { GATE_COMMANDS, AUX_COMMANDS, runGate, runHarnessScript } from "./lib/gates.js";
+import { GATE_COMMANDS, AUX_COMMANDS, runGate, runSeatbeltScript } from "./lib/gates.js";
 import { install } from "./lib/install.js";
 import {
   initProjectConfig,
@@ -315,7 +315,7 @@ if (command === "--version" || command === "-v" || command === "version") {
   }
 } else if (AUX_COMMANDS.includes(command)) {
   try {
-    const code = await runHarnessScript(command, args);
+    const code = await runSeatbeltScript(command, args);
     process.exit(code);
   } catch (err) {
     console.error(`❌ ${err.message}`);

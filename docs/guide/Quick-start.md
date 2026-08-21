@@ -68,7 +68,7 @@ Replace `auth` with your feature folder name under `.specs/features/`. A non-zer
 | `check-commit` | The commit title looks Conventional (type, length, no trailing period) |
 | `lessons list` | Show rules the team already promoted — candidates stay hidden |
 
-More gates (tasks, “are we actually done?”) live in the [README Gates section](https://github.com/luizssantiago92/spec-driven-harness#gates).
+More gates (tasks, “are we actually done?”) live in the [README Gates section](https://github.com/luizssantiago92/spec-seatbelt#gates).
 
 ## If something feels stuck
 

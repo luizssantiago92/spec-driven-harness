@@ -47,7 +47,7 @@ npx @luizsantiago/spec-seatbelt lessons list --status confirmed
 | `check-commit` | Sloppy commit titles |
 | `lessons list --status confirmed` | Nothing broken — lists hard-won rules to reuse |
 
-Fail → fix the file → re-run. Full reject lists: [README Gates](https://github.com/luizssantiago92/spec-driven-harness#gates).
+Fail → fix the file → re-run. Full reject lists: [README Gates](https://github.com/luizssantiago92/spec-seatbelt#gates).
 
 
 ## What the gate **does not** fully enforce

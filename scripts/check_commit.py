@@ -9,7 +9,7 @@ Run before each atomic commit:
 Wire it as a git hook to enforce the format without agent involvement:
 
     #!/bin/sh
-    python3 .specs/harness/scripts/check_commit.py --file "$1"
+    python3 .specs/seatbelt/scripts/check_commit.py --file "$1"
 
 Checks:
   * `type(scope): subject` shape with an allowed type

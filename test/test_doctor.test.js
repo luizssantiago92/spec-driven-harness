@@ -20,7 +20,7 @@ describe("harness doctor", () => {
     const cwd = await createTempDir("doctor-good-");
     await fs.mkdir(path.join(cwd, ".specs/features"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".specs/project"), { recursive: true });
-    await fs.mkdir(path.join(cwd, ".specs/harness/scripts"), { recursive: true });
+    await fs.mkdir(path.join(cwd, ".specs/seatbelt/scripts"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/skills"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/rules"), { recursive: true });
     await fs.writeFile(path.join(cwd, ".specs/STATE.md"), "# State\n\n- **Active feature**: none\n");
@@ -29,7 +29,7 @@ describe("harness doctor", () => {
     await fs.writeFile(path.join(cwd, ".cursor/rules/engineering-baseline.mdc"), "---\n");
     await fs.copyFile(
       path.join(process.cwd(), "scripts/check_commit.py"),
-      path.join(cwd, ".specs/harness/scripts/check_commit.py"),
+      path.join(cwd, ".specs/seatbelt/scripts/check_commit.py"),
     );
 
     const checks = await runDoctorChecks(cwd);
@@ -45,7 +45,7 @@ describe("harness doctor", () => {
     const cwd = await createTempDir("doctor-config-");
     await fs.mkdir(path.join(cwd, ".specs/features"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".specs/project"), { recursive: true });
-    await fs.mkdir(path.join(cwd, ".specs/harness/scripts"), { recursive: true });
+    await fs.mkdir(path.join(cwd, ".specs/seatbelt/scripts"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/skills"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/rules"), { recursive: true });
     await fs.writeFile(path.join(cwd, ".specs/STATE.md"), "# State\n\n- **Active feature**: none\n");
@@ -64,7 +64,7 @@ describe("harness doctor", () => {
     const featureDir = path.join(cwd, ".specs/features", feature);
     await fs.mkdir(featureDir, { recursive: true });
     await fs.mkdir(path.join(cwd, ".specs/project"), { recursive: true });
-    await fs.mkdir(path.join(cwd, ".specs/harness/scripts"), { recursive: true });
+    await fs.mkdir(path.join(cwd, ".specs/seatbelt/scripts"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/skills"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/rules"), { recursive: true });
     await fs.writeFile(
@@ -98,7 +98,7 @@ describe("harness doctor", () => {
     const cwd = await createTempDir("doctor-json-");
     await fs.mkdir(path.join(cwd, ".specs/features"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".specs/project"), { recursive: true });
-    await fs.mkdir(path.join(cwd, ".specs/harness/scripts"), { recursive: true });
+    await fs.mkdir(path.join(cwd, ".specs/seatbelt/scripts"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/skills"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/rules"), { recursive: true });
     await fs.writeFile(path.join(cwd, ".specs/STATE.md"), "# State\n\n- **Active feature**: none\n");

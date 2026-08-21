@@ -27,7 +27,7 @@ Break the work into atomic tasks with real dependencies and binary done criteria
 ## Procedure
 
 1. **Write one task per deliverable.** A task is something you would hand to a single agent and check in one commit.
-2. **Prefer vertical slices.** One thin verifiable path per **feature** (e.g. register), not “all schema then all APIs then all UI” as *phases*. If `.cursor/rules/fullstack-layer.mdc` is present (`@luizsantiago/agentic-fullstack`), keep each task `Files` list on **one layer**. Split UI vs API into T1/T2 with `Depends on`. Vertical still means a thin *feature*, not one task mixing `apps/web` + `apps/api`. See [Companion: Agentic Fullstack](https://github.com/luizssantiago92/spec-driven-harness/blob/main/docs/guide/Companion-agentic-fullstack.md).
+2. **Prefer vertical slices.** One thin verifiable path per **feature** (e.g. register), not “all schema then all APIs then all UI” as *phases*. If `.cursor/rules/fullstack-layer.mdc` is present (`@luizsantiago/agentic-fullstack`), keep each task `Files` list on **one layer**. Split UI vs API into T1/T2 with `Depends on`. Vertical still means a thin *feature*, not one task mixing `apps/web` + `apps/api`. See [Companion: Agentic Fullstack](https://github.com/luizssantiago92/spec-seatbelt/blob/main/docs/guide/Companion-agentic-fullstack.md).
 3. **Give every task the full field set.** Authoring and the gate require all six:
    - `Requirement` — the spec ID it serves (gated)
    - `Files` — where the change lands (gated; required; `none` / `—` rejected; overlap across independent tasks blocks)
@@ -42,8 +42,8 @@ Break the work into atomic tasks with real dependencies and binary done criteria
 8. **Draw the graph** in `task-graph.md` when there are 3+ tasks or any parallel group.
 9. **Run analyze, then the tasks gate**, then present the breakdown for approval.
    ```bash
-   python3 .specs/harness/scripts/analyze_artifacts.py [feature]
-   python3 .specs/harness/scripts/validate_tasks.py [feature]
+   python3 .specs/seatbelt/scripts/analyze_artifacts.py [feature]
+   python3 .specs/seatbelt/scripts/validate_tasks.py [feature]
    ```
 
 **Authoring vs gate.** `validate_tasks.py` already enforces REQ coverage and `Tests`/`Gate` fields. The matrix and Gate Check Commands sections are an owner/verifier checklist (judgment) until a future form gate — do not skip them when Tasks ran.
@@ -51,9 +51,9 @@ Break the work into atomic tasks with real dependencies and binary done criteria
 ## Gate
 
 ```bash
-python3 .specs/harness/scripts/validate_tasks.py .specs/features/[feature]/tasks.md
-python3 .specs/harness/scripts/validate_tasks.py [feature]
-python3 .specs/harness/scripts/validate_tasks.py          # single-feature projects
+python3 .specs/seatbelt/scripts/validate_tasks.py .specs/features/[feature]/tasks.md
+python3 .specs/seatbelt/scripts/validate_tasks.py [feature]
+python3 .specs/seatbelt/scripts/validate_tasks.py          # single-feature projects
 ```
 
 Checks task IDs, required fields (including `Files` and `Done when`), dependency direction, later-phase dependencies, cycles, granularity smells, **spec requirement coverage**, and **Files overlap** across independent tasks. `Files`/`Tests`/`Gate`/`Done when` set to `none` or `—` fail. Non-zero exit means STOP.

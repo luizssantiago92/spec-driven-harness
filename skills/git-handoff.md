@@ -43,15 +43,15 @@ Compare with `tasks.md` checkboxes. If commits exist for tasks STATE lists as pe
 .specs/project/**/*
 .specs/features/**/*
 .specs/quick/**/*
-.specs/harness/scripts/**/*
+.specs/seatbelt/scripts/**/*
 ```
 
-Treat `.specs/` as **versioned product documentation**, not ephemeral notes. The gate scripts under `.specs/harness/scripts/` are committed on purpose — the team and CI run the same gates as the agent.
+Treat `.specs/` as **versioned product documentation**, not ephemeral notes. The gate scripts under `.specs/seatbelt/scripts/` are committed on purpose — the team and CI run the same gates as the agent.
 
 ### Never commit via handoff
 
 ```
-.cursor/skills/          # installed by harness; upstream is spec-driven-harness repo
+.cursor/skills/          # installed by spec-seatbelt; upstream is spec-seatbelt repo
 .claude/skills/
 .cursor/rules/             # unless team customized — then commit intentionally
 node_modules/
@@ -131,7 +131,7 @@ Use this structure in `.specs/STATE.md`:
 - Ensure no secrets in staged files
 - Commit messages in **English** (Conventional Commits):
   ```bash
-  python3 .specs/harness/scripts/check_commit.py --message "docs(spec): update STATE handoff for auth"
+  python3 .specs/seatbelt/scripts/check_commit.py --message "docs(spec): update STATE handoff for auth"
   ```
 
 ### 3. Stage and commit
@@ -182,7 +182,7 @@ Agent tooling and Python bytecode stay ignored:
 ```gitignore
 .cursor/skills/
 .claude/skills/
-.specs/harness/scripts/__pycache__/
+.specs/seatbelt/scripts/__pycache__/
 ```
 
 The gate scripts themselves are committed; only their compiled bytecode is ignored.

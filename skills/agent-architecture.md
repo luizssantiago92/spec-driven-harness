@@ -16,7 +16,7 @@ This file is the contract and the map. Phase procedures live in `references/`; c
 
 **Reference files.** Phase procedures live in `references/` next to this file (`.cursor/skills/references/`, `.claude/skills/references/`). Read a reference **completely** before acting on it. Never act on a partial read. Load the working set per `references/context-limits.md` — one feature at a time, current phase only.
 
-**Gate scripts.** Structural gates live in `.specs/harness/scripts/` at the project root. Run them with `python3`; never assume a project-local `scripts/` directory belongs to this harness.
+**Gate scripts.** Structural gates live in `.specs/seatbelt/scripts/` at the project root. Run them with `python3`; never assume a project-local `scripts/` directory belongs to this harness.
 
 **Execution contract — non-negotiable, holds even if no reference file is open:**
 
@@ -42,14 +42,14 @@ Structural gates run **before** owner review, so they cannot drift when the mode
 | --- | --- |
 | Before `/specify` (Medium+) | `npx @luizsantiago/spec-seatbelt feature-init "<description>"` (Tier 0) |
 | Optional project config | `init-config --preset node-ts` or `install --preset python` (see `preset list`) |
-| Before confirming a spec | `python3 .specs/harness/scripts/validate_spec.py [feature]` |
-| Before approving tasks | `python3 .specs/harness/scripts/analyze_artifacts.py [feature]` |
-| Before presenting tasks for approval | `python3 .specs/harness/scripts/validate_tasks.py [feature]` |
-| On each commit | `python3 .specs/harness/scripts/check_commit.py --message "<message>"` |
-| Before declaring a feature done | `python3 .specs/harness/scripts/validate_state.py [feature]` |
+| Before confirming a spec | `python3 .specs/seatbelt/scripts/validate_spec.py [feature]` |
+| Before approving tasks | `python3 .specs/seatbelt/scripts/analyze_artifacts.py [feature]` |
+| Before presenting tasks for approval | `python3 .specs/seatbelt/scripts/validate_tasks.py [feature]` |
+| On each commit | `python3 .specs/seatbelt/scripts/check_commit.py --message "<message>"` |
+| Before declaring a feature done | `python3 .specs/seatbelt/scripts/validate_state.py [feature]` |
 | After Verify PASS | `npx @luizsantiago/spec-seatbelt archive-feature [feature]` (Tier 0) |
 | Before a phase procedure (optional) | `npx @luizsantiago/spec-seatbelt phase-context <phase>` |
-| After a FAIL verdict | `python3 .specs/harness/scripts/lessons.py add --source .specs/features/[feature]/validation.md` |
+| After a FAIL verdict | `python3 .specs/seatbelt/scripts/lessons.py add --source .specs/features/[feature]/validation.md` |
 
 Gates accept a feature name, a feature directory, or a path to the artifact. With no argument they auto-detect when the project has exactly one feature; with several they list candidates and exit 2. A spec is rejected unless every criterion uses `SHALL` or `MUST` and `## Assumptions` is present.
 
@@ -138,7 +138,7 @@ When in doubt, start at **Medium** and drop phases only with owner approval.
 | `.specs/features/[feature]/tasks.md` | Atomic task breakdown |
 | `.specs/features/[feature]/task-graph.md` | Job DAG and parallel groups (when applicable) |
 | `.specs/features/[feature]/validation.md` | Independent verification report |
-| `.specs/harness/scripts/` | Deterministic gate scripts |
+| `.specs/seatbelt/scripts/` | Deterministic gate scripts |
 
 **Create artifacts lazily.** Write a file only when its phase actually produces content. Never scaffold an empty `design.md`, `tasks.md`, or `context.md` — an empty file claims a phase ran when it did not. Absence is the correct state for a skipped phase.
 
@@ -214,4 +214,4 @@ Project rules: `.cursor/rules/engineering-baseline.mdc` (always applied in Curso
 
 ## Credits
 
-Lineage and inspiration (CC-BY / MIT notices): see the repository [Credits](https://github.com/luizssantiago92/spec-driven-harness#credits) — TLC Spec-Driven, Addy Osmani agent-skills, graph-engineering.
+Lineage and inspiration (CC-BY / MIT notices): see the repository [Credits](https://github.com/luizssantiago92/spec-seatbelt#credits) — TLC Spec-Driven, Addy Osmani agent-skills, graph-engineering.

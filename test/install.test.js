@@ -9,7 +9,7 @@ import { fileURLToPath } from "node:url";
 import {
   assertSafeAssetBase,
   assertSafeDownloadUrl,
-  HARNESS_SCRIPTS_DIR,
+  SEATBELT_SCRIPTS_DIR,
   LESSONS_HEADER,
   PACKAGE_VERSION,
   PINNED_REF,
@@ -186,7 +186,7 @@ describe("install harness", () => {
         assert.match(rulesContent, /task-graph-engineering\.md/);
         assert.match(rulesContent, /engineering-baseline\.mdc/);
         assert.match(rulesContent, /references\//);
-        assert.match(rulesContent, /harness\/scripts/);
+        assert.match(rulesContent, /seatbelt\/scripts/);
         assert.match(rulesContent, /GETTING_STARTED\.md/);
         assert.doesNotMatch(rulesContent, /pt-BR/);
       } finally {
@@ -234,7 +234,7 @@ describe("install harness", () => {
     });
   });
 
-  it("installs executable gate scripts under .specs/harness/scripts", async () => {
+  it("installs executable gate scripts under .specs/seatbelt/scripts", async () => {
     await withMockServer(async (mockServer) => {
       const cwd = await createTempDir("harness-gates-");
 
@@ -242,7 +242,7 @@ describe("install harness", () => {
         await install({ cwd, repoUrl: mockServer.baseUrl, silent: true });
 
         for (const script of SCRIPT_ASSETS) {
-          const scriptPath = path.join(cwd, HARNESS_SCRIPTS_DIR, script.file);
+          const scriptPath = path.join(cwd, SEATBELT_SCRIPTS_DIR, script.file);
           assert.equal(
             await pathExists(scriptPath),
             true,
@@ -252,7 +252,7 @@ describe("install harness", () => {
 
         const specGate = path.join(
           cwd,
-          HARNESS_SCRIPTS_DIR,
+          SEATBELT_SCRIPTS_DIR,
           "validate_spec.py",
         );
         assert.equal(await fs.readFile(specGate, "utf8"), SPEC_GATE_FIXTURE);
@@ -271,8 +271,8 @@ describe("install harness", () => {
 
   it("installs from packaged assets without a network fetch", async () => {
     const cwd = await createTempDir("harness-offline-");
-    const originalOverride = process.env.HARNESS_REPO_URL;
-    delete process.env.HARNESS_REPO_URL;
+    const originalOverride = process.env.SPEC_SEATBELT_REPO_URL;
+    delete process.env.SPEC_SEATBELT_REPO_URL;
 
     try {
       await install({ cwd, silent: true });
@@ -285,13 +285,13 @@ describe("install harness", () => {
       assert.doesNotMatch(hub, /test fixture/);
 
       const specGate = await fs.readFile(
-        path.join(cwd, HARNESS_SCRIPTS_DIR, "validate_spec.py"),
+        path.join(cwd, SEATBELT_SCRIPTS_DIR, "validate_spec.py"),
         "utf8",
       );
       assert.match(specGate, /SHALL or MUST/);
 
       const lessonsEngine = await fs.readFile(
-        path.join(cwd, HARNESS_SCRIPTS_DIR, "lessons.py"),
+        path.join(cwd, SEATBELT_SCRIPTS_DIR, "lessons.py"),
         "utf8",
       );
       assert.match(lessonsEngine, /def cmd_add/);
@@ -303,9 +303,9 @@ describe("install harness", () => {
       assert.match(contextLimits, /# Context Limits/);
     } finally {
       if (originalOverride === undefined) {
-        delete process.env.HARNESS_REPO_URL;
+        delete process.env.SPEC_SEATBELT_REPO_URL;
       } else {
-        process.env.HARNESS_REPO_URL = originalOverride;
+        process.env.SPEC_SEATBELT_REPO_URL = originalOverride;
       }
       await fs.rm(cwd, { recursive: true, force: true });
     }
@@ -313,8 +313,8 @@ describe("install harness", () => {
 
   it("offline reinstall refreshes skills but keeps memory and user rule prose", async () => {
     const cwd = await createTempDir("harness-offline-rerun-");
-    const originalOverride = process.env.HARNESS_REPO_URL;
-    delete process.env.HARNESS_REPO_URL;
+    const originalOverride = process.env.SPEC_SEATBELT_REPO_URL;
+    delete process.env.SPEC_SEATBELT_REPO_URL;
 
     try {
       await install({ cwd, silent: true });
@@ -335,7 +335,7 @@ describe("install harness", () => {
       assert.equal(await fs.readFile(stateFile, "utf8"), "# Custom state\n");
       const baseline = await fs.readFile(baselineRule, "utf8");
       assert.match(baseline, /# Custom rules/);
-      assert.match(baseline, /harness-managed:skills-map:start/);
+      assert.match(baseline, /seatbelt-managed:skills-map:start/);
       assert.match(baseline, /appsec\.md/);
       assert.match(baseline, /GETTING_STARTED\.md/);
 
@@ -346,9 +346,9 @@ describe("install harness", () => {
       assert.match(hub, /# Agent Architecture/);
     } finally {
       if (originalOverride === undefined) {
-        delete process.env.HARNESS_REPO_URL;
+        delete process.env.SPEC_SEATBELT_REPO_URL;
       } else {
-        process.env.HARNESS_REPO_URL = originalOverride;
+        process.env.SPEC_SEATBELT_REPO_URL = originalOverride;
       }
       await fs.rm(cwd, { recursive: true, force: true });
     }
@@ -419,7 +419,7 @@ keep me
         await install({ cwd, repoUrl: mockServer.baseUrl, silent: true });
 
         const baseline = await fs.readFile(baselineRule, "utf8");
-        assert.match(baseline, /harness-managed:skills-map:start/);
+        assert.match(baseline, /seatbelt-managed:skills-map:start/);
         assert.match(baseline, /appsec\.md/);
         assert.match(baseline, /# Deterministic Gates/);
         assert.match(baseline, /keep me/);
@@ -461,6 +461,7 @@ keep me
         assert.match(rulesContent, /engineering-baseline\.mdc/);
         assert.match(rulesContent, /GETTING_STARTED\.md/);
         assert.doesNotMatch(rulesContent, /# Old block/);
+        assert.match(rulesContent, /SPEC-SEATBELT:BEGIN/);
       } finally {
         await fs.rm(cwd, { recursive: true, force: true });
       }
@@ -565,7 +566,7 @@ describe("asset source safety", () => {
   it("pins remote asset URLs to the released tag", () => {
     const url = resolveAssetUrl("skills/agent-architecture.md");
 
-    assert.match(url, /\/spec-driven-harness\/v\d+\.\d+\.\d+\//);
+    assert.match(url, /\/spec-seatbelt\/v\d+\.\d+\.\d+\//);
     assert.ok(url.startsWith("https://"), `expected https, got ${url}`);
     assert.ok(
       url.includes(`/${PINNED_REF}/`),
@@ -590,7 +591,7 @@ describe("asset source safety", () => {
   it("rejects malformed asset bases", () => {
     assert.throws(
       () => assertSafeAssetBase("not-a-url"),
-      /Invalid harness asset URL/,
+      /Invalid seatbelt asset URL/,
     );
   });
 
@@ -598,8 +599,9 @@ describe("asset source safety", () => {
     const mockServer = await createMockAssetServer();
     const cwd = await createTempDir("harness-override-");
     const logs = [];
-    const originalOverride = process.env.HARNESS_REPO_URL;
-    process.env.HARNESS_REPO_URL = mockServer.baseUrl;
+    const originalOverride = process.env.SPEC_SEATBELT_REPO_URL;
+    delete process.env.SPEC_SEATBELT_REPO_URL;
+    process.env.SPEC_SEATBELT_REPO_URL = mockServer.baseUrl;
 
     try {
       const originalLog = console.log;
@@ -612,14 +614,14 @@ describe("asset source safety", () => {
       }
 
       assert.ok(
-        logs.some((line) => line.includes("HARNESS_REPO_URL is set")),
+        logs.some((line) => line.includes("SPEC_SEATBELT_REPO_URL is set")),
         `expected an override warning, got:\n${logs.join("\n")}`,
       );
     } finally {
       if (originalOverride === undefined) {
-        delete process.env.HARNESS_REPO_URL;
+        delete process.env.SPEC_SEATBELT_REPO_URL;
       } else {
-        process.env.HARNESS_REPO_URL = originalOverride;
+        process.env.SPEC_SEATBELT_REPO_URL = originalOverride;
       }
       await fs.rm(cwd, { recursive: true, force: true });
       await mockServer.close();
@@ -638,7 +640,7 @@ describe("cursorrules maintenance", () => {
       await injectCursorRules(cwd);
 
       const withStaleBlock = (await fs.readFile(rulesPath, "utf8")).replace(
-        /<!-- AGENTIC-HARNESS:BEGIN -->[\s\S]*?<!-- AGENTIC-HARNESS:END -->/,
+        /<!-- SPEC-SEATBELT:BEGIN -->[\s\S]*?<!-- SPEC-SEATBELT:END -->/,
         "<!-- AGENTIC-HARNESS:BEGIN -->\n# old\n<!-- AGENTIC-HARNESS:END -->",
       );
       await fs.writeFile(rulesPath, withStaleBlock, "utf8");
@@ -653,11 +655,11 @@ describe("cursorrules maintenance", () => {
         "user blank lines outside the harness block must survive an upgrade",
       );
       assert.equal(
-        (content.match(/AGENTIC-HARNESS:BEGIN/g) ?? []).length,
+        (content.match(/SPEC-SEATBELT:BEGIN/g) ?? []).length,
         1,
         "repeated runs must not duplicate the harness block",
       );
-      assert.match(content, /harness\/scripts/);
+      assert.match(content, /seatbelt\/scripts/);
     } finally {
       await fs.rm(cwd, { recursive: true, force: true });
     }
@@ -757,8 +759,8 @@ describe("packaged assets", () => {
   });
 
   it("resolves install to the package when no override is set", () => {
-    const original = process.env.HARNESS_REPO_URL;
-    delete process.env.HARNESS_REPO_URL;
+    const original = process.env.SPEC_SEATBELT_REPO_URL;
+    delete process.env.SPEC_SEATBELT_REPO_URL;
     try {
       assert.deepEqual(resolveInstallSource(), { mode: "package" });
       assert.equal(
@@ -771,9 +773,9 @@ describe("packaged assets", () => {
       );
     } finally {
       if (original === undefined) {
-        delete process.env.HARNESS_REPO_URL;
+        delete process.env.SPEC_SEATBELT_REPO_URL;
       } else {
-        process.env.HARNESS_REPO_URL = original;
+        process.env.SPEC_SEATBELT_REPO_URL = original;
       }
     }
   });
@@ -996,7 +998,7 @@ describe("shipped baseline", () => {
       assert.equal(await pathExists(path.join(cwd, ".specs/domains")), true);
       assert.equal(
         await pathExists(
-          path.join(cwd, HARNESS_SCRIPTS_DIR, "analyze_artifacts.py"),
+          path.join(cwd, SEATBELT_SCRIPTS_DIR, "analyze_artifacts.py"),
         ),
         true,
       );

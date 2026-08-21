@@ -44,7 +44,7 @@ You installed the **Spec Seatbelt**. You do **not** need to memorize CLI command
 
 **Typical order:** `/specify` → `/tasks` → `/analyze` → `/loop` → `/verify` → `/archive`
 
-Full detail (Purpose · When · How · examples): repository **README** → [Agent commands](https://github.com/luizssantiago92/spec-driven-harness#agent-commands-chat--not-the-terminal).
+Full detail (Purpose · When · How · examples): repository **README** → [Agent commands](https://github.com/luizssantiago92/spec-seatbelt#agent-commands-chat--not-the-terminal).
 
 ---
 
@@ -70,4 +70,4 @@ Everything else (`validate-tasks`, `loop-plan`, `check-commit`, …) is normally
 | `.cursor/skills/agent-architecture.md` | Hub — phase map |
 | `.specs/STATE.md` | Where you left off |
 | `.specs/features/` | One folder per feature |
-| `.specs/harness/scripts/` | Automatic gates |
+| `.specs/seatbelt/scripts/` | Automatic gates |
