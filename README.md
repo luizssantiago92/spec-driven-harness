@@ -679,7 +679,9 @@ Re-run `install` to refresh skills; `STATE.md` and your edits are kept.
 npx @luizsantiago/spec-seatbelt install
 ```
 
-**Renamed from `@luizsantiago/agentic-harness`.** Same layout; CLI is `spec-seatbelt`. Run `install` once after switching — gates move to `.specs/seatbelt/scripts/` (legacy `.specs/harness/scripts/` still works until you reinstall).
+**Renamed from `@luizsantiago/agentic-harness`.** Same layout; CLI is `spec-seatbelt`. Run `install` once after switching — gates move to `.specs/seatbelt/scripts/` (legacy `.specs/harness/scripts/` still works until you reinstall). `install` also upgrades legacy `.cursorrules` markers (`AGENTIC-HARNESS` → `SPEC-SEATBELT`).
+
+**Planned for a future major (3.0):** drop read-only support for legacy paths and markers after `install` migrates them automatically. Stay on 2.x until you have run `install` at least once after upgrading.
 
 | Version | Highlights |
 | --- | --- |

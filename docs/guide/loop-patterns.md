@@ -39,7 +39,7 @@ npx @luizsantiago/spec-seatbelt doctor
 npx @luizsantiago/spec-seatbelt doctor --json
 ```
 
-`doctor` checks skills, gates, config, STATE, optional PROJECT.md, and (for the active feature with 3+ tasks) `task-graph.md`. It prints **Seatbelt Ready: N/100** and up to three next actions.
+`doctor` checks skills, gates, config, STATE, optional PROJECT.md, and (for the active feature with 3+ tasks) `task-graph.md`. It prints **Seatbelt Ready: N/100**, up to three next actions, and an **Execute hint** (`loop-plan` when tasks are in progress, or `validate-state` when every task is marked complete).
 
 Inspired by loop-engineering’s Loop Ready score — scoped to **this package’s** install surface, not their full foundry stack.
 
