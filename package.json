@@ -1,6 +1,6 @@
 {
   "name": "@luizsantiago/spec-seatbelt",
-  "version": "2.2.3",
+  "version": "2.2.4",
   "description": "A seatbelt for AI coding agents — spec-driven phases, automatic gates, progressive skill loading (~70% fewer tokens per turn). Works in Cursor and Claude.",
   "type": "module",
   "bin": {
