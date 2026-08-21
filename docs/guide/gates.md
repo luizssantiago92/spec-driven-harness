@@ -6,36 +6,16 @@ Gates are **Python scripts** in `.specs/seatbelt/scripts/`. The agent (or you) r
 
 ## Pipeline placement
 
-```mermaid
-flowchart LR
-  subgraph plan["Planning"]
-    FI[feature-init CLI]
-    VS[validate-spec]
-    AA[analyze-artifacts]
-    VT[validate-tasks]
-  end
-
-  subgraph build["Building"]
-    LP[loop-plan]
-    CC[check-commit]
-  end
-
-  subgraph close["Closing"]
-    VST[validate-state]
-    AF[archive-feature CLI]
-    LS[lessons]
-  end
-
-  FI --> VS
-  VS --> AA
-  AA --> VT
-  VT --> LP
-  LP --> CC
-  CC --> LP
-  LP --> VST
-  VST --> AF
-  VST -.->|on FAIL| LS
-```
+| Phase | Order | Gate / CLI |
+| --- | ---: | --- |
+| **Planning** | 1 | `feature-init` (CLI) |
+| | 2 | `validate-spec` |
+| | 3 | `analyze-artifacts` |
+| | 4 | `validate-tasks` |
+| **Building** | 5 | `loop-plan` → implement → `check-commit` (repeat per wave) |
+| **Closing** | 6 | `validate-state` |
+| | 7 | `archive-feature` (CLI) |
+| | — | `lessons` (after Verify FAIL) |
 
 ## Gate catalog
 
@@ -52,21 +32,12 @@ flowchart LR
 
 ## How a gate run works
 
-```mermaid
-sequenceDiagram
-  participant Agent
-  participant Gate as validate_spec.py
-  participant FS as .specs/features/…/spec.md
-
-  Agent->>FS: Write or update spec
-  Agent->>Gate: python3 .specs/seatbelt/scripts/validate_spec.py feature
-  alt pass (exit 0)
-    Gate-->>Agent: OK — present to owner
-  else fail (exit 1)
-    Gate-->>Agent: Reject list — fix and re-run
-    Note over Agent: STOP — no Tasks/Execute
-  end
-```
+| Step | What happens |
+| ---: | --- |
+| 1 | Agent writes or updates the artifact (e.g. `spec.md`) |
+| 2 | Agent runs `python3 .specs/seatbelt/scripts/validate_spec.py <feature>` |
+| 3 | **Exit 0** → OK, present to you for approval |
+| 4 | **Exit 1** → STOP, fix listed issues, re-run (no Tasks/Execute until pass) |
 
 ### Arguments
 

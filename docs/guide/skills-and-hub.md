@@ -4,40 +4,12 @@ After `install`, the agent does **not** load the whole library every turn. It lo
 
 ## Architecture overview
 
-```mermaid
-flowchart TB
-  subgraph always["Always available"]
-    HUB["agent-architecture.md<br/>Hub — contract & router"]
-    BASE["engineering-baseline.mdc<br/>Cursor always-on rule"]
-  end
+| Always on | One at a time | On demand |
+| --- | --- | --- |
+| `agent-architecture.md` (hub) | One file from `references/` | Sister skills |
+| `engineering-baseline.mdc` (Cursor rule) | e.g. `specify.md`, `implement.md` | e.g. `security-review.md`, `task-graph-engineering.md` |
 
-  subgraph phase["One phase at a time (references/)"]
-    R1[specify.md]
-    R2[tasks.md]
-    R3[implement.md]
-    R4[validate.md]
-    R5[explore, discuss, design, …]
-  end
-
-  subgraph sisters["Sisters — load on demand"]
-    ES[engineering-standards.md]
-    TG[task-graph-engineering.md]
-    SR[security-review.md]
-    GH[git-handoff.md]
-    C1[appsec.md]
-    C2[qa-strategy.md]
-    C3[code-simplify.md]
-    C4[ship-ready.md]
-  end
-
-  HUB -->|"Complexity Router picks tier"| phase
-  HUB --> sisters
-  phase --> ES
-  phase --> TG
-  R4 --> SR
-  R4 -.->|"one at a time"| C1
-  R4 -.-> C2
-```
+**Load order each turn:** Hub → one reference → optional sister → gate at the boundary.
 
 ## Hub — `agent-architecture.md`
 
@@ -96,23 +68,15 @@ Loaded **one per turn** (plus hub). Each file is a step-by-step procedure.
 
 ## Progressive loading (why tokens stay low)
 
-```mermaid
-sequenceDiagram
-  participant You
-  participant Agent
-  participant Hub
-  participant Phase
-  participant Sister
+| Step | Who | Action |
+| ---: | --- | --- |
+| 1 | You | `/specify` + feature description |
+| 2 | Agent | Read hub (contract + router) |
+| 3 | Agent | Read `specify.md` only (~9k tokens this turn) |
+| 4 | Agent | Run `validate-spec` |
+| 5 | Agent | Present `spec.md` → wait for your approval |
 
-  You->>Agent: /specify feature X
-  Agent->>Hub: Read contract + router
-  Agent->>Phase: Read specify.md (full file)
-  Note over Agent,Sister: engineering-standards optional on Specify
-  Agent->>Agent: validate-spec gate
-  Agent->>You: spec.md for approval
-```
-
-A **Specify** turn loads ~5 files (~9k est. tokens). Dumping every skill and reference every turn would be ~31k tokens — see [Token efficiency](Token-efficiency.md).
+Dumping every skill + reference every turn ≈ **31k tokens** — see [Token efficiency](Token-efficiency.md).
 
 ## Where files land after install
 
