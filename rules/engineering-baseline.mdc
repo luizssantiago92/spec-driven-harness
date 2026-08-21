@@ -44,6 +44,7 @@ Structural gates live in `.specs/harness/scripts/` and require Python 3. A non-z
 | When | Command |
 | --- | --- |
 | Before `/specify` (Medium+) | `npx @luizsantiago/agentic-harness feature-init "<description>"` (Tier 0 — folder + branch + STATE) |
+| Optional brownfield bootstrap | `npx @luizsantiago/agentic-harness project-init` (existing repos — before first `/specify`) |
 | Optional project config | `npx @luizsantiago/agentic-harness init-config --preset node-ts` or `install --preset python` |
 | Before a phase procedure (optional) | `npx @luizsantiago/agentic-harness phase-context <phase>` |
 | Before confirming a spec | `python3 .specs/harness/scripts/validate_spec.py [feature]` |

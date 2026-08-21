@@ -195,6 +195,7 @@ Project rules: `.cursor/rules/engineering-baseline.mdc` (always applied in Curso
 | Command | Reference | Action |
 | --- | --- | --- |
 | `/explore` | `references/explore.md` | Think through ideas before Specify |
+| `/project-init` | `references/project-init.md` | Brownfield: map repo → PROJECT + domain stubs |
 | `/constitution` | `references/constitution.md` | Create project governing principles |
 | `/specify` | `references/specify.md` | `feature-init` then requirements; EARS; delta specs |
 | `/discuss` | `references/discuss.md` | Resolve gray areas into `context.md` |

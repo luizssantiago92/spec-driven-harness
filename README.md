@@ -7,9 +7,17 @@
 
 Install once (`npx @luizsantiago/agentic-harness install`) and the same playbook runs in **Cursor** and **Claude Code**. The agent loads **one step’s guide** at a time instead of dumping the whole manual into every chat — so you spend less context on process and more on the feature.
 
-npm package: [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **1.0.x**. The badge above tracks the published patch.
+npm package: [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **1.1.x**. The badge above tracks the published patch.
 
 For the engineering contract (gates, evidence rules, upgrade tables), keep reading below — or take the plain-language tour on the [project wiki](https://github.com/luizssantiago92/spec-driven-harness/wiki).
+
+### What's in 1.1.x
+
+| Area | What you get |
+| --- | --- |
+| **Brownfield `project-init`** | Scan existing repos → `PROJECT.md`, domain stubs, ROADMAP planned items, config preset |
+| **Stack detection** | Node/TS, Python, Go, Rust from repo markers; monorepo domains from `packages/`, `apps/`, `src/domains/` |
+| **Dry run** | `project-init --dry-run` previews stack and domains without writing files |
 
 ### What's in 1.0.x
 
@@ -100,7 +108,8 @@ Without Python the harness runs in degraded mode: the skills still apply and the
 ```bash
 npx @luizsantiago/agentic-harness install
 npx @luizsantiago/agentic-harness install --preset node-ts
-npx @luizsantiago/agentic-harness init-config --preset python
+npx @luizsantiago/agentic-harness project-init --dry-run
+npx @luizsantiago/agentic-harness project-init --preset node-ts
 npx @luizsantiago/agentic-harness preset list
 ```
 
@@ -312,6 +321,7 @@ Run `npx @luizsantiago/agentic-harness install` again. Existing memory and edite
 
 | Coming from | Manual step |
 | --- | --- |
+| A version before `1.1.0` | Run `project-init` on brownfield repos to seed `PROJECT.md` and domain stubs. Re-run install for `references/project-init.md` |
 | A version before `1.0.0` | Optional: `init-config --preset <name>` or add `extends:` to `.specs/config.yaml`. Re-run install for preset templates. `feature-init` now reads branch prefix from resolved config |
 | A version before `0.9.0` | Add `archive-feature` and `phase-context` CLI; copy `config.yaml` pattern if missing. Re-run install |
 | A version before `0.8.0` | Re-run install for Explore/Analyze/Archive refs, `feature-init`, delta specs, git tiers, and `analyze_artifacts.py`. Open features: run `feature-init` pattern manually or rename folders to `NNN-slug` |
