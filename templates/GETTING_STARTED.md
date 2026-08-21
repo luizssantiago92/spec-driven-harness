@@ -5,7 +5,7 @@ You installed the **Spec Seatbelt**. You do **not** need to memorize CLI command
 ## What to do now
 
 1. Open **Cursor** or **Claude Code** in this project.
-2. Start with **Specify**:
+2. Start with **Specify** (an **agent command** — chat, not terminal):
 
    ```
    /specify
@@ -16,30 +16,41 @@ You installed the **Spec Seatbelt**. You do **not** need to memorize CLI command
 
 3. Review `.specs/features/…/spec.md` and **approve** before implementation.
 
+---
+
 ## Agent commands (chat — not terminal)
 
-| Command | Purpose |
-| --- | --- |
-| `/quick` | Tiny fix (≤3 files) — skip full spec |
-| `/explore` | Research before committing to a feature |
-| `/specify` | Written requirements — **start here** for real work |
-| `/discuss` | Resolve gray product decisions |
-| `/plan` | Technical design (Complex) |
-| `/tasks` | Job list with tests and “done when” |
-| `/task-graph` | Parallel work DAG (3+ tasks) |
-| `/analyze` | Spec ↔ tasks check before approval |
-| `/loop` | Implement — **parallel waves + sub-agents** when `loop-plan` says so |
-| `/verify` | Independent proof (fresh context) |
-| `/archive` | Fold PASS feature into domain memory |
-| `/converge` | Recover when spec and code drifted |
-| `/handoff` | Update STATE.md end of session |
-| `/project-init` | Map existing repo (brownfield, once) |
-| `/constitution` | Project principles (once) |
-| `/lessons` | Learn from verify failures |
+> Type these in **Cursor or Claude Code**. They load phase procedures from `.cursor/skills/references/`.
+> The agent runs gates and CLI helpers for you.
 
-Full detail for each command: repository **README** (Agent commands section).
+| Command | What it's for | When to use | How (chat) |
+| --- | --- | --- | --- |
+| `/quick` | Tiny fix without full spec | ≤3 files, no new deps | `/quick` + one-line fix |
+| `/explore` | Research before committing | Idea unclear; no prod code | `/explore` + question |
+| `/specify` | Written requirements | **Start here** for real features | `/specify` + goal + out of scope |
+| `/discuss` | Gray product decisions | Auth, payments, ambiguity | `/discuss` + questions |
+| `/plan` | Technical design | Complex — APIs, architecture | `/plan` + design scope |
+| `/tasks` | Atomic job list | After approved spec | `/tasks` + “break into tasks” |
+| `/task-graph` | Parallel work DAG | 3+ tasks or parallel work | `/task-graph` + “mark groups” |
+| `/analyze` | Spec ↔ tasks check | Before approving tasks | `/analyze` + “check consistency” |
+| `/loop` | Implement code | After approved tasks | `/loop` + “loop-plan, next wave” |
+| `/verify` | Independent proof | **Always** after last task | `/verify` + fresh context |
+| `/archive` | Domain memory | After Verify PASS | `/archive` + domain |
+| `/converge` | Recover from drift | Spec/tasks ≠ code | `/converge` + what changed |
+| `/handoff` | Session snapshot | End of chat | `/handoff` + next step |
+| `/project-init` | Brownfield map | Once, existing repo | `/project-init` + “scan repo” |
+| `/constitution` | Project principles | Once, greenfield | `/constitution` + principles |
+| `/lessons` | Learn from failures | After Verify FAIL | `/lessons` + what failed |
 
-## CLI you might run yourself
+**Typical order:** `/specify` → `/tasks` → `/analyze` → `/loop` → `/verify` → `/archive`
+
+Full detail (Purpose · When · How · examples): repository **README** → [Agent commands](https://github.com/luizssantiago92/spec-driven-harness#agent-commands-chat--not-the-terminal).
+
+---
+
+## CLI you might run yourself (terminal)
+
+These are **not** agent commands — you run them in your shell:
 
 | Command | When |
 | --- | --- |
@@ -48,7 +59,9 @@ Full detail for each command: repository **README** (Agent commands section).
 | `doctor` | Install looks broken |
 | `validate-spec` / `validate-state` | Double-check gates manually |
 
-Everything else is normally run **by the agent**.
+Everything else (`validate-tasks`, `loop-plan`, `check-commit`, …) is normally run **by the agent**.
+
+---
 
 ## Where things live
 
