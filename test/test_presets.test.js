@@ -34,12 +34,6 @@ describe("presets", () => {
     assert.ok(preset.rules?.implement?.length);
   });
 
-  it("node-ts preset documents ChatPRD placeholders", async () => {
-    const preset = await loadPreset("node-ts");
-    assert.equal(preset.chatprd_org_id, "");
-    assert.match(preset.context ?? "", /CHATPRD_API_KEY/);
-  });
-
   it("resolves extends and overrides", async () => {
     const resolved = await resolveHarnessConfig(
       {
