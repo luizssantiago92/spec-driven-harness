@@ -4,9 +4,9 @@ import os from "node:os";
 import path from "node:path";
 import { describe, it } from "node:test";
 
-import { mergeHarnessConfigs, resolveHarnessConfig } from "../lib/config.js";
+import { mergeSeatbeltConfigs, resolveSeatbeltConfig } from "../lib/config.js";
 import { featureInit } from "../lib/feature.js";
-import { initMemoryHarness } from "../lib/memory.js";
+import { initSeatbeltMemory } from "../lib/memory.js";
 import {
   initProjectConfig,
   listPresets,
@@ -35,7 +35,7 @@ describe("presets", () => {
   });
 
   it("resolves extends and overrides", async () => {
-    const resolved = await resolveHarnessConfig(
+    const resolved = await resolveSeatbeltConfig(
       {
         extends: "node-ts",
         context: "Team: Acme",
@@ -56,8 +56,8 @@ describe("presets", () => {
     assert.ok(resolved.rules?.verify?.includes("Also run playwright e2e"));
   });
 
-  it("mergeHarnessConfigs appends rules and context", () => {
-    const merged = mergeHarnessConfigs(
+  it("mergeSeatbeltConfigs appends rules and context", () => {
+    const merged = mergeSeatbeltConfigs(
       { context: "Base", rules: { specify: ["A"] } },
       { context: "Local", rules: { specify: ["B"] } },
     );
@@ -115,7 +115,7 @@ describe("presets", () => {
 
   it("feature-init uses branch prefix from resolved config", async () => {
     const cwd = await createTempDir("feature-prefix-");
-    await initMemoryHarness(cwd);
+    await initSeatbeltMemory(cwd);
     await initProjectConfig({ cwd, preset: "node-ts" });
 
     const result = await featureInit("auth flow", { cwd, skipBranch: true });

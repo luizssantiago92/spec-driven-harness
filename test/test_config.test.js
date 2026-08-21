@@ -6,9 +6,9 @@ import { describe, it } from "node:test";
 
 import {
   formatPhaseContext,
-  loadHarnessConfig,
+  loadSeatbeltConfig,
   normalizePhase,
-  parseHarnessConfig,
+  parseSeatbeltConfig,
   phaseContext,
 } from "../lib/config.js";
 
@@ -16,7 +16,7 @@ async function createTempDir(prefix) {
   return fs.mkdtemp(path.join(os.tmpdir(), prefix));
 }
 
-describe("harness config", () => {
+describe("seatbelt config", () => {
   it("parses schema, context block, and phase rules", () => {
     const yaml = `# comment
 schema: spec-driven
@@ -32,7 +32,7 @@ rules:
     - Evidence must cite test file:line paths
 `;
 
-    const config = parseHarnessConfig(yaml);
+    const config = parseSeatbeltConfig(yaml);
     assert.equal(config.schema, "spec-driven");
     assert.match(config.context ?? "", /Tech stack: Node/);
     assert.deepEqual(config.rules?.specify, ["Prefer EARS acceptance criteria"]);
@@ -68,7 +68,7 @@ rules:
 `,
     );
 
-    const config = await loadHarnessConfig(cwd);
+    const config = await loadSeatbeltConfig(cwd);
     assert.match(config?.context ?? "", /Branch prefix: feat/);
     assert.deepEqual(config?.rules?.tasks?.[0], "Every REQ must appear in the Test Coverage Matrix");
   });
@@ -83,7 +83,7 @@ context: |
 #   rules:
 `;
 
-    const config = parseHarnessConfig(yaml);
+    const config = parseSeatbeltConfig(yaml);
     assert.equal(config.extends, "node-ts");
     assert.equal(config.context?.trim(), "Team: Acme");
   });

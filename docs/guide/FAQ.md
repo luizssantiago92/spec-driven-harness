@@ -6,7 +6,7 @@ A **seatbelt for AI coding agents**. It makes them write down the plan, build ag
 
 ## Is this a framework or a product I run in production?
 
-It’s a **process kit** for agents (skills + docs + a completion gate). Your app is still your app. The harness shapes *how the agent works*, not your runtime stack.
+It’s a **process kit** for agents (skills + docs + a completion gate). Your app is still your app. Spec Seatbelt shapes *how the agent works*, not your runtime stack.
 
 ## Do I need to change how my team codes?
 
@@ -29,7 +29,7 @@ Cost and focus. Most turns don’t need a full audit. When you do, say so and lo
 
 ## How is this different from Test-Led Coding or Addy’s agent-skills?
 
-| | This harness | TLC | Addy-style catalogs |
+| | Spec Seatbelt | TLC | Addy-style catalogs |
 |--|--------------|-----|---------------------|
 | Focus | Spec → prove done | Tests as the spine | Broad SDLC skill set |
 | Gate | Stronger on “really finished?” | Different emphasis | Usually lighter formal gate |
@@ -61,7 +61,7 @@ You need Python 3 for these. Without a real `.specs/features/auth` folder, `vali
 
 ## I’m not technical—can I still use this?
 
-Yes at a high level: ask your agent to **install the harness**, then to **specify before building** and **verify before done**. Engineers maintain the repo and the gate; you can still insist on the process in plain language.
+Yes at a high level: ask your agent to **install Spec Seatbelt**, then to **specify before building** and **verify before done**. Engineers maintain the repo and the gate; you can still insist on the process in plain language.
 
 ## Where should I start reading?
 
@@ -73,8 +73,8 @@ Then [Gates](Gates-and-guarantees) / [Tokens](Token-efficiency) when you care ab
 
 ## How do I use this with frontend or backend skills?
 
-This harness is stack-agnostic. Optional floor maps live in [`@luizsantiago/agentic-fullstack`](https://www.npmjs.com/package/@luizsantiago/agentic-fullstack): one Execute manual per layer, one layer per task. Pairing contract: [Companion: Agentic Fullstack](Companion-agentic-fullstack).
+Spec Seatbelt is stack-agnostic. Optional floor maps live in [`@luizsantiago/agentic-fullstack`](https://www.npmjs.com/package/@luizsantiago/agentic-fullstack): one Execute manual per layer, one layer per task. Pairing contract: [Companion: Agentic Fullstack](Companion-agentic-fullstack).
 
 ## Something broken or unclear?
 
-Open an issue on [GitHub](https://github.com/luizssantiago92/spec-driven-harness/issues). For contributing rules (especially the frozen gate), see [CONTRIBUTING](../../CONTRIBUTING.md).
+Open an issue on [GitHub](https://github.com/luizssantiago92/spec-seatbelt/issues). For contributing rules (especially the frozen gate), see [CONTRIBUTING](../../CONTRIBUTING.md).

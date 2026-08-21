@@ -6,6 +6,7 @@ import { describe, it } from "node:test";
 
 import {
   doctor,
+  resolveExecuteHint,
   runDoctorChecks,
   scoreDoctorChecks,
   topDoctorSuggestions,
@@ -15,12 +16,12 @@ async function createTempDir(prefix) {
   return fs.mkdtemp(path.join(os.tmpdir(), prefix));
 }
 
-describe("harness doctor", () => {
+describe("seatbelt doctor", () => {
   it("scores installed scaffold highly", async () => {
     const cwd = await createTempDir("doctor-good-");
     await fs.mkdir(path.join(cwd, ".specs/features"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".specs/project"), { recursive: true });
-    await fs.mkdir(path.join(cwd, ".specs/harness/scripts"), { recursive: true });
+    await fs.mkdir(path.join(cwd, ".specs/seatbelt/scripts"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/skills"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/rules"), { recursive: true });
     await fs.writeFile(path.join(cwd, ".specs/STATE.md"), "# State\n\n- **Active feature**: none\n");
@@ -29,7 +30,7 @@ describe("harness doctor", () => {
     await fs.writeFile(path.join(cwd, ".cursor/rules/engineering-baseline.mdc"), "---\n");
     await fs.copyFile(
       path.join(process.cwd(), "scripts/check_commit.py"),
-      path.join(cwd, ".specs/harness/scripts/check_commit.py"),
+      path.join(cwd, ".specs/seatbelt/scripts/check_commit.py"),
     );
 
     const checks = await runDoctorChecks(cwd);
@@ -45,7 +46,7 @@ describe("harness doctor", () => {
     const cwd = await createTempDir("doctor-config-");
     await fs.mkdir(path.join(cwd, ".specs/features"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".specs/project"), { recursive: true });
-    await fs.mkdir(path.join(cwd, ".specs/harness/scripts"), { recursive: true });
+    await fs.mkdir(path.join(cwd, ".specs/seatbelt/scripts"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/skills"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/rules"), { recursive: true });
     await fs.writeFile(path.join(cwd, ".specs/STATE.md"), "# State\n\n- **Active feature**: none\n");
@@ -64,7 +65,7 @@ describe("harness doctor", () => {
     const featureDir = path.join(cwd, ".specs/features", feature);
     await fs.mkdir(featureDir, { recursive: true });
     await fs.mkdir(path.join(cwd, ".specs/project"), { recursive: true });
-    await fs.mkdir(path.join(cwd, ".specs/harness/scripts"), { recursive: true });
+    await fs.mkdir(path.join(cwd, ".specs/seatbelt/scripts"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/skills"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/rules"), { recursive: true });
     await fs.writeFile(
@@ -94,11 +95,78 @@ describe("harness doctor", () => {
     assert.deepEqual(suggestions.map((item) => item.id), ["b", "c"]);
   });
 
+  it("suggests loop-plan when active feature has incomplete tasks", async () => {
+    const cwd = await createTempDir("doctor-loop-plan-");
+    const feature = "001-auth";
+    const featureDir = path.join(cwd, ".specs/features", feature);
+    await fs.mkdir(featureDir, { recursive: true });
+    await fs.writeFile(
+      path.join(cwd, ".specs/STATE.md"),
+      `# State\n\n- **Active feature**: ${feature}\n`,
+    );
+    await fs.writeFile(
+      path.join(featureDir, "tasks.md"),
+      "# Tasks\n\n## T1: login form\n\nDepends on: —\n\n## T2: session API\n\nDepends on: T1\n",
+    );
+
+    const hint = await resolveExecuteHint(cwd, feature);
+    assert.match(hint ?? "", /loop-plan/);
+    assert.match(hint ?? "", /001-auth/);
+  });
+
+  it("suggests validate-state when all tasks are complete", async () => {
+    const cwd = await createTempDir("doctor-validate-state-");
+    const feature = "002-export";
+    const featureDir = path.join(cwd, ".specs/features", feature);
+    await fs.mkdir(featureDir, { recursive: true });
+    await fs.writeFile(
+      path.join(featureDir, "tasks.md"),
+      "# Tasks\n\n## T1: csv endpoint\n\n- [x] complete\n",
+    );
+
+    const hint = await resolveExecuteHint(cwd, feature);
+    assert.match(hint ?? "", /validate-state/);
+  });
+
+  it("doctor prints execute hint in human mode", async () => {
+    const cwd = await createTempDir("doctor-hint-output-");
+    const feature = "001-auth";
+    const featureDir = path.join(cwd, ".specs/features", feature);
+    await fs.mkdir(featureDir, { recursive: true });
+    await fs.mkdir(path.join(cwd, ".specs/features"), { recursive: true });
+    await fs.mkdir(path.join(cwd, ".specs/project"), { recursive: true });
+    await fs.mkdir(path.join(cwd, ".specs/seatbelt/scripts"), { recursive: true });
+    await fs.mkdir(path.join(cwd, ".cursor/skills"), { recursive: true });
+    await fs.mkdir(path.join(cwd, ".cursor/rules"), { recursive: true });
+    await fs.writeFile(
+      path.join(cwd, ".specs/STATE.md"),
+      `# State\n\n- **Active feature**: ${feature}\n`,
+    );
+    await fs.writeFile(path.join(cwd, ".specs/config.yaml"), "schema: spec-driven\n");
+    await fs.writeFile(path.join(cwd, ".cursor/skills/agent-architecture.md"), "# Hub\n");
+    await fs.writeFile(path.join(cwd, ".cursor/rules/engineering-baseline.mdc"), "---\n");
+    await fs.writeFile(
+      path.join(featureDir, "tasks.md"),
+      "# Tasks\n\n## T1: login form\n",
+    );
+
+    const logs = [];
+    const original = console.log;
+    console.log = (...args) => logs.push(args.join(" "));
+    try {
+      await doctor(cwd, { suggest: false });
+      assert.match(logs.join("\n"), /Execute hint:/);
+      assert.match(logs.join("\n"), /loop-plan/);
+    } finally {
+      console.log = original;
+    }
+  });
+
   it("doctor json mode prints structured output", async () => {
     const cwd = await createTempDir("doctor-json-");
     await fs.mkdir(path.join(cwd, ".specs/features"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".specs/project"), { recursive: true });
-    await fs.mkdir(path.join(cwd, ".specs/harness/scripts"), { recursive: true });
+    await fs.mkdir(path.join(cwd, ".specs/seatbelt/scripts"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/skills"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/rules"), { recursive: true });
     await fs.writeFile(path.join(cwd, ".specs/STATE.md"), "# State\n\n- **Active feature**: none\n");

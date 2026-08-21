@@ -1,4 +1,4 @@
-# Project harness config (optional). Copy to .specs/config.yaml and edit.
+# Project seatbelt config (optional). Copy to .specs/config.yaml and edit.
 # Or run: npx @luizsantiago/spec-seatbelt init-config --preset node-ts
 # Injected into phase procedures via phase-context.
 

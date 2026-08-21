@@ -86,7 +86,7 @@ Rules:
 1. **Split** only at real boundaries (see Stop Rule)
 2. **Workers** run in parallel with disjoint file ownership (see engineering-standards)
 3. **Verify** in a **separate context** — never the code author; ask diverse questions (correct? current? tested?)
-4. **Merge** has one owner who resolves conflicts and runs the harness
+4. **Merge** has one owner who resolves conflicts and runs the project harness
 
 Maps to SDD: `/tasks` → `/loop` (workers) → `/verify` (diamond verify node) → `/handoff` (merge + persist).
 
@@ -108,7 +108,7 @@ Full operational contract (worker payload, compact summary template, failure tab
 
 **Verifier** — After the final task, dispatch a fresh verifier regardless of batch count. It is the closing step of Execute, never prompted. See `references/validate.md`.
 
-**Model tier per role** — When the harness allows choosing a model per sub-agent:
+**Model tier per role** — When Spec Seatbelt allows choosing a model per sub-agent:
 
 | Role | Tier |
 | --- | --- |
@@ -117,7 +117,7 @@ Full operational contract (worker payload, compact summary template, failure tab
 | Design phase | High reasoning |
 | Verifier | Mid-to-high — adversarial reasoning, mutant design |
 
-If the harness cannot set a per-agent model, ignore this and invest more care on the heavy steps.
+If Spec Seatbelt cannot set a per-agent model, ignore this and invest more care on the heavy steps.
 
 ## Human Gate
 

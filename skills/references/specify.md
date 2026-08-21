@@ -16,7 +16,7 @@ Capture WHAT to build as testable, traceable requirements. Always required (exce
 - Owner's request, in their own words
 - `.specs/STATE.md` decisions (`AD-NNN`) relevant to this area
 - `.specs/project/CONSTITUTION.md` when present
-- `.specs/LESSONS.md` entries that apply — load them with `python3 .specs/harness/scripts/lessons.py list --status confirmed`
+- `.specs/LESSONS.md` entries that apply — load them with `python3 .specs/seatbelt/scripts/lessons.py list --status confirmed`
 - Existing codebase conventions
 - `context-limits.md` — this feature only; do not load sibling specs
 
@@ -35,7 +35,7 @@ Capture WHAT to build as testable, traceable requirements. Always required (exce
 1. **Act as a thinking partner, not an interviewer.** Challenge vagueness; restate the goal in one sentence and confirm it.
 2. **Surface assumptions before drafting criteria.** State stack/auth/data guesses and ask for corrections; lasting ones go under `## Assumptions` only after that (or after `discuss.md`).
 3. **Mark unknowns explicitly.** Use `[NEEDS CLARIFICATION: specific question]` — never guess. Resolve or remove before owner approval.
-4. **Load confirmed lessons.** Run `python3 .specs/harness/scripts/lessons.py list --status confirmed` and apply every rule that matches this work. Candidates are not guidance.
+4. **Load confirmed lessons.** Run `python3 .specs/seatbelt/scripts/lessons.py list --status confirmed` and apply every rule that matches this work. Candidates are not guidance.
 5. **Detect gray areas.** If the feature touches persistence, external calls, auth, payments, concurrency, or state transitions — or if intent is ambiguous — run `discuss.md` before finalizing.
 6. **Choose spec shape:**
    - **Greenfield** — full spec (`## Requirements`, `## Assumptions`, `## Out of Scope`)
@@ -63,9 +63,9 @@ Capture WHAT to build as testable, traceable requirements. Always required (exce
 ## Gate
 
 ```bash
-python3 .specs/harness/scripts/validate_spec.py .specs/features/[feature]/spec.md
-python3 .specs/harness/scripts/validate_spec.py [feature]
-python3 .specs/harness/scripts/validate_spec.py          # single-feature projects
+python3 .specs/seatbelt/scripts/validate_spec.py .specs/features/[feature]/spec.md
+python3 .specs/seatbelt/scripts/validate_spec.py [feature]
+python3 .specs/seatbelt/scripts/validate_spec.py          # single-feature projects
 ```
 
 Checks required sections (`Requirements`, `Assumptions`, `Out of Scope`), well-formed IDs, a `SHALL`/`MUST` outcome per criterion, and unresolved placeholders. Sections, IDs, criteria, and placeholders are read from visible markdown — fenced samples and HTML comments do not count. A criterion with `SHALL` but no `WHEN`/`IF` … `THEN` trigger is a warning. Non-zero exit means STOP.

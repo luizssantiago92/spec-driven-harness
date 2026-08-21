@@ -2,7 +2,7 @@
 
 **A seatbelt for AI coding agents.**
 
-Agents are great at writing code and terrible at knowing when to stop. This harness gives them a simple loop: agree on the goal, break it into small jobs, prove each job, then let a fresh review ask for proof — not “trust me”.
+Agents are great at writing code and terrible at knowing when to stop. Spec Seatbelt gives them a simple loop: agree on the goal, break it into small jobs, prove each job, then let a fresh review ask for proof — not “trust me”.
 
 It is not another pile of prompts. If the write-up is incomplete or there is no real test evidence, the agent is supposed to **stop and fix it** before saying the feature is done.
 
@@ -34,6 +34,19 @@ npx @luizsantiago/spec-seatbelt lessons list --status confirmed
 
 Plain meaning on [Quick start](Quick-start.md) and [Gates and guarantees](Gates-and-guarantees.md).
 
+## Agent commands
+
+You talk to the agent in **chat**, not the terminal — `/specify`, `/loop`, `/verify`, and more.
+
+| Command | When |
+| --- | --- |
+| `/specify` | Start any real feature |
+| `/tasks` | Job list after spec approval |
+| `/loop` | Implement (`loop-plan` each wave) |
+| `/verify` | Proof after last task |
+
+**Full reference:** [agent-commands.md](agent-commands.md) · [Concepts](concepts.md)
+
 ## Start here
 
 | Page | Read when |
@@ -41,12 +54,14 @@ Plain meaning on [Quick start](Quick-start.md) and [Gates and guarantees](Gates-
 | [How it works](How-it-works.md) | You want the story from goal → done |
 | [Gates and guarantees](Gates-and-guarantees.md) | You want what the brakes catch (and what they don’t) |
 | [Token efficiency](Token-efficiency.md) | You care about chat cost / context |
-| [Quick start](Quick-start.md) | You want ten minutes to first success |
+| [Quick start](Quick-start.md) | First ten minutes |
+| [Agent commands](agent-commands.md) | Full chat command reference |
+| [Concepts](concepts.md) | Spec-driven, loop, graph, tiers |
 | [FAQ](FAQ.md) | You have a concrete question |
 | [Companion: Agentic Fullstack](Companion-agentic-fullstack.md) | You also use frontend / backend / data skills |
 
 ## Links
 
-- [README](https://github.com/luizssantiago92/spec-driven-harness#readme) (technical detail)
+- [README](https://github.com/luizssantiago92/spec-seatbelt#readme) (technical detail)
 - [npm `@luizsantiago/spec-seatbelt`](https://www.npmjs.com/package/@luizsantiago/spec-seatbelt)
-- Gate contract for maintainers: [`prd/gate-stability.md`](https://github.com/luizssantiago92/spec-driven-harness/blob/main/prd/gate-stability.md)
+- Gate contract for maintainers: [`prd/gate-stability.md`](https://github.com/luizssantiago92/spec-seatbelt/blob/main/prd/gate-stability.md)

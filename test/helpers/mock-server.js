@@ -49,15 +49,15 @@ alwaysApply: true
 ---
 # Engineering Baseline (test fixture)
 
-# Harness Skills
+# Seatbelt Skills
 
-<!-- harness-managed:skills-map:start -->
+<!-- seatbelt-managed:skills-map:start -->
 | Skill | Purpose |
 | --- | --- |
 | \`.cursor/skills/agent-architecture.md\` | SDD hub |
 | \`.cursor/skills/appsec.md\` | Application security sister |
 | \`.cursor/skills/qa-strategy.md\` | QA strategy sister |
-<!-- harness-managed:skills-map:end -->
+<!-- seatbelt-managed:skills-map:end -->
 `;
 
 export const SPECIFY_REFERENCE_FIXTURE = `# Specify (test fixture)

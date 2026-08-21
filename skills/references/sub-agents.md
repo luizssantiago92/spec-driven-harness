@@ -99,7 +99,7 @@ The verifier writes `validation.md` and runs `validate_state.py`. A PASS WITH GA
 
 ## Model tier (optional)
 
-When the harness can pick a model per sub-agent:
+When Spec Seatbelt can pick a model per sub-agent:
 
 | Role | Tier |
 | --- | --- |

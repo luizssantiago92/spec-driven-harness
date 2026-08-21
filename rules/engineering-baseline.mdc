@@ -1,5 +1,5 @@
 ---
-description: Engineering baseline and harness map for this repository
+description: Engineering baseline and seatbelt map for this repository
 alwaysApply: true
 ---
 
@@ -19,9 +19,9 @@ All project artifacts are written in English: source code, tests, comments, comm
 
 Chat language is a personal preference. Set it in your own agent settings if you want replies in another language.
 
-# Harness Skills
+# Seatbelt Skills
 
-<!-- harness-managed:skills-map:start -->
+<!-- seatbelt-managed:skills-map:start -->
 | Skill | Purpose |
 | --- | --- |
 | `.cursor/skills/agent-architecture.md` | SDD hub — contract, phases, gates, complexity router |
@@ -34,12 +34,12 @@ Chat language is a personal preference. Set it in your own agent settings if you
 | `.cursor/skills/code-simplify.md` | Simplification sister (load on demand) |
 | `.cursor/skills/ship-ready.md` | Ship-ready sister (load on demand) |
 | `.cursor/skills/git-handoff.md` | Git sync and session handoff |
-<!-- harness-managed:skills-map:end -->
+<!-- seatbelt-managed:skills-map:end -->
 
 # Deterministic Gates
 
-<!-- harness-managed:gates-map:start -->
-Gates live in `.specs/harness/scripts/` (Python 3). **The agent runs them** at phase boundaries — see `agent-architecture.md`.
+<!-- seatbelt-managed:gates-map:start -->
+Gates live in `.specs/seatbelt/scripts/` (Python 3). **The agent runs them** at phase boundaries — see `agent-architecture.md`.
 
 | You run (human) | When |
 | --- | --- |
@@ -53,4 +53,4 @@ Everything else (`validate-spec`, `validate-tasks`, `check-commit`, …) is norm
 Non-zero gate exit = STOP. Without Python, the agent performs the same checks manually.
 
 **Git tiers:** Tier 0 (branch, local commits, `.specs/`) is automatic after you approve spec/tasks. Push, PR, merge, and deploy need owner go-ahead. See `git-handoff.md`.
-<!-- harness-managed:gates-map:end -->
+<!-- seatbelt-managed:gates-map:end -->

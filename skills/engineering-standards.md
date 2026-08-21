@@ -14,7 +14,7 @@ Apply during **Execute** and **Verify** phases, and whenever writing or reviewin
 
 Every project artifact is written in **English**: source code, tests, comments and docstrings, commit messages, PR titles and descriptions, `.specs/` documents, and identifier names.
 
-Chat language is a personal preference, not a harness rule. Set it as a global rule in your agent settings if you want replies in another language.
+Chat language is a personal preference, not a seatbelt rule. Set it as a global rule in your agent settings if you want replies in another language.
 
 ## Secure Coding
 
@@ -67,7 +67,7 @@ test(auth): add session expiry edge case
 Validate the message before committing:
 
 ```bash
-python3 .specs/harness/scripts/check_commit.py --message "feat(auth): add token refresh"
+python3 .specs/seatbelt/scripts/check_commit.py --message "feat(auth): add token refresh"
 ```
 
 Optionally wire it as a git `commit-msg` hook so the rule holds without agent involvement.

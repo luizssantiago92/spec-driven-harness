@@ -8,7 +8,7 @@ import { PACKAGE_VERSION, CLI_NAME } from "./lib/constants.js";
 import { phaseContext } from "./lib/config.js";
 import { doctor } from "./lib/doctor.js";
 import { featureInit } from "./lib/feature.js";
-import { GATE_COMMANDS, AUX_COMMANDS, runGate, runHarnessScript } from "./lib/gates.js";
+import { GATE_COMMANDS, AUX_COMMANDS, runGate, runSeatbeltScript } from "./lib/gates.js";
 import { install } from "./lib/install.js";
 import {
   initProjectConfig,
@@ -43,7 +43,7 @@ Commands:
     [--no-domain]                    Skip domain spec merge
     [--no-state]                     Skip STATE reset
   phase-context <phase>              Print .specs/config.yaml context + rules for a phase
-  doctor [path]                      Audit harness readiness (score + next actions)
+  doctor [path]                      Audit seatbelt readiness (score + next actions)
     [--json]                         Machine-readable output
     [--no-suggest]                   Hide per-check remediation hints
   validate-spec [spec.md|feature]    Closure gate for a feature spec
@@ -315,7 +315,7 @@ if (command === "--version" || command === "-v" || command === "version") {
   }
 } else if (AUX_COMMANDS.includes(command)) {
   try {
-    const code = await runHarnessScript(command, args);
+    const code = await runSeatbeltScript(command, args);
     process.exit(code);
   } catch (err) {
     console.error(`❌ ${err.message}`);
