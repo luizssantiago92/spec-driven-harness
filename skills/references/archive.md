@@ -29,24 +29,19 @@ Fold a verified feature back into long-lived project memory after Verify PASS.
 
 ## Procedure
 
+0. **Load project context (optional)** — `npx @luizsantiago/agentic-harness phase-context archive` when `.specs/config.yaml` exists.
 1. **Confirm PASS** — `validate_state.py [feature]` exit 0.
-2. **Update ROADMAP** — mark feature done with date and link to validation.md.
-3. **Merge domain truth (brownfield):**
-   - Full spec → copy stable requirements to `.specs/domains/[domain]/spec.md`
-   - Delta spec → apply ADDED/MODIFIED/REMOVED sections into the domain spec
-   - Record merge in ROADMAP: `Merged 003-chat-system → domains/chat/spec.md`
-4. **Reset STATE** for the next feature:
-   ```markdown
-   ## Active Feature
-   - Feature: —
-   - Phase: —
-   - Branch: —
+2. **Run archive CLI (Tier 0)** — merges domain truth and updates ROADMAP + STATE:
+   ```bash
+   npx @luizsantiago/agentic-harness archive-feature [feature] [--domain <slug>]
    ```
-5. **Commit** archive updates (Tier 0):
+   Flags: `--no-roadmap`, `--no-domain`, `--no-state` for partial runs; `--skip-verify` for recovery only.
+3. **Review domain diff** — owner approves the merged `.specs/domains/[domain]/spec.md` before Tier 1 push.
+4. **Commit** archive updates (Tier 0):
    ```bash
    git commit -m "docs(spec): archive 003-chat-system"
    ```
-6. **Tier 1 optional** — owner may push branch / open PR separately.
+5. **Tier 1 optional** — owner may push branch / open PR separately.
 
 ## Delta merge rules
 
