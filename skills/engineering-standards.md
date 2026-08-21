@@ -75,8 +75,8 @@ Optionally wire it as a git `commit-msg` hook so the rule holds without agent in
 - One concern per PR when possible.
 - Link to spec requirement IDs (e.g. `REQ-003`) in PR description.
 - Include test evidence (file:line) for each REQ addressed — not just a summary.
-- Never force-push shared branches without coordination.
-- **Blast radius** — `git push`, deploy, and destructive operations require an explicit go-ahead.
+- Never force-push shared branches without coordination (Tier 2).
+- **Git blast radius (tiers)** — Tier 0 local work is authorized by spec/tasks approval. Tier 1 (`push`, PR) and Tier 2 (merge, deploy, force-push) require explicit owner go-ahead. See `git-handoff.md`.
 
 ## Logging & Observability
 

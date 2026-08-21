@@ -25,6 +25,9 @@ import validate_tasks  # noqa: E402
 
 SPEC = """# Spec: Authentication
 
+## Goal
+Let users sign in with email and password.
+
 ## Requirements
 
 ### REQ-001: Email login
@@ -389,6 +392,10 @@ class SpecTasksFamilyTest(unittest.TestCase):
 
     def test_html_comment_requirements_section_does_not_count(self):
         spec = """# Spec
+
+## Goal
+Hidden requirements must not count from HTML comments.
+
 <!--
 ## Requirements
 ### REQ-001: Hidden

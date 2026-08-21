@@ -40,7 +40,11 @@ Break the work into atomic tasks with real dependencies and binary done criteria
 6. **Apply the stop rule.** Only split work that never reads its siblings' results; sequential work stays with one agent.
 7. **Cover every acceptance criterion.** Fill `## Test Coverage Matrix` and `## Gate Check Commands` **before** presenting the list. An unmapped requirement is a missing task. Align each task `Tests` / `Gate` field with those sections.
 8. **Draw the graph** in `task-graph.md` when there are 3+ tasks or any parallel group.
-9. **Run the gate**, then present the breakdown for approval.
+9. **Run analyze, then the tasks gate**, then present the breakdown for approval.
+   ```bash
+   python3 .specs/harness/scripts/analyze_artifacts.py [feature]
+   python3 .specs/harness/scripts/validate_tasks.py [feature]
+   ```
 
 **Authoring vs gate.** `validate_tasks.py` already enforces REQ coverage and `Tests`/`Gate` fields. The matrix and Gate Check Commands sections are an owner/verifier checklist (judgment) until a future form gate — do not skip them when Tasks ran.
 

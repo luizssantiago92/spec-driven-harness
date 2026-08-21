@@ -62,6 +62,42 @@ node_modules/
 
 Follow `engineering-standards.md` — separate commits for code vs docs when possible.
 
+## Git Blast Radius (Tiers)
+
+Structural gates enforce artifact quality. Git tiers enforce **what leaves the machine**.
+
+| Tier | Auto on phase trigger | Owner go-ahead |
+| --- | --- | --- |
+| **0 — Local** | `feature-init`, `git checkout -b feat/NNN-slug`, commits for spec/tasks/code/STATE | — |
+| **1 — Share** | — | `git push`, open/update PR |
+| **2 — External** | — | merge, deploy, force-push, production data |
+
+### Tier 0 triggers (automatic — no ask)
+
+| Phase complete | Git action |
+| --- | --- |
+| `/specify` start | `feature-init "<description>"` → folder + branch + STATE |
+| Spec approved | Commit `spec.md` (+ `context.md` if Discuss ran) |
+| Tasks approved | Commit `tasks.md` (+ `task-graph.md` if created) |
+| Execute (each task) | Atomic code commit per task |
+| Verify PASS | Commit `validation.md` |
+| `/handoff` | Commit `.specs/` snapshot |
+| `/archive` | Commit ROADMAP + domain spec merge |
+
+**Quick tier:** no dedicated branch — commit on current branch.
+
+### Tier 1 — share (explicit once per feature)
+
+Stop after local commits. Owner says "push" / "open PR" before:
+
+```bash
+git push -u origin feat/003-chat-system
+```
+
+### Tier 2 — external (explicit per action)
+
+Merge, deploy, tags, force-push — each needs a separate go-ahead. `ship-ready.md` documents readiness; it never authorizes push.
+
 ## Handoff Workflow (`/handoff`)
 
 Run at session end or phase milestone:
@@ -106,9 +142,9 @@ git status   # review — no secrets, no accidental paths
 git commit -m "docs(spec): update STATE handoff for [feature]"
 ```
 
-### 4. Do NOT auto-push
+### 4. Do NOT auto-push (Tier 1)
 
-Stop after commit. Human or explicit instruction handles `git push`.
+Stop after commit. Owner handles `git push` and PRs (Tier 1).
 
 ## Commit Messages by Phase
 

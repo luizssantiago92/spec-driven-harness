@@ -7,11 +7,22 @@
 
 Install once (`npx @luizsantiago/agentic-harness install`) and the same playbook runs in **Cursor** and **Claude Code**. The agent loads **one step’s guide** at a time instead of dumping the whole manual into every chat — so you spend less context on process and more on the feature.
 
-npm package: [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **0.7.x**. The badge above tracks the published patch.
+npm package: [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **0.8.x**. The badge above tracks the published patch.
 
 For the engineering contract (gates, evidence rules, upgrade tables), keep reading below — or take the plain-language tour on the [project wiki](https://github.com/luizssantiago92/spec-driven-harness/wiki).
 
-### What's in 0.7.x
+### What's in 0.8.x
+
+| Area | What you get |
+| --- | --- |
+| **Feature identity (Tier 0)** | `feature-init` allocates `NNN-slug`, updates `STATE.md`, and `git checkout -b feat/NNN-slug` automatically on `/specify` |
+| **Git blast radius tiers** | Tier 0 local (branch + commits) automatic on phase triggers; Tier 1 push/PR and Tier 2 merge/deploy need owner go-ahead |
+| **Explore + Constitution** | Free `/explore` before Specify; project `CONSTITUTION.md` workflow |
+| **Brownfield delta specs** | `ADDED` / `MODIFIED` / `REMOVED` requirement sections; `[NEEDS CLARIFICATION]` markers |
+| **Cross-artifact analyze** | `analyze_artifacts.py` before task approval; `/converge` and `/archive` for drift and fold-back |
+| **0.7 gate contract preserved** | Evidence-or-zero, discrimination sensor, adversarial CI matrix — see [`prd/gate-stability.md`](prd/gate-stability.md) |
+
+### What's in 0.7.x (baseline)
 
 | Area | What you get |
 | --- | --- |
@@ -20,7 +31,7 @@ For the engineering contract (gates, evidence rules, upgrade tables), keep readi
 | **Authoring (judgment)** | EARS patterns on criteria (shape is a **warning**; missing `SHALL`/`MUST` still **blocks**); Tasks **Test Coverage Matrix** + **Gate Check Commands**; Execute adequacy **A–D** before each commit; standing Definition of Done — not extra Python brakes |
 | **Verify depth** | OWASP checklist always; conditional **AppSec** then **QA** (one at a time); lean interactive UAT on Complex user-facing work — verifier judgment, not `validate_state.py` |
 | **Conditional extras** | `code-simplify` (Medium+ / owner ask); `ship-ready` (owner ship/deploy ask — does not authorize push); at most **one** conditional sister in context |
-| **Install surface** | Cursor + Claude Code; hub + 8 sisters, 11 phase refs, 6 gate scripts; re-run install refreshes kit and keeps `.specs/` memory |
+| **Install surface** | Cursor + Claude Code; hub + 8 sisters, 16 phase refs, 7 gate scripts; re-run install refreshes kit and keeps `.specs/` memory |
 
 **Stability baseline 0.7** freezes that gate contract and ships an adversarial CI matrix. Free-form “find more gate bugs” only becomes a PR when a failing case lands in `test/test_adversarial_gates.py` first.
 
@@ -76,7 +87,7 @@ Re-running refreshes skills, references and gate scripts, and upgrades the harne
 | Artifact | Purpose |
 | --- | --- |
 | `.cursor/skills/agent-architecture.md` | Hub — execution contract, phase map, complexity router |
-| `.cursor/skills/references/*.md` | Per-phase procedures (11 files), including `context-limits.md` |
+| `.cursor/skills/references/*.md` | Per-phase procedures (16 files), including `explore`, `analyze`, `archive` |
 | `.cursor/skills/task-graph-engineering.md` | Task DAG, parallelism, diamond verify, sub-agent batches |
 | `.cursor/skills/engineering-standards.md` | Secure coding, code quality, one writer per file |
 | `.cursor/skills/security-review.md` | OWASP checklist for `/verify` |
@@ -101,8 +112,9 @@ Setting `HARNESS_REPO_URL` overrides the source (a fork, or the test suite) and 
 
 | Stage | Command |
 | --- | --- |
+| Before `/specify` (Medium+) | `feature-init "<description>"` (Tier 0 — folder + branch + STATE) |
 | Before confirming a spec | `validate_spec.py [feature]` |
-| Before approving tasks | `validate_tasks.py [feature]` |
+| Before approving tasks | `analyze_artifacts.py [feature]` then `validate_tasks.py [feature]` |
 | On each commit | `check_commit.py --message "feat: ..."` |
 | Before closing a feature | `validate_state.py [feature]` |
 | After a FAIL verdict | `lessons.py add --source .specs/features/[feature]/validation.md` |
@@ -110,7 +122,9 @@ Setting `HARNESS_REPO_URL` overrides the source (a fork, or the test suite) and 
 Scripts live in `.specs/harness/scripts/`. Pass a feature name, a feature directory, or a path to the artifact. With no argument the gate auto-detects when the project has exactly one feature.
 
 ```bash
+npx @luizsantiago/agentic-harness feature-init "chat with presence"
 npx @luizsantiago/agentic-harness validate-spec auth
+npx @luizsantiago/agentic-harness analyze-artifacts auth
 npx @luizsantiago/agentic-harness check-commit --message "feat(auth): add token refresh"
 npx @luizsantiago/agentic-harness lessons list --status confirmed
 ```
@@ -157,17 +171,22 @@ Gate scripts are committed with `.specs/`, so the team and CI run what the agent
 ## Workflow
 
 ```
-SPECIFY → DISCUSS (conditional) → DESIGN (optional) → TASKS (optional) → EXECUTE (loop) → VERIFY
+EXPLORE (optional) → SPECIFY → DISCUSS (conditional) → DESIGN (optional) → TASKS (optional) → ANALYZE → EXECUTE (loop) → VERIFY → ARCHIVE
 ```
 
 | Phase | Command | Procedure | Cross-cutting skill | Gate |
 | --- | --- | --- | --- | --- |
-| Specify | `/specify` | `references/specify.md` (EARS patterns; `SHALL`/`MUST` gated) | — | `validate_spec.py` |
+| Explore | `/explore` | `references/explore.md` | — | — |
+| Constitution | `/constitution` | `references/constitution.md` | — | — |
+| Specify | `/specify` | `references/specify.md` (feature-init + EARS; delta specs) | — | `validate_spec.py` |
 | Discuss | `/discuss` | `references/discuss.md` | — | — |
 | Design | `/plan` | `references/design.md` | — | — |
 | Tasks | `/tasks` | `references/tasks.md` (coverage matrix + gate commands, authoring) | `task-graph-engineering` | `validate_tasks.py` |
+| Analyze | `/analyze` | `references/analyze.md` | — | `analyze_artifacts.py` |
 | Execute | `/loop` | `references/implement.md` (adequacy A–D before commit) | `engineering-standards` | `check_commit.py` |
 | Verify | `/verify` | `references/validate.md` | `security-review` (+ conditional `appsec` then `qa-strategy`, one at a time) | `validate_state.py` |
+| Archive | `/archive` | `references/archive.md` | `git-handoff` | — |
+| Converge | `/converge` | `references/converge.md` | — | `analyze_artifacts.py` |
 | Handoff | `/handoff` | `references/memory.md` | `git-handoff` | — |
 | Quick | `/quick` | `references/quick-mode.md` | — | `check_commit.py` |
 | Context | — | `references/context-limits.md` | — | — |
@@ -200,7 +219,7 @@ Even when Tasks is skipped, Execute opens by listing the atomic steps. More than
 2. **Gate before done** — the test runner decides, not self-assessment. Adequacy **C** is the task `Gate` command.
 3. **One atomic commit per task** — code, tests, and the task checkbox land together. Adequacy **B** is scope (`Files` vs the index); **D** is no silent spec deviation.
 4. **Author ≠ verifier** — after the last task, `/verify` runs in a clean context. Mandatory, never prompted.
-5. **Blast radius** — approving a spec or tasks authorizes local implementation and commits. `git push`, deploy, and destructive operations require an explicit go-ahead.
+5. **Blast radius (git tiers)** — Tier 0 (feature-init, local branch, commits) runs on phase triggers. Tier 1 (`git push`, PR) and Tier 2 (merge, deploy, force-push) require explicit owner go-ahead.
 
 ## Verification
 
@@ -266,6 +285,7 @@ Run `npx @luizsantiago/agentic-harness install` again. Existing memory and edite
 
 | Coming from | Manual step |
 | --- | --- |
+| A version before `0.8.0` | Re-run install for Explore/Analyze/Archive refs, `feature-init`, delta specs, git tiers, and `analyze_artifacts.py`. Open features: run `feature-init` pattern manually or rename folders to `NNN-slug` |
 | A version before `code-simplify` / `ship-ready` sisters | Re-run install. Both are optional judgment loaders; no artifact migration |
 | A version before AppSec/QA sister skills | Re-run install to receive `appsec.md` and `qa-strategy.md`. Sections in `validation.md` stay optional (judgment); no artifact migration |
 | A version before Specify EARS table / Tasks matrix template / Execute adequacy | Re-run install. Specs still need `SHALL`/`MUST` (gated). Coverage-matrix headings and A–D remain authoring/judgment — no artifact migration |
@@ -294,7 +314,7 @@ spec-driven-harness/
 ├── lib/                            # Installer and Python bridge
 ├── skills/
 │   ├── agent-architecture.md       # Hub
-│   ├── references/                 # 11 phase / load procedures
+│   ├── references/                 # 16 phase / load procedures
 │   ├── task-graph-engineering.md
 │   ├── engineering-standards.md
 │   ├── security-review.md
