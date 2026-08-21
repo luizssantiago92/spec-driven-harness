@@ -1,10 +1,14 @@
 # Default preset — general-purpose projects
 schema: spec-driven
 
+chatprd_org_id: ""
+# Secrets: set CHATPRD_API_KEY in the environment (never store API keys in this file).
+
 context: |
   Tech stack: (fill in)
   Test command: npm test
   Branch prefix: feat
+  ChatPRD (optional): set chatprd_org_id above; authenticate MCP in Cursor; API key via CHATPRD_API_KEY env
 
 rules:
   specify:
