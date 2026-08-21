@@ -1,6 +1,6 @@
 # How it works
 
-Think of the harness as a **seatbelt for an AI coding agent**.
+Think of Spec Seatbelt as a **seatbelt for an AI coding agent**.
 
 Without it, the agent often jumps straight into code, says “done”, and leaves you with half-finished work. With it, the agent has to **write down the goal, break the work into clear steps, prove each step, and only then call it finished**.
 
@@ -11,7 +11,7 @@ Without it, the agent often jumps straight into code, says “done”, and leave
 3. **Build one job at a time** (with a real check that it worked)
 4. **Have a second pass review it** (not the same “mind” that wrote the code)
 
-If any of those steps is incomplete, the harness **stops the agent** until it’s fixed.
+If any of those steps is incomplete, the seatbelt **stops the agent** until it’s fixed.
 
 ## The journey (in plain words)
 
@@ -61,7 +61,7 @@ Tiny or backend-only changes skip those extras. Optional **ship-ready** is only 
 
 ### 6. Archive — “File it away”
 
-After a pass, the feature folds into long-lived project memory. **Push and merge still need your go-ahead** — the harness stops at local commits unless you say otherwise.
+After a pass, the feature folds into long-lived project memory. **Push and merge still need your go-ahead** — the seatbelt stops at local commits unless you say otherwise.
 
 ## What you get day to day
 

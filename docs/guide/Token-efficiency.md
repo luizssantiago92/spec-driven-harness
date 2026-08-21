@@ -12,7 +12,7 @@ That’s the difference between “seatbelt” and “paste every skill into eve
 
 If the agent reloads planning + building + checking + security + QA on every turn, you pay for text you aren’t using. Worse: the model’s attention spreads thin.
 
-The harness fights that with:
+Spec Seatbelt fights that with:
 
 1. **Progressive skill loading** — one phase (or one sister) at a time  
 2. **`.specs/` on disk** — the plan doesn’t need to live only in the prompt  

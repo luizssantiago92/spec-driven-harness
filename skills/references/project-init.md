@@ -4,7 +4,7 @@ Map an existing codebase into `.specs/` project memory before the first `/specif
 
 ## When to Use
 
-- Adopting the harness on a repo that already has code
+- Adopting Spec Seatbelt on a repo that already has code
 - Owner wants domain specs and `PROJECT.md` before feature work
 - Before `/constitution` or the first Medium+ feature on a brownfield repo
 

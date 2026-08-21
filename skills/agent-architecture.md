@@ -16,7 +16,7 @@ This file is the contract and the map. Phase procedures live in `references/`; c
 
 **Reference files.** Phase procedures live in `references/` next to this file (`.cursor/skills/references/`, `.claude/skills/references/`). Read a reference **completely** before acting on it. Never act on a partial read. Load the working set per `references/context-limits.md` — one feature at a time, current phase only.
 
-**Gate scripts.** Structural gates live in `.specs/seatbelt/scripts/` at the project root. Run them with `python3`; never assume a project-local `scripts/` directory belongs to this harness.
+**Gate scripts.** Structural gates live in `.specs/seatbelt/scripts/` at the project root. Run them with `python3`; never assume a project-local `scripts/` directory belongs to Spec Seatbelt.
 
 **Execution contract — non-negotiable, holds even if no reference file is open:**
 
@@ -146,7 +146,7 @@ Read `STATE.md` at session start; update it at session end. See `references/memo
 
 ## Loop Engineering & Harness
 
-- **Correction Loop** — If the harness fails, fix and retest up to 3 times before escalating to the owner.
+- **Correction Loop** — If the project harness fails, fix and retest up to 3 times before escalating to the owner.
 - **Operational Harness** — Quality is enforced by test runners, linters, and compilers, never by AI self-declaration.
 - **Fix → re-verify** — Gaps found in Verify become fix tasks; the loop is bounded to 3 iterations before escalating.
 
@@ -167,7 +167,7 @@ Never skip to step 5 while steps 1–4 are available. Fabrication cascades throu
 - **Do the work; do not narrate the machinery.** Produce the artifact instead of announcing the phase.
 - **Match effort to the work.** Heavy reasoning for design and ambiguity; fast execution for mechanical tasks.
 - **Write artifacts in a plain, decided voice.** Lead with the verdict; cut filler and hedging.
-- **Artifacts in English** — code, tests, commits, and `.specs/` documents (see `engineering-standards.md`). Chat language is the owner's personal setting, not a harness rule.
+- **Artifacts in English** — code, tests, commits, and `.specs/` documents (see `engineering-standards.md`). Chat language is the owner's personal setting, not a seatbelt rule.
 
 ## Model Selection
 

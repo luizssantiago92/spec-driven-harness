@@ -2,7 +2,7 @@
 
 Optional **floor map** for the same agent loop. The Spec Seatbelt stays the seatbelt (spec, tasks, gates, Verify). [`@luizsantiago/agentic-fullstack`](https://www.npmjs.com/package/@luizsantiago/agentic-fullstack) adds **which floor** a task lives on — frontend, backend, data, analytics, data science — and loads **one** Execute manual per turn.
 
-They are **two packages**. Do not merge them. Re-installing this harness does **not** delete Fullstack skills.
+They are **two packages**. Do not merge them. Re-installing Spec Seatbelt does **not** delete Fullstack skills.
 
 ## Install order
 
@@ -14,7 +14,7 @@ In the **product** repo (the company app):
 
 ## Pairing contract (this is the important bit)
 
-This harness prefers **vertical slices**. Fullstack requires **one layer per task `Files`**. Together:
+Spec Seatbelt prefers **vertical slices**. Fullstack requires **one layer per task `Files`**. Together:
 
 | Phrase | Meaning when both are installed |
 | --- | --- |
@@ -28,16 +28,16 @@ Example (login): T1 `apps/web/.../LoginForm.tsx`, T2 `apps/api/.../login.ts`.
 
 ## Layer gate (Fullstack-owned)
 
-This harness CLI does **not** absorb the layer check. After tasks exist:
+Spec Seatbelt CLI does **not** absorb the layer check. After tasks exist:
 
     npx @luizsantiago/agentic-fullstack validate-layers your-feature
 
-Same as `python3 .specs/seatbelt/scripts/validate_layer_routing.py your-feature`. The script sits next to harness gates but is **owned by Fullstack** — harness re-install must not delete it.
+Same as `python3 .specs/seatbelt/scripts/validate_layer_routing.py your-feature`. The script sits next to seatbelt gates but is **owned by Fullstack** — seatbelt re-install must not delete it.
 
 ## Execute and Verify
 
-- Execute: harness `engineering-standards.md` + `references/implement.md` **and one** Fullstack `*-engineering.md` skill.
+- Execute: seatbelt `engineering-standards.md` + `references/implement.md` **and one** Fullstack `*-engineering.md` skill.
 - After commit: drop the layer skill.
-- Verify: **no** Fullstack skills. Use this harness’s Verify stack only.
+- Verify: **no** Fullstack skills. Use Spec Seatbelt’s Verify stack only.
 
 Full playbook: [agentic-fullstack repository](https://github.com/luizssantiago92/agentic-fullstack).

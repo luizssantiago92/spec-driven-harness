@@ -2,7 +2,7 @@
 
 **A seatbelt for AI coding agents.**
 
-Agents are great at writing code and terrible at knowing when to stop. This harness gives them a simple loop: agree on the goal, break it into small jobs, prove each job, then let a fresh review ask for proof — not “trust me”.
+Agents are great at writing code and terrible at knowing when to stop. Spec Seatbelt gives them a simple loop: agree on the goal, break it into small jobs, prove each job, then let a fresh review ask for proof — not “trust me”.
 
 It is not another pile of prompts. If the write-up is incomplete or there is no real test evidence, the agent is supposed to **stop and fix it** before saying the feature is done.
 

@@ -15,7 +15,7 @@ async function createTempDir(prefix) {
   return fs.mkdtemp(path.join(os.tmpdir(), prefix));
 }
 
-describe("harness doctor", () => {
+describe("seatbelt doctor", () => {
   it("scores installed scaffold highly", async () => {
     const cwd = await createTempDir("doctor-good-");
     await fs.mkdir(path.join(cwd, ".specs/features"), { recursive: true });

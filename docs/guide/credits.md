@@ -36,6 +36,6 @@ We did not invent spec-driven phases, loop design, or task-graph topology — we
 
 ## How to cite this package
 
-If you publish work that builds on this harness, please credit the upstream projects above in addition to `@luizsantiago/spec-seatbelt`.
+If you publish work that builds on Spec Seatbelt, please credit the upstream projects above in addition to `@luizsantiago/spec-seatbelt`.
 
 When adding new borrowed patterns, extend this file and the README Credits section in the same PR.

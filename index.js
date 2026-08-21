@@ -43,7 +43,7 @@ Commands:
     [--no-domain]                    Skip domain spec merge
     [--no-state]                     Skip STATE reset
   phase-context <phase>              Print .specs/config.yaml context + rules for a phase
-  doctor [path]                      Audit harness readiness (score + next actions)
+  doctor [path]                      Audit seatbelt readiness (score + next actions)
     [--json]                         Machine-readable output
     [--no-suggest]                   Hide per-check remediation hints
   validate-spec [spec.md|feature]    Closure gate for a feature spec

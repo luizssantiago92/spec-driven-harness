@@ -77,8 +77,8 @@ async function withMockServer(fn, options) {
   }
 }
 
-describe("install harness", () => {
-  it("creates the full harness structure in the target project", async () => {
+describe("install seatbelt", () => {
+  it("creates the full seatbelt structure in the target project", async () => {
     await withMockServer(async (mockServer) => {
       const cwd = await createTempDir("harness-install-");
 
@@ -388,7 +388,7 @@ describe("install harness", () => {
     });
   });
 
-  it("reinstall refreshes a stale Harness Skills table without markers", async () => {
+  it("reinstall refreshes a stale Seatbelt Skills table without markers", async () => {
     await withMockServer(async (mockServer) => {
       const cwd = await createTempDir("harness-baseline-stale-");
 
@@ -403,7 +403,7 @@ describe("install harness", () => {
           baselineRule,
           `# Engineering Baseline
 
-# Harness Skills
+# Seatbelt Skills
 
 | Skill | Purpose |
 | --- | --- |
@@ -429,7 +429,7 @@ keep me
     });
   });
 
-  it("upgrades an outdated .cursorrules harness block on re-run", async () => {
+  it("upgrades an outdated .cursorrules seatbelt block on re-run", async () => {
     await withMockServer(async (mockServer) => {
       const cwd = await createTempDir("harness-cursorrules-upgrade-");
 
@@ -630,7 +630,7 @@ describe("asset source safety", () => {
 });
 
 describe("cursorrules maintenance", () => {
-  it("preserves user formatting when upgrading the harness block", async () => {
+  it("preserves user formatting when upgrading the seatbelt block", async () => {
     const cwd = await createTempDir("harness-cursorrules-format-");
     const rulesPath = path.join(cwd, ".cursorrules");
     const userContent = "# My rules\n\n\n\nSection A\n\n\n\nSection B\n";
@@ -652,12 +652,12 @@ describe("cursorrules maintenance", () => {
 
       assert.ok(
         content.includes("\n\n\n\nSection A"),
-        "user blank lines outside the harness block must survive an upgrade",
+        "user blank lines outside the seatbelt block must survive an upgrade",
       );
       assert.equal(
         (content.match(/SPEC-SEATBELT:BEGIN/g) ?? []).length,
         1,
-        "repeated runs must not duplicate the harness block",
+        "repeated runs must not duplicate the seatbelt block",
       );
       assert.match(content, /seatbelt\/scripts/);
     } finally {

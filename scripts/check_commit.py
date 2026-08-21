@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Conventional Commits gate for harness commits.
+"""Conventional Commits gate for seatbelt commits.
 
 Run before each atomic commit:
 

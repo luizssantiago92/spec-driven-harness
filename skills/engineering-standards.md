@@ -14,7 +14,7 @@ Apply during **Execute** and **Verify** phases, and whenever writing or reviewin
 
 Every project artifact is written in **English**: source code, tests, comments and docstrings, commit messages, PR titles and descriptions, `.specs/` documents, and identifier names.
 
-Chat language is a personal preference, not a harness rule. Set it as a global rule in your agent settings if you want replies in another language.
+Chat language is a personal preference, not a seatbelt rule. Set it as a global rule in your agent settings if you want replies in another language.
 
 ## Secure Coding
 

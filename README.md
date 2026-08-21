@@ -24,7 +24,7 @@ After install, read **`.specs/GETTING_STARTED.md`** in your repo — it explains
 
 **Requirements:** Node.js 18+. Python 3.10+ for automatic gates (without Python the agent still follows the same checklists).
 
-npm: [`@luizsantiago/spec-seatbelt`](https://www.npmjs.com/package/@luizsantiago/spec-seatbelt) **2.1.x**
+npm: [`@luizsantiago/spec-seatbelt`](https://www.npmjs.com/package/@luizsantiago/spec-seatbelt) **2.2.x**
 
 ---
 
@@ -632,7 +632,7 @@ Most users only touch **`install`**, optionally **`project-init`** or **`doctor`
 
 | Command | Purpose |
 | --- | --- |
-| `install [--preset node-ts]` | Copy harness into project |
+| `install [--preset node-ts]` | Copy seatbelt into project |
 | `init-config --preset <name>` | Config only |
 | `preset list` / `preset show` | Inspect presets |
 | `project-init [--dry-run]` | Brownfield scan |
@@ -679,10 +679,11 @@ Re-run `install` to refresh skills; `STATE.md` and your edits are kept.
 npx @luizsantiago/spec-seatbelt install
 ```
 
-**Renamed from `@luizsantiago/agentic-harness`.** Same repository and `.specs/` layout; CLI is now `spec-seatbelt`. Run `install` once after switching packages to refresh skills and references.
+**Renamed from `@luizsantiago/agentic-harness`.** Same layout; CLI is `spec-seatbelt`. Run `install` once after switching — gates move to `.specs/seatbelt/scripts/` (legacy `.specs/harness/scripts/` still works until you reinstall).
 
 | Version | Highlights |
 | --- | --- |
+| **2.2.x** (`spec-seatbelt`) | Internal rename: `.specs/seatbelt/scripts/`, `SPEC-SEATBELT` markers, repo `spec-seatbelt` |
 | **2.1.x** (`spec-seatbelt`) | `loop-plan` — parallel waves + sub-agent orchestration in `/loop` |
 | **2.0.x** (`spec-seatbelt`) | Package rename from `agentic-harness`; CLI is `spec-seatbelt` |
 | **1.0.x** (`spec-seatbelt`) | First rename commit (superseded by 2.0.0 — use 2.0.x) |
