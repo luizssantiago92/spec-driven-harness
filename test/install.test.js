@@ -1038,10 +1038,12 @@ describe("CLI", () => {
     assert.match(stderr, /Usage: agentic-harness/);
   });
 
-  it("lists feature-init and analyze-artifacts in help", async () => {
+  it("lists feature-init, archive-feature, and phase-context in help", async () => {
     const { code, stdout } = await runCli(["--help"]);
     assert.equal(code, 0);
     assert.match(stdout, /feature-init/);
+    assert.match(stdout, /archive-feature/);
+    assert.match(stdout, /phase-context/);
     assert.match(stdout, /analyze-artifacts/);
   });
 });

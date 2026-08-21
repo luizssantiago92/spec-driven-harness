@@ -31,6 +31,7 @@ Capture WHAT to build as testable, traceable requirements. Always required (exce
    npx @luizsantiago/agentic-harness feature-init "owner description here"
    ```
    Creates `.specs/features/003-slug/`, updates `STATE.md`, and `git checkout -b feat/003-slug`. Skip on Quick tier.
+   Optional project context: `npx @luizsantiago/agentic-harness phase-context specify` when `.specs/config.yaml` exists.
 1. **Act as a thinking partner, not an interviewer.** Challenge vagueness; restate the goal in one sentence and confirm it.
 2. **Surface assumptions before drafting criteria.** State stack/auth/data guesses and ask for corrections; lasting ones go under `## Assumptions` only after that (or after `discuss.md`).
 3. **Mark unknowns explicitly.** Use `[NEEDS CLARIFICATION: specific question]` — never guess. Resolve or remove before owner approval.

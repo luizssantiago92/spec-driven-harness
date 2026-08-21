@@ -46,6 +46,8 @@ Structural gates run **before** owner review, so they cannot drift when the mode
 | Before presenting tasks for approval | `python3 .specs/harness/scripts/validate_tasks.py [feature]` |
 | On each commit | `python3 .specs/harness/scripts/check_commit.py --message "<message>"` |
 | Before declaring a feature done | `python3 .specs/harness/scripts/validate_state.py [feature]` |
+| After Verify PASS | `npx @luizsantiago/agentic-harness archive-feature [feature]` (Tier 0) |
+| Before a phase procedure (optional) | `npx @luizsantiago/agentic-harness phase-context <phase>` |
 | After a FAIL verdict | `python3 .specs/harness/scripts/lessons.py add --source .specs/features/[feature]/validation.md` |
 
 Gates accept a feature name, a feature directory, or a path to the artifact. With no argument they auto-detect when the project has exactly one feature; with several they list candidates and exit 2. A spec is rejected unless every criterion uses `SHALL` or `MUST` and `## Assumptions` is present.
@@ -71,7 +73,7 @@ EXPLORE (optional) → SPECIFY → DISCUSS (conditional) → DESIGN (optional) �
 | **Analyze** | Before task approval | `references/analyze.md` | — | `analyze_artifacts.py` |
 | **Execute** | Yes | `references/implement.md` | `engineering-standards.md` | `check_commit.py` |
 | **Verify** | Yes | `references/validate.md` | `security-review.md` | `validate_state.py` |
-| **Archive** | After Verify PASS | `references/archive.md` | `git-handoff.md` | — |
+| **Archive** | After Verify PASS | `references/archive.md` | `git-handoff.md` | `archive-feature` |
 | **Converge** | On drift | `references/converge.md` | — | `analyze_artifacts.py` |
 | **Handoff** | Yes | `references/memory.md` | `git-handoff.md` | — |
 | **Quick** | Alternative | `references/quick-mode.md` | — | `check_commit.py` |

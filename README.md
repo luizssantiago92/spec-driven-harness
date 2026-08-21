@@ -7,9 +7,18 @@
 
 Install once (`npx @luizsantiago/agentic-harness install`) and the same playbook runs in **Cursor** and **Claude Code**. The agent loads **one step’s guide** at a time instead of dumping the whole manual into every chat — so you spend less context on process and more on the feature.
 
-npm package: [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **0.8.x**. The badge above tracks the published patch.
+npm package: [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **0.9.x**. The badge above tracks the published patch.
 
 For the engineering contract (gates, evidence rules, upgrade tables), keep reading below — or take the plain-language tour on the [project wiki](https://github.com/luizssantiago92/spec-driven-harness/wiki).
+
+### What's in 0.9.x
+
+| Area | What you get |
+| --- | --- |
+| **Archive CLI** | `archive-feature` updates `ROADMAP.md`, merges delta/full specs into `.specs/domains/[domain]/spec.md`, resets `STATE.md` (Tier 0) |
+| **Config injection** | `phase-context <phase>` prints project `context` + per-phase `rules` from `.specs/config.yaml` before a procedure |
+| **Delta merge engine** | ADDED / MODIFIED / REMOVED requirement blocks fold into domain truth on archive |
+| **Dev ergonomics** | `npm run harness -- <cmd>` when developing this repo (`node index.js` equivalent) |
 
 ### What's in 0.8.x
 
@@ -117,6 +126,8 @@ Setting `HARNESS_REPO_URL` overrides the source (a fork, or the test suite) and 
 | Before approving tasks | `analyze_artifacts.py [feature]` then `validate_tasks.py [feature]` |
 | On each commit | `check_commit.py --message "feat: ..."` |
 | Before closing a feature | `validate_state.py [feature]` |
+| After Verify PASS | `archive-feature [feature]` (Tier 0 — ROADMAP + domain merge + STATE reset) |
+| Before loading a phase procedure | `phase-context <phase>` (optional — inject `.specs/config.yaml`) |
 | After a FAIL verdict | `lessons.py add --source .specs/features/[feature]/validation.md` |
 
 Scripts live in `.specs/harness/scripts/`. Pass a feature name, a feature directory, or a path to the artifact. With no argument the gate auto-detects when the project has exactly one feature.
@@ -125,6 +136,8 @@ Scripts live in `.specs/harness/scripts/`. Pass a feature name, a feature direct
 npx @luizsantiago/agentic-harness feature-init "chat with presence"
 npx @luizsantiago/agentic-harness validate-spec auth
 npx @luizsantiago/agentic-harness analyze-artifacts auth
+npx @luizsantiago/agentic-harness archive-feature auth --domain chat
+npx @luizsantiago/agentic-harness phase-context specify
 npx @luizsantiago/agentic-harness check-commit --message "feat(auth): add token refresh"
 npx @luizsantiago/agentic-harness lessons list --status confirmed
 ```
@@ -186,7 +199,7 @@ EXPLORE (optional) → SPECIFY → DISCUSS (conditional) → DESIGN (optional) �
 | Analyze | `/analyze` | `references/analyze.md` | — | `analyze_artifacts.py` |
 | Execute | `/loop` | `references/implement.md` (adequacy A–D before commit) | `engineering-standards` | `check_commit.py` |
 | Verify | `/verify` | `references/validate.md` | `security-review` (+ conditional `appsec` then `qa-strategy`, one at a time) | `validate_state.py` |
-| Archive | `/archive` | `references/archive.md` | `git-handoff` | — |
+| Archive | `/archive` | `references/archive.md` | `git-handoff` | `archive-feature` (Tier 0) |
 | Converge | `/converge` | `references/converge.md` | — | `analyze_artifacts.py` |
 | Handoff | `/handoff` | `references/memory.md` | `git-handoff` | — |
 | Quick | `/quick` | `references/quick-mode.md` | — | `check_commit.py` |
