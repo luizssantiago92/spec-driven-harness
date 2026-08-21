@@ -37,9 +37,13 @@ npm install
 npm test
 ```
 
-When developing inside this repository, use the local CLI entrypoint (avoids `npx` name conflicts with the package itself):
+When developing **inside this source repository**, do **not** run `npx @luizsantiago/spec-seatbelt install` — `npx` can resolve to the local package name and fail. Use the local CLI entrypoint instead:
 
 ```bash
-npm run seatbelt -- install
+npm install
+npm run seatbelt -- install   # only when testing the installer itself
 npm run seatbelt -- --help
+npm run seatbelt -- doctor
 ```
+
+Consumers install in **their own** project with `npx @luizsantiago/spec-seatbelt install`.

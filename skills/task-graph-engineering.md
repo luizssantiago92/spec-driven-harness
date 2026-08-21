@@ -35,20 +35,13 @@ Draw the graph in `.specs/features/[feature]/task-graph.md` before `/loop` when 
 ```markdown
 ## Task Graph: [feature]
 
-\`\`\`mermaid
-flowchart LR
-  T1[Task 1: schema] --> T3[Task 3: API]
-  T2[Task 2: types] --> T3
-  T3 --> V[Verify: independent]
-  V --> M[Merge + handoff]
-\`\`\`
-
 | Node | Depends on | Parallel group | Owner |
 | --- | --- | --- | --- |
-| Task 1 | — | A | agent-1 |
-| Task 2 | — | A | agent-2 |
-| Task 3 | 1, 2 | — | agent-1 |
+| Task 1: schema | — | A | agent-1 |
+| Task 2: types | — | A | agent-2 |
+| Task 3: API | 1, 2 | — | agent-1 |
 | Verify | 3 | — | verifier (clean context) |
+| Merge + handoff | Verify | — | merge owner |
 ```
 
 ## The Stop Rule
@@ -75,11 +68,13 @@ Most hand-built task lists contain 2–3 fake edges. Removing them unlocks safe 
 
 The shape serious systems converge to for splittable work:
 
-```
-        ┌─ worker 1 ─┐
-plan ───┼─ worker 2 ─┼─→ verify ─→ merge ─→ result
-        └─ worker 3 ─┘
-```
+| Stage | What runs | Notes |
+| --- | --- | --- |
+| Plan | Single planner | Produces `tasks.md` + `task-graph.md` |
+| Workers | 1–3 parallel agents | Disjoint file ownership only |
+| Verify | Fresh verifier context | Never the code author |
+| Merge | One merge owner | Resolves conflicts, runs harness |
+| Result | Commits + evidence | Handoff to `/archive` when done |
 
 Rules:
 

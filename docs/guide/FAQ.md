@@ -65,15 +65,19 @@ Yes at a high level: ask your agent to **install Spec Seatbelt**, then to **spec
 
 ## Where should I start reading?
 
-1. [Home](Home)  
-2. [Quick start](Quick-start)  
-3. [How it works](How-it-works)  
+1. [Home](Home.md)  
+2. [Quick start](Quick-start.md)  
+3. [How it works](How-it-works.md)  
 
-Then [Gates](Gates-and-guarantees) / [Tokens](Token-efficiency) when you care about guarantees or cost.
+Then [Gates and guarantees](Gates-and-guarantees.md) / [Token efficiency](Token-efficiency.md) when you care about guarantees or cost.
 
 ## How do I use this with frontend or backend skills?
 
-Spec Seatbelt is stack-agnostic. Optional floor maps live in [`@luizsantiago/agentic-fullstack`](https://www.npmjs.com/package/@luizsantiago/agentic-fullstack): one Execute manual per layer, one layer per task. Pairing contract: [Companion: Agentic Fullstack](Companion-agentic-fullstack).
+Spec Seatbelt is stack-agnostic. Optional floor maps live in [`@luizsantiago/agentic-fullstack`](https://www.npmjs.com/package/@luizsantiago/agentic-fullstack): one Execute manual per layer, one layer per task. Pairing contract: [Companion: Agentic Fullstack](Companion-agentic-fullstack.md).
+
+## Something looks wrong after install?
+
+Run `npx @luizsantiago/spec-seatbelt doctor` — it scores the install (skills, gates, config, STATE) and suggests the next CLI step (`loop-plan`, `init-config`, …).
 
 ## Something broken or unclear?
 

@@ -34,7 +34,7 @@ Skipping Design is the default for Simple and Medium tiers.
 2. **Load confirmed lessons** that constrain this design (`lessons.py list --status confirmed`).
 3. **Follow the Knowledge Verification Chain** for anything unfamiliar: codebase → project docs → MCP/Context → web search → flag uncertainty. Never fabricate an API.
 4. **Choose an approach and state it definitively.** Record the alternatives you rejected and why — that is the part future readers need.
-5. **Draw the shape.** A small mermaid diagram of components and data flow beats three paragraphs.
+5. **Draw the shape.** A small component table and a step-by-step data-flow table beat three vague paragraphs.
 6. **Name the risks** and the mitigation for each. A risk without a mitigation is a blocker.
 7. **Link every component back to requirement IDs.** Anything that serves no `REQ` is scope creep.
 8. **Promote project-wide decisions** to `STATE.md` as `AD-NNN` (see `memory.md`).
@@ -55,10 +55,11 @@ Skipping Design is the default for Simple and Medium tiers.
 
 ## Data Flow
 
-\`\`\`mermaid
-flowchart LR
-  Client --> Api --> Service --> Store
-\`\`\`
+| Step | From | To | Payload / notes |
+| ---: | --- | --- | --- |
+| 1 | Client | API | [request] |
+| 2 | API | Service | [validated input] |
+| 3 | Service | Store | [persistence] |
 
 ## Decisions
 

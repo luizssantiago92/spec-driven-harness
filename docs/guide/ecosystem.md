@@ -4,20 +4,12 @@ Where the Spec Seatbelt sits among harness, loop, and graph engineering — and 
 
 ## Layers
 
-```text
-┌─────────────────────────────────────────────────────────────┐
-│  Runtime (sessions, tools, models, desktop)                 │
-│  e.g. DeepCode, harness-foundry                             │
-├─────────────────────────────────────────────────────────────┤
-│  Operational loops (cadence, triage, CI, cost)              │
-│  e.g. loop-engineering                                      │
-├─────────────────────────────────────────────────────────────┤
-│  Spec + gates + memory  ←  @luizsantiago/spec-seatbelt    │
-├─────────────────────────────────────────────────────────────┤
-│  Code context (repo graphs, search)                         │
-│  e.g. RepoGraph                                             │
-└─────────────────────────────────────────────────────────────┘
-```
+| Layer | Examples | Relationship to Spec Seatbelt |
+| --- | --- | --- |
+| **Runtime** (sessions, tools, models, desktop) | DeepCode, harness-foundry | Adjacent — we do not ship a runtime |
+| **Operational loops** (cadence, triage, CI, cost) | loop-engineering | Complementary — see [loop-patterns.md](loop-patterns.md) |
+| **Spec + gates + memory** | **@luizsantiago/spec-seatbelt** | **This package** — skills, `.specs/`, Python gates |
+| **Code context** (repo graphs, search) | RepoGraph | Optional brownfield plugin — not bundled |
 
 ## This package
 
