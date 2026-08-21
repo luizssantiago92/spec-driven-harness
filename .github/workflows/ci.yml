@@ -68,6 +68,8 @@ jobs:
           test -f scripts/validate_spec.py
           test -f scripts/validate_tasks.py
           test -f scripts/validate_state.py
+          test -f scripts/analyze_artifacts.py
+          test -f scripts/loop_plan.py
           test -f scripts/check_commit.py
           test -f scripts/lessons.py
           python3 -m compileall -q scripts
