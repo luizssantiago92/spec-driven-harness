@@ -2,6 +2,10 @@
 
 Version history for `@luizsantiago/spec-seatbelt`. For upgrade steps, see the [README](../README.md#upgrading).
 
+## Unreleased
+
+- Companion guide: [Full Stack Floor Map Desks v3 (planned 0.5.0)](guide/Companion-fullstack-floor-map.md) — Lane vs Desk vs Seatbelt ownership, harmony loop, non-destructive `.specs/desks/` coexistence; hub pointer in `agent-architecture.md`
+
 ## 2.2.x — Internal seatbelt branding
 
 - Gate scripts path: `.specs/seatbelt/scripts/` (legacy `.specs/harness/scripts/` still resolved on 2.x)

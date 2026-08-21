@@ -9,7 +9,7 @@ Where the Spec Seatbelt sits among harness, loop, and graph engineering — and 
 | **Runtime** (sessions, tools, models, desktop) | DeepCode, harness-foundry | Adjacent — we do not ship a runtime |
 | **Operational loops** (cadence, triage, CI, cost) | loop-engineering | Complementary — see [loop-patterns.md](loop-patterns.md) |
 | **Spec + gates + memory** | **@luizsantiago/spec-seatbelt** | **This package** — skills, `.specs/`, Python gates |
-| **Floor map** (layer Execute manuals + specialists) | [@luizsantiago/fullstack-floor-map](https://www.npmjs.com/package/@luizsantiago/fullstack-floor-map) | Optional companion — see [Companion-fullstack-floor-map.md](Companion-fullstack-floor-map.md) |
+| **Floor map** (Lane Execute manuals + specialists; **Desks** planned 0.5.0) | [@luizsantiago/fullstack-floor-map](https://www.npmjs.com/package/@luizsantiago/fullstack-floor-map) | Optional companion — see [Companion-fullstack-floor-map.md](Companion-fullstack-floor-map.md) |
 | **Code context** (repo graphs, search) | RepoGraph | Optional brownfield plugin — not bundled |
 
 ## This package
@@ -33,7 +33,7 @@ Where the Spec Seatbelt sits among harness, loop, and graph engineering — and 
 | [awesome-harness-engineering](https://github.com/ai-boost/awesome-harness-engineering) | Curated index | Taxonomy reference |
 | [DeepCode](https://github.com/HKUDS/DeepCode) | Full agent runtime | Adjacent product |
 | [RepoGraph](https://github.com/ozyyshr/RepoGraph) | Repo-level code graph | Optional brownfield context (not bundled) |
-| [fullstack-floor-map](https://github.com/luizssantiago92/fullstack-floor-map) | Floors + specialist catalog | Optional companion — one Floor per task |
+| [fullstack-floor-map](https://github.com/luizssantiago92/fullstack-floor-map) | Lanes + specialist catalog (+ Desks planned 0.5.0) | Optional companion — one Lane per task |
 
 ## What we are not building
 
