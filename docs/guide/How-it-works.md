@@ -35,7 +35,7 @@ If something is unclear or the design is big, you pause and decide. Small fixes 
 
 The work becomes a list of small, checkable jobs: which files change, how we’ll know it’s done, what depends on what. A short coverage table maps each goal to a job and a test so nothing important is left without an owner.
 
-Keep the **feature** as one user path. If you also installed Full Stack Floor Map, each job’s file list stays on one Floor (UI vs API) — details on [Companion: Full Stack Floor Map](Companion-fullstack-floor-map.md).
+Keep the **feature** as one user path. If you also installed Full Stack Floor Map, each job’s file list stays on one **Lane** (path layer; UI vs API) — details on [Companion: Full Stack Floor Map](Companion-fullstack-floor-map.md).
 
 Two agents won’t edit the same file at the same time unless the list says they should wait for each other.
 
