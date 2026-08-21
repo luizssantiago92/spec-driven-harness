@@ -34,18 +34,18 @@ npx @luizsantiago/spec-seatbelt lessons list --status confirmed
 
 Plain meaning on [Quick start](Quick-start.md) and [Gates and guarantees](Gates-and-guarantees.md).
 
-## Agent commands (chat — not the terminal)
+## Agent commands
 
-You do **not** memorize CLI commands. You talk to the agent in **Cursor or Claude Code** using phase commands like `/specify`, `/loop`, and `/verify`. The agent loads the right guide and runs gates for you.
+You talk to the agent in **chat**, not the terminal — `/specify`, `/loop`, `/verify`, and more.
 
 | Command | When |
 | --- | --- |
-| `/specify` | Start any real feature — written goal first |
-| `/tasks` | Break work into small jobs after spec approval |
-| `/loop` | Implement — agent runs `loop-plan` for the next wave |
-| `/verify` | Fresh-context proof after the last task |
+| `/specify` | Start any real feature |
+| `/tasks` | Job list after spec approval |
+| `/loop` | Implement (`loop-plan` each wave) |
+| `/verify` | Proof after last task |
 
-Full table and examples: [Quick start → Agent commands](Quick-start.md#agent-commands-chat--not-the-terminal).
+**Full reference:** [agent-commands.md](agent-commands.md) · [Concepts](concepts.md)
 
 ## Start here
 
@@ -54,7 +54,9 @@ Full table and examples: [Quick start → Agent commands](Quick-start.md#agent-c
 | [How it works](How-it-works.md) | You want the story from goal → done |
 | [Gates and guarantees](Gates-and-guarantees.md) | You want what the brakes catch (and what they don’t) |
 | [Token efficiency](Token-efficiency.md) | You care about chat cost / context |
-| [Quick start](Quick-start.md) | You want ten minutes to first success (includes agent commands) |
+| [Quick start](Quick-start.md) | First ten minutes |
+| [Agent commands](agent-commands.md) | Full chat command reference |
+| [Concepts](concepts.md) | Spec-driven, loop, graph, tiers |
 | [FAQ](FAQ.md) | You have a concrete question |
 | [Companion: Agentic Fullstack](Companion-agentic-fullstack.md) | You also use frontend / backend / data skills |
 

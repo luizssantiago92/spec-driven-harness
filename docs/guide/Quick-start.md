@@ -18,34 +18,7 @@ Open Cursor or Claude and say something concrete, for example:
 
 Ask it to follow the installed seatbelt (the Spec-Driven / hub skill).
 
-## Agent commands (chat — not the terminal)
-
-> Type these in **Cursor or Claude Code** — not in your shell.
-> They load phase procedures from `.cursor/skills/references/`.
-> The agent runs gates and CLI helpers (`validate-spec`, `loop-plan`, …) for you.
-
-| Command | What it's for | When to use | How (chat) |
-| --- | --- | --- | --- |
-| `/quick` | Tiny fix without full spec | ≤3 files, no new deps | `/quick` + one-line fix |
-| `/explore` | Research before committing | Idea unclear; no prod code | `/explore` + question |
-| `/specify` | Written requirements | **Start here** for real features | `/specify` + goal + out of scope |
-| `/discuss` | Gray product decisions | Auth, payments, ambiguity | `/discuss` + questions |
-| `/plan` | Technical design | Complex — APIs, architecture | `/plan` + design scope |
-| `/tasks` | Atomic job list | After approved spec | `/tasks` + “break into tasks” |
-| `/task-graph` | Parallel work DAG | 3+ tasks or parallel work | `/task-graph` + “mark groups” |
-| `/analyze` | Spec ↔ tasks check | Before approving tasks | `/analyze` + “check consistency” |
-| `/loop` | Implement code | After approved tasks | `/loop` + “loop-plan, next wave” |
-| `/verify` | Independent proof | **Always** after last task (fresh context) | `/verify` + “you did not write this code” |
-| `/archive` | Domain memory | After Verify PASS | `/archive` + domain |
-| `/converge` | Recover from drift | Spec/tasks ≠ code | `/converge` + what changed |
-| `/handoff` | Session snapshot | End of chat | `/handoff` + next step |
-| `/project-init` | Brownfield map | Once, existing repo | `/project-init` + “scan repo” |
-| `/constitution` | Project principles | Once, greenfield | `/constitution` + principles |
-| `/lessons` | Learn from failures | After Verify FAIL | `/lessons` + what failed |
-
-**Typical order:** `/specify` → `/tasks` → `/analyze` → `/loop` → `/verify` → `/archive`
-
-Full detail with examples: [README → Agent commands](https://github.com/luizssantiago92/spec-seatbelt#agent-commands-chat--not-the-terminal).
+**Agent commands** (`/specify`, `/loop`, `/verify`, …) are chat phrases — not shell commands. Summary table: [Agent commands](agent-commands.md).
 
 ## 3. Watch for the written goal
 
