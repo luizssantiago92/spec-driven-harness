@@ -24,7 +24,7 @@ After install, read **`.specs/GETTING_STARTED.md`** in your repo — it explains
 
 **Requirements:** Node.js 18+. Python 3.10+ for automatic gates (without Python the agent still follows the same checklists).
 
-npm: [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **1.2.x**
+npm: [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **1.3.x**
 
 ---
 
