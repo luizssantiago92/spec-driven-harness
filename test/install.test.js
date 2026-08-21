@@ -731,6 +731,7 @@ describe("packaged assets", () => {
       "skills/",
       "rules/",
       "scripts/*.py",
+      "templates/",
       "LICENSE",
     ]) {
       assert.ok(pkg.files.includes(entry), `package.json files missing ${entry}`);
@@ -1038,12 +1039,14 @@ describe("CLI", () => {
     assert.match(stderr, /Usage: agentic-harness/);
   });
 
-  it("lists feature-init, archive-feature, and phase-context in help", async () => {
+  it("lists preset, init-config, archive-feature, and phase-context in help", async () => {
     const { code, stdout } = await runCli(["--help"]);
     assert.equal(code, 0);
     assert.match(stdout, /feature-init/);
     assert.match(stdout, /archive-feature/);
     assert.match(stdout, /phase-context/);
+    assert.match(stdout, /init-config/);
+    assert.match(stdout, /preset list/);
     assert.match(stdout, /analyze-artifacts/);
   });
 });

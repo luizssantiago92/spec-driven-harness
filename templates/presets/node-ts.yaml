@@ -1,0 +1,22 @@
+# Node.js + TypeScript preset
+schema: spec-driven
+
+branch_prefix: feat
+
+context: |
+  Stack: Node.js 18+, TypeScript
+  Test command: npm test
+  Lint: npm run lint
+  Branch prefix: feat
+
+rules:
+  specify:
+    - Prefer EARS acceptance criteria
+    - Mark unknowns with [NEEDS CLARIFICATION: question]
+  tasks:
+    - Every REQ must appear in the Test Coverage Matrix
+    - Gate Check Commands must include npm test
+  implement:
+    - Run npm test before each commit
+  verify:
+    - Evidence must cite test file:line paths under test/ or src/

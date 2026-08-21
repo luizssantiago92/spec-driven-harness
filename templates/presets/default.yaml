@@ -1,0 +1,16 @@
+# Default preset — general-purpose projects
+schema: spec-driven
+
+context: |
+  Tech stack: (fill in)
+  Test command: npm test
+  Branch prefix: feat
+
+rules:
+  specify:
+    - Prefer EARS acceptance criteria
+    - Mark unknowns with [NEEDS CLARIFICATION: question]
+  tasks:
+    - Every REQ must appear in the Test Coverage Matrix
+  verify:
+    - Evidence must cite test file:line paths
