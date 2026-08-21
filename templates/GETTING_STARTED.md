@@ -28,7 +28,7 @@ You installed the **Spec Seatbelt**. You do **not** need to memorize CLI command
 | `/tasks` | Job list with tests and “done when” |
 | `/task-graph` | Parallel work DAG (3+ tasks) |
 | `/analyze` | Spec ↔ tasks check before approval |
-| `/loop` | Implement **one task at a time** |
+| `/loop` | Implement — **parallel waves + sub-agents** when `loop-plan` says so |
 | `/verify` | Independent proof (fresh context) |
 | `/archive` | Fold PASS feature into domain memory |
 | `/converge` | Recover when spec and code drifted |

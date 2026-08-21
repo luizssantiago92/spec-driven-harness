@@ -1,6 +1,6 @@
-# Implement
+# Implement (Execute / Loop)
 
-Execute one task at a time: test first, gate, commit, repeat. Always required.
+Orchestrate tasks from `tasks.md` and `task-graph.md`: **parallel waves with sub-agents** when files are disjoint, otherwise **one task at a time** inline. Always required after Specify (and Tasks, when it ran).
 
 ## When to Use
 
@@ -25,8 +25,24 @@ Execute one task at a time: test first, gate, commit, repeat. Always required.
 2. **Discover this repo’s test command** from `package.json`, `Makefile`, CI, or README — prefer the focused command the task `Gate` names. Do not assume `npm test` if the project uses another runner.
 3. Run `python3 .specs/harness/scripts/validate_tasks.py` when a formal `tasks.md` exists.
 4. If Tasks was skipped, list the atomic steps inline now. More than 5 steps or real dependencies means the Tasks phase was skipped in error — stop and create `tasks.md`.
-5. If the breakdown exceeds roughly 8 tasks, offer sub-agent delegation per `task-graph-engineering.md` and the operational contract in `sub-agents.md`. Offer and wait; never auto-spawn.
-6. Confirm you are the only writer for each file this task names. Two parallel tasks never share a file in the same round.
+5. **Plan the wave** — run `python3 .specs/harness/scripts/loop_plan.py [feature]` (or `loop-plan --json`) at the start of Execute and after every batch completes. It lists the next runnable tasks and marks **parallel groups** (disjoint `Files`) vs inline work.
+6. When `loop-plan` shows a **parallel group** (2+ tasks), offer sub-agent dispatch per `task-graph-engineering.md` and `sub-agents.md`. Offer and wait; never auto-spawn. Large features (roughly 8+ tasks total) also warrant batching across waves.
+7. Confirm you are the only writer for each file this task names. Two parallel tasks never share a file in the same round.
+
+## Orchestration (each /loop round)
+
+```
+loop-plan → dispatch (parallel sub-agents | inline) → merge → loop-plan → … → /verify
+```
+
+1. **loop-plan** — Read the next wave: which tasks have satisfied dependencies and disjoint file ownership.
+2. **Dispatch**
+   - **Parallel group (2+ tasks):** one sub-agent per task with the worker brief in `sub-agents.md`. Cap at 3 workers + 1 verifier (see `task-graph-engineering.md`).
+   - **Single task:** run the per-task cycle below inline (or as sole worker).
+3. **Merge** — After a parallel round, confirm every task is `[x]`, commits exist, and the project harness passes once on the integrated tree.
+4. **Repeat** — Run `loop-plan` again until all tasks are complete, then close Execute.
+
+Do not start the next wave until the current wave is fully committed. Parallelism is **inside** a wave only when `Files` do not overlap.
 
 ## Per-Task Cycle
 

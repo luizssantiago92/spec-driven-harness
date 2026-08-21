@@ -203,7 +203,7 @@ Project rules: `.cursor/rules/engineering-baseline.mdc` (always applied in Curso
 | `/tasks` | `references/tasks.md` | Atomic breakdown; coverage matrix (authoring) |
 | `/analyze` | `references/analyze.md` | Cross-artifact consistency before task approval |
 | `/task-graph` | `task-graph-engineering.md` | Draw or revise the job DAG |
-| `/loop` | `references/implement.md` | Autonomous loop; adequacy A–D before each commit |
+| `/loop` | `references/implement.md` | Orchestrate Execute — `loop-plan`, parallel sub-agents, adequacy A–D |
 | `/verify` | `references/validate.md` | Independent validation; lean UAT; conditional AppSec/QA |
 | `/converge` | `references/converge.md` | Reassess drift; append remaining tasks |
 | `/archive` | `references/archive.md` | Fold verified feature into domain truth |
