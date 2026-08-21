@@ -19,14 +19,12 @@ Everything lives under `.specs/` in your repo so the next chat session can conti
 
 The **seatbelt** is the process kit: hub skill, phase references, sister skills, and Python **gates** that stop the agent when paperwork or evidence is incomplete.
 
-```mermaid
-flowchart LR
-  A[You describe a feature] --> B[Agent loads one phase guide]
-  B --> C{Gate passes?}
-  C -->|No| D[Fix artifact — stop]
-  C -->|Yes| E[Next phase or your approval]
-  E --> B
-```
+| Step | What happens |
+| --- | --- |
+| 1 | You describe the feature |
+| 2 | Agent opens **one** phase guide (not the whole library) |
+| 3 | Gate runs — **fail** → stop, fix artifact, re-run |
+| 4 | Gate passes → your approval → next phase |
 
 Without the seatbelt, agents often jump to code and say “done”. With it, **incomplete specs, empty stubs, and missing test evidence fail automatic checks** before you waste time reviewing fake progress.
 
@@ -34,16 +32,12 @@ Without the seatbelt, agents often jump to code and say “done”. With it, **i
 
 **Loop** here means the **Execute** phase: implement in **waves**, not one giant dump.
 
-```mermaid
-flowchart TD
-  LP[loop-plan] --> W{Next wave}
-  W -->|1 task| T[Test → implement → gate → commit]
-  W -->|2+ parallel tasks| P[Sub-agents on disjoint files]
-  T --> LP
-  P --> M[Merge + project harness]
-  M --> LP
-  LP -->|All tasks done| V[/verify]
-```
+| Step | What happens |
+| --- | --- |
+| 1 | `loop-plan` reads `tasks.md` → next wave |
+| 2a | **One task** → test → implement → gate → commit |
+| 2b | **Parallel group** (disjoint files) → sub-agents → merge |
+| 3 | Repeat until all tasks done → `/verify` |
 
 - **`loop-plan`** reads `tasks.md` and returns the next runnable tasks (respecting dependencies and file ownership).
 - **Parallel groups** run only when tasks touch **disjoint files** — see [task graph](#graph-engineering).
@@ -55,12 +49,11 @@ Operational loops (CI triage, dependency sweeps) are a different idea — see [l
 
 When a feature has **3+ tasks** or parallel work, the agent draws a **task graph** (`task-graph.md`): which jobs can run at the same time and which must wait.
 
-```mermaid
-flowchart LR
-  T1[T1 UI] --> T3[T3 integration]
-  T2[T2 API] --> T3
-  T1 -. parallel .- T2
-```
+| Task | Files | Can run with |
+| --- | --- | --- |
+| T1 · UI | `LoginForm.tsx` | T2 (different files) |
+| T2 · API | `login.ts` | T1 (different files) |
+| T3 · integration | UI + API wiring | **After** T1 and T2 complete |
 
 Rules (from `task-graph-engineering.md`):
 
@@ -80,24 +73,14 @@ Yes — **“How work flows”** is exactly this: the hub **Complexity Router** 
 | **Complex** | New APIs, architecture, infra | + `/discuss`, `/plan`, optional AppSec/QA on verify |
 | **Parallel** | Splittable work, multiple agents | Above + `/task-graph` |
 
-```mermaid
-flowchart TD
-  Start[New work] --> Q{Quick rules?}
-  Q -->|Yes| Quick[/quick/]
-  Q -->|No| S[Specify always]
-  S --> D{Gray areas?}
-  D -->|Yes| Discuss[/discuss/]
-  D -->|No| P{Architecture?}
-  P -->|Yes| Plan[/plan/]
-  P -->|No| M{More than 3 steps?}
-  M -->|Yes| Tasks[/tasks/ + task-graph?/]
-  M -->|No| Loop[/loop/]
-  Tasks --> Loop
-  Discuss --> P
-  Plan --> Tasks
-  Loop --> Verify[/verify/]
-  Verify --> Archive[/archive/]
-```
+| If… | Then… |
+| --- | --- |
+| Fits Quick rules (≤3 files, no new deps) | `/quick` |
+| Otherwise | `/specify` (always) |
+| Gray product areas | + `/discuss` |
+| Architecture decisions | + `/plan` |
+| More than ~3 steps | + `/tasks` (+ `/task-graph` if parallel) |
+| Tasks approved | `/loop` → `/verify` → `/archive` |
 
 **Specify** and **Verify** are always required on the full pipeline (Quick is the express exception). The agent may skip Discuss, Plan, or Tasks when the scope is small — but if Execute reveals more than ~5 steps, it must go back and formalize `tasks.md`.
 
@@ -109,6 +92,7 @@ flowchart TD
 | **Seatbelt** | Skills + gates that enforce the process |
 | **Loop** | *How* to implement in waves (`loop-plan`, sub-agents) |
 | **Graph** | *When* tasks can run in parallel safely |
+| **Memory** | `.specs/` — specs, STATE, domains persist across sessions |
 
 ## Related
 

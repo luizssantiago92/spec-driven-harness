@@ -39,13 +39,11 @@ Where the Spec Seatbelt sits among harness, loop, and graph engineering — and 
 | [loop-engineering](https://github.com/cobusgreyling/loop-engineering) | Operational loops | Complementary patterns |
 | [awesome-harness-engineering](https://github.com/ai-boost/awesome-harness-engineering) | Curated index | Taxonomy reference |
 | [DeepCode](https://github.com/HKUDS/DeepCode) | Full agent runtime | Adjacent product |
-| [harness/harness-skills](https://github.com/harness/harness-skills) | Harness.io CI/CD skills | **Different product** (name collision only) |
 | [RepoGraph](https://github.com/ozyyshr/RepoGraph) | Repo-level code graph | Optional brownfield context (not bundled) |
 
 ## What we are not building
 
 - A desktop agent or session runtime (see DeepCode, Cursor, Claude Code)
-- Harness.io pipeline generator (see harness-skills + MCP)
 - Full knowledge-graph pipeline (see graph-engineering KG half)
 - SWE-bench research integration (see RepoGraph)
 

@@ -25,7 +25,6 @@ We did not invent spec-driven phases, loop design, or task-graph topology — we
 | --- | --- |
 | [DeepCode](https://github.com/HKUDS/DeepCode) | Reference for agent harness + loop runtime (separate product) |
 | [RepoGraph](https://github.com/ozyyshr/RepoGraph) | Repo-level code graph; deferred as brownfield plugin |
-| [harness/harness-skills](https://github.com/harness/harness-skills) | **Harness.io** CI/CD skills — unrelated product, similar name |
 | Google DeepMind × MIT — [Scaling Agent Systems](https://research.google/blog/towards-a-science-of-scaling-agent-systems-when-and-why-agent-systems-work/) | Cited in graph-engineering for stop-rule research |
 
 ## Course material
