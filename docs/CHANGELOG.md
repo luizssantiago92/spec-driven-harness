@@ -9,6 +9,7 @@ Version history for `@luizsantiago/spec-seatbelt`. For upgrade steps, see the [R
 - Config API renamed: `parseSeatbeltConfig`, `mergeSeatbeltConfigs`, …
 - `doctor`: **Seatbelt Ready** score + Execute hint (`loop-plan` / `validate-state`)
 - Docs: agent commands, skills/hub, gates reference moved out of README
+- Companion guide renamed to [Full Stack Floor Map](guide/Companion-fullstack-floor-map.md) (`@luizsantiago/fullstack-floor-map`; was Agentic Fullstack)
 
 ## 2.1.x — Parallel Execute
 

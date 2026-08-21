@@ -60,7 +60,7 @@ You talk to the agent in **chat**, not the terminal — `/specify`, `/loop`, `/v
 | [Agent commands](agent-commands.md) | Full chat command reference |
 | [Concepts](concepts.md) | Spec-driven, loop, graph, tiers |
 | [FAQ](FAQ.md) | You have a concrete question |
-| [Companion: Agentic Fullstack](Companion-agentic-fullstack.md) | You also use frontend / backend / data skills |
+| [Companion: Full Stack Floor Map](Companion-fullstack-floor-map.md) | You also use frontend / backend / data skills |
 
 ## Links
 

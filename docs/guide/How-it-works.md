@@ -35,7 +35,7 @@ If something is unclear or the design is big, you pause and decide. Small fixes 
 
 The work becomes a list of small, checkable jobs: which files change, how we’ll know it’s done, what depends on what. A short coverage table maps each goal to a job and a test so nothing important is left without an owner.
 
-Keep the **feature** as one user path. If you also installed Agentic Fullstack, each job’s file list stays on one floor (UI vs API) — details on [Companion: Agentic Fullstack](Companion-agentic-fullstack.md).
+Keep the **feature** as one user path. If you also installed Full Stack Floor Map, each job’s file list stays on one Floor (UI vs API) — details on [Companion: Full Stack Floor Map](Companion-fullstack-floor-map.md).
 
 Two agents won’t edit the same file at the same time unless the list says they should wait for each other.
 
@@ -80,5 +80,5 @@ It **does** stop the agent from skipping the boring-but-important paperwork that
 - New here? → [Quick start](Quick-start.md)  
 - Want the “stop rules”? → [Gates and guarantees](Gates-and-guarantees.md)  
 - Care about cost? → [Token efficiency](Token-efficiency.md)  
-- Also using frontend/backend skills? → [Companion: Agentic Fullstack](Companion-agentic-fullstack.md)  
+- Also using frontend/backend skills? → [Companion: Full Stack Floor Map](Companion-fullstack-floor-map.md)  
 - Back → [Home](Home.md)
