@@ -123,6 +123,7 @@ describe("install harness", () => {
         const stateFile = path.join(cwd, ".specs/STATE.md");
         const lessonsFile = path.join(cwd, ".specs/LESSONS.md");
         const featuresDir = path.join(cwd, ".specs/features");
+        const gettingStarted = path.join(cwd, ".specs/GETTING_STARTED.md");
         const cursorRules = path.join(cwd, ".cursorrules");
 
         assert.equal(await pathExists(cursorSkill), true);
@@ -137,6 +138,8 @@ describe("install harness", () => {
         assert.equal(await pathExists(claudeSkill), true);
         assert.equal(await pathExists(baselineRule), true);
         assert.equal(await pathExists(featuresDir), true);
+        assert.equal(await pathExists(gettingStarted), true);
+        assert.match(await fs.readFile(gettingStarted, "utf8"), /do \*\*not\*\* need to memorize CLI/);
         assert.equal(await pathExists(cursorRules), true);
 
         assert.equal(await fs.readFile(cursorSkill, "utf8"), SKILL_FIXTURE);
@@ -183,8 +186,8 @@ describe("install harness", () => {
         assert.match(rulesContent, /task-graph-engineering\.md/);
         assert.match(rulesContent, /engineering-baseline\.mdc/);
         assert.match(rulesContent, /references\//);
-        assert.match(rulesContent, /validate_spec\.py/);
-        assert.match(rulesContent, /analyze_artifacts\.py/);
+        assert.match(rulesContent, /harness\/scripts/);
+        assert.match(rulesContent, /GETTING_STARTED\.md/);
         assert.doesNotMatch(rulesContent, /pt-BR/);
       } finally {
         await fs.rm(cwd, { recursive: true, force: true });
@@ -334,7 +337,7 @@ describe("install harness", () => {
       assert.match(baseline, /# Custom rules/);
       assert.match(baseline, /harness-managed:skills-map:start/);
       assert.match(baseline, /appsec\.md/);
-      assert.match(baseline, /analyze_artifacts\.py/);
+      assert.match(baseline, /GETTING_STARTED\.md/);
 
       const hub = await fs.readFile(
         path.join(cwd, ".cursor/skills/agent-architecture.md"),
@@ -456,7 +459,7 @@ keep me
         assert.match(rulesContent, /git-handoff\.md/);
         assert.match(rulesContent, /task-graph-engineering\.md/);
         assert.match(rulesContent, /engineering-baseline\.mdc/);
-        assert.match(rulesContent, /validate_state\.py/);
+        assert.match(rulesContent, /GETTING_STARTED\.md/);
         assert.doesNotMatch(rulesContent, /# Old block/);
       } finally {
         await fs.rm(cwd, { recursive: true, force: true });
@@ -654,7 +657,7 @@ describe("cursorrules maintenance", () => {
         1,
         "repeated runs must not duplicate the harness block",
       );
-      assert.match(content, /validate_spec\.py/);
+      assert.match(content, /harness\/scripts/);
     } finally {
       await fs.rm(cwd, { recursive: true, force: true });
     }
@@ -977,7 +980,7 @@ describe("shipped baseline", () => {
         path.join(cwd, ".cursor/rules/engineering-baseline.mdc"),
         "utf8",
       );
-      assert.match(baseline, /analyze_artifacts\.py/);
+      assert.match(baseline, /GETTING_STARTED\.md/);
       assert.match(baseline, /feature-init/);
       assert.match(baseline, /explore/);
 
