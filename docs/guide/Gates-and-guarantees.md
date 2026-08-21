@@ -36,9 +36,9 @@ If those aren’t there, **done** doesn’t stick.
 Same checks the agent should run — from your shell after install:
 
 ```bash
-npx @luizsantiago/agentic-harness validate-spec auth
-npx @luizsantiago/agentic-harness check-commit --message "feat(auth): add token refresh"
-npx @luizsantiago/agentic-harness lessons list --status confirmed
+npx @luizsantiago/spec-seatbelt validate-spec auth
+npx @luizsantiago/spec-seatbelt check-commit --message "feat(auth): add token refresh"
+npx @luizsantiago/spec-seatbelt lessons list --status confirmed
 ```
 
 | Command | Catches |

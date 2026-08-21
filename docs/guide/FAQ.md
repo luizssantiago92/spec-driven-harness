@@ -53,7 +53,7 @@ No. It checks **structure and evidence**. Humans (and sisters) still review qual
 
 | Command | In one line |
 | --- | --- |
-| `npx @luizsantiago/agentic-harness validate-spec auth` | Checks that the **auth** feature’s written goal is complete enough to build from |
+| `npx @luizsantiago/spec-seatbelt validate-spec auth` | Checks that the **auth** feature’s written goal is complete enough to build from |
 | `… check-commit --message "feat(auth): …"` | Checks the commit title style before you land a change |
 | `… lessons list --status confirmed` | Lists project rules learned from past failures (confirmed only) |
 

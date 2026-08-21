@@ -1,6 +1,6 @@
 # Loop patterns (operational)
 
-The Spec-Driven Harness governs **feature work**: Specify → Tasks → Execute → Verify.
+The Spec Seatbelt governs **feature work**: Specify → Tasks → Execute → Verify.
 **Loop engineering** governs **recurring work** on the same repo: triage, CI babysitting, dependency sweeps.
 
 This guide maps when to use each. Patterns below are inspired by the open-source
@@ -35,8 +35,8 @@ Pick one pattern per automation. Mixing “fix CI + upgrade all deps + rewrite a
 Run an audit before relying on the harness in production:
 
 ```bash
-npx @luizsantiago/agentic-harness doctor
-npx @luizsantiago/agentic-harness doctor --json
+npx @luizsantiago/spec-seatbelt doctor
+npx @luizsantiago/spec-seatbelt doctor --json
 ```
 
 `doctor` checks skills, gates, config, STATE, optional PROJECT.md, and (for the active feature with 3+ tasks) `task-graph.md`. It prints **Harness Ready: N/100** and up to three next actions.

@@ -5,7 +5,7 @@ description: Spec-Driven Development hub for AI-assisted engineering. Progressiv
 
 # Agent Architecture (Hub)
 
-Spec-Driven Development (SDD) harness for AI-assisted software engineering.
+Spec-Driven Development (SDD) seatbelt for AI-assisted software engineering.
 Replaces "Vibe Coding" with adaptive phases backed by persistent memory, sister skills, and gates enforced by code.
 
 **Token cost.** Load a working set, not the archive — see `references/context-limits.md`. Progressive phase loading is ~70% fewer skill tokens than dumping hub + all references + sister skills every turn; a Medium feature is typically ~80% cheaper in skill tokens than naive full reloads.
@@ -40,15 +40,15 @@ Structural gates run **before** owner review, so they cannot drift when the mode
 
 | When | Command |
 | --- | --- |
-| Before `/specify` (Medium+) | `npx @luizsantiago/agentic-harness feature-init "<description>"` (Tier 0) |
+| Before `/specify` (Medium+) | `npx @luizsantiago/spec-seatbelt feature-init "<description>"` (Tier 0) |
 | Optional project config | `init-config --preset node-ts` or `install --preset python` (see `preset list`) |
 | Before confirming a spec | `python3 .specs/harness/scripts/validate_spec.py [feature]` |
 | Before approving tasks | `python3 .specs/harness/scripts/analyze_artifacts.py [feature]` |
 | Before presenting tasks for approval | `python3 .specs/harness/scripts/validate_tasks.py [feature]` |
 | On each commit | `python3 .specs/harness/scripts/check_commit.py --message "<message>"` |
 | Before declaring a feature done | `python3 .specs/harness/scripts/validate_state.py [feature]` |
-| After Verify PASS | `npx @luizsantiago/agentic-harness archive-feature [feature]` (Tier 0) |
-| Before a phase procedure (optional) | `npx @luizsantiago/agentic-harness phase-context <phase>` |
+| After Verify PASS | `npx @luizsantiago/spec-seatbelt archive-feature [feature]` (Tier 0) |
+| Before a phase procedure (optional) | `npx @luizsantiago/spec-seatbelt phase-context <phase>` |
 | After a FAIL verdict | `python3 .specs/harness/scripts/lessons.py add --source .specs/features/[feature]/validation.md` |
 
 Gates accept a feature name, a feature directory, or a path to the artifact. With no argument they auto-detect when the project has exactly one feature; with several they list candidates and exit 2. A spec is rejected unless every criterion uses `SHALL` or `MUST` and `## Assumptions` is present.

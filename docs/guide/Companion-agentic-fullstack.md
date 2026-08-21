@@ -1,6 +1,6 @@
 # Companion: Agentic Fullstack
 
-Optional **floor map** for the same agent loop. The Spec-Driven Harness stays the seatbelt (spec, tasks, gates, Verify). [`@luizsantiago/agentic-fullstack`](https://www.npmjs.com/package/@luizsantiago/agentic-fullstack) adds **which floor** a task lives on — frontend, backend, data, analytics, data science — and loads **one** Execute manual per turn.
+Optional **floor map** for the same agent loop. The Spec Seatbelt stays the seatbelt (spec, tasks, gates, Verify). [`@luizsantiago/agentic-fullstack`](https://www.npmjs.com/package/@luizsantiago/agentic-fullstack) adds **which floor** a task lives on — frontend, backend, data, analytics, data science — and loads **one** Execute manual per turn.
 
 They are **two packages**. Do not merge them. Re-installing this harness does **not** delete Fullstack skills.
 
@@ -8,7 +8,7 @@ They are **two packages**. Do not merge them. Re-installing this harness does **
 
 In the **product** repo (the company app):
 
-    npx @luizsantiago/agentic-harness install
+    npx @luizsantiago/spec-seatbelt install
     npx @luizsantiago/agentic-fullstack install
     npx @luizsantiago/agentic-fullstack doctor
 

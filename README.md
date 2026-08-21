@@ -1,6 +1,6 @@
-# Spec-Driven Harness
+# Spec Seatbelt
 
-[![npm version](https://img.shields.io/npm/v/@luizsantiago/agentic-harness.svg)](https://www.npmjs.com/package/@luizsantiago/agentic-harness)
+[![npm version](https://img.shields.io/npm/v/@luizsantiago/spec-seatbelt.svg)](https://www.npmjs.com/package/@luizsantiago/spec-seatbelt)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
 **A seatbelt for AI coding agents** — agree on the goal in writing, break work into provable steps, run automatic checks before calling anything “done”, and verify with a fresh context that did not write the code.
@@ -8,7 +8,7 @@
 ## Install
 
 ```bash
-npx @luizsantiago/agentic-harness install
+npx @luizsantiago/spec-seatbelt install
 ```
 
 **That is the whole setup.** Skills, gates, and `.specs/` land in your project. Open the agent and describe what you want to build.
@@ -24,7 +24,7 @@ After install, read **`.specs/GETTING_STARTED.md`** in your repo — it explains
 
 **Requirements:** Node.js 18+. Python 3.10+ for automatic gates (without Python the agent still follows the same checklists).
 
-npm: [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **1.3.x**
+npm: [`@luizsantiago/spec-seatbelt`](https://www.npmjs.com/package/@luizsantiago/spec-seatbelt) **1.0.x**
 
 ---
 
@@ -97,9 +97,9 @@ You rarely run these yourself — the agent does. Useful to know what is happeni
 Example if you start from the terminal:
 
 ```bash
-npx @luizsantiago/agentic-harness feature-init "add CSV export to reports"
+npx @luizsantiago/spec-seatbelt feature-init "add CSV export to reports"
 # Agent or you draft .specs/features/001-add-csv-export-to-reports/spec.md
-npx @luizsantiago/agentic-harness validate-spec 001-add-csv-export-to-reports
+npx @luizsantiago/spec-seatbelt validate-spec 001-add-csv-export-to-reports
 ```
 
 ### When to skip Specify
@@ -345,7 +345,7 @@ Archive the CSV export feature into the reports domain.
 **CLI:**
 
 ```bash
-npx @luizsantiago/agentic-harness archive-feature 001-add-csv-export-to-reports
+npx @luizsantiago/spec-seatbelt archive-feature 001-add-csv-export-to-reports
 ```
 
 **Skip when:** Verify has not passed.
@@ -405,7 +405,7 @@ Scan this repo and scaffold .specs/ project memory.
 **CLI:**
 
 ```bash
-npx @luizsantiago/agentic-harness project-init
+npx @luizsantiago/spec-seatbelt project-init
 # preview: project-init --dry-run
 ```
 
@@ -591,13 +591,17 @@ Re-run `install` to refresh skills; `STATE.md` and your edits are kept.
 ## Upgrading
 
 ```bash
-npx @luizsantiago/agentic-harness install
+npx @luizsantiago/spec-seatbelt install
 ```
+
+**Renamed from `@luizsantiago/agentic-harness`.** Same repository and `.specs/` layout; CLI is now `spec-seatbelt`. Run `install` once after switching packages to refresh skills and references.
 
 | Version | Highlights |
 | --- | --- |
+| **1.0.x** (`spec-seatbelt`) | Package rename; `doctor`, README overhaul, agent-first onboarding |
+| **1.3.x** (`agentic-harness`) | Last release under the old name — use `spec-seatbelt` going forward |
 | **1.1.x** | `project-init` brownfield |
-| **1.0.x** | Config presets, `init-config` |
+| **1.0.x** (`agentic-harness`) | Config presets, `init-config` |
 | **0.9.x** | `archive-feature`, delta merge |
 | **0.8.x** | `feature-init`, git tiers |
 
@@ -610,7 +614,7 @@ npx @luizsantiago/agentic-harness install
 ```bash
 git clone https://github.com/luizssantiago92/spec-driven-harness.git
 cd spec-driven-harness && npm test
-npm run harness -- install
+npm run seatbelt -- install
 ```
 
 ---

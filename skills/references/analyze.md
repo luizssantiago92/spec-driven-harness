@@ -29,7 +29,7 @@ Fix list in chat; update artifacts until the gate passes.
 1. **Run the gate:**
    ```bash
    python3 .specs/harness/scripts/analyze_artifacts.py [feature]
-   npx @luizsantiago/agentic-harness analyze-artifacts [feature]
+   npx @luizsantiago/spec-seatbelt analyze-artifacts [feature]
    ```
 2. **Fix every blocking error** — missing REQ coverage, orphan task Requirement IDs.
 3. **Resolve warnings** before owner approval:

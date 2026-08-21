@@ -30,8 +30,8 @@ Map an existing codebase into `.specs/` project memory before the first `/specif
 
 1. **Run the scan (Tier 0):**
    ```bash
-   npx @luizsantiago/agentic-harness project-init --dry-run
-   npx @luizsantiago/agentic-harness project-init [--preset node-ts] [--domains auth,billing]
+   npx @luizsantiago/spec-seatbelt project-init --dry-run
+   npx @luizsantiago/spec-seatbelt project-init [--preset node-ts] [--domains auth,billing]
    ```
 2. **Review with the owner** — edit `PROJECT.md`, trim false-positive domains, fill Vision/Constraints.
 3. **Draft domain truth** — replace stub requirements in `.specs/domains/*/spec.md` from code review (or leave stubs until features archive in).

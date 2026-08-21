@@ -1,6 +1,6 @@
 # Documentation
 
-Plain-language guides for the Spec-Driven Harness. Start at [Home](Home.md).
+Plain-language guides for the Spec Seatbelt. Start at [Home](Home.md).
 
 | File | Topic |
 | --- | --- |

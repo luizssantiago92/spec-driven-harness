@@ -6,7 +6,7 @@ Get from zero to “the harness is watching” in about ten minutes.
 
 In your project folder:
 
-    npx @luizsantiago/agentic-harness install
+    npx @luizsantiago/spec-seatbelt install
 
 You should see a playbook land for Cursor (and Claude if you use it), plus a `.specs/` folder where the project keeps notes and the automatic checks.
 
@@ -51,13 +51,13 @@ After install, you can run the same brakes from the terminal. Think of them as �
 
 ```bash
 # Is the written goal complete enough?
-npx @luizsantiago/agentic-harness validate-spec auth
+npx @luizsantiago/spec-seatbelt validate-spec auth
 
 # Does this commit message follow the house style?
-npx @luizsantiago/agentic-harness check-commit --message "feat(auth): add token refresh"
+npx @luizsantiago/spec-seatbelt check-commit --message "feat(auth): add token refresh"
 
 # What lessons has the project already confirmed?
-npx @luizsantiago/agentic-harness lessons list --status confirmed
+npx @luizsantiago/spec-seatbelt lessons list --status confirmed
 ```
 
 Replace `auth` with your feature folder name under `.specs/features/`. A non-zero exit means: stop, fix the artifact, run again.

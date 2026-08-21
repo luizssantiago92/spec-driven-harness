@@ -4,7 +4,7 @@ import path from "node:path";
 
 import { archiveFeature } from "./lib/archive.js";
 import { projectInit } from "./lib/brownfield.js";
-import { PACKAGE_VERSION } from "./lib/constants.js";
+import { PACKAGE_VERSION, CLI_NAME } from "./lib/constants.js";
 import { phaseContext } from "./lib/config.js";
 import { doctor } from "./lib/doctor.js";
 import { featureInit } from "./lib/feature.js";
@@ -16,7 +16,7 @@ import {
   loadPresetText,
 } from "./lib/presets.js";
 
-const USAGE = `Usage: agentic-harness <command> [args]
+const USAGE = `Usage: ${CLI_NAME} <command> [args]
 
 Commands:
   install                            Install skills, references, gates and .specs/ memory
