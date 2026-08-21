@@ -1,7 +1,11 @@
 # Project harness config (optional). Copy to .specs/config.yaml and edit.
-# Injected into phase procedures as project context.
+# Or run: npx @luizsantiago/agentic-harness init-config --preset node-ts
+# Injected into phase procedures via phase-context.
 
 schema: spec-driven
+
+# Extend a built-in preset (default | node-ts | python):
+# extends: node-ts
 
 context: |
   Tech stack: (fill in)
@@ -16,3 +20,9 @@ rules:
     - Every REQ must appear in the Test Coverage Matrix
   verify:
     - Evidence must cite test file:line paths
+
+# Project-specific overrides (appended on top of preset + rules above):
+# overrides:
+#   rules:
+#     verify:
+#       - Also run playwright e2e before PASS

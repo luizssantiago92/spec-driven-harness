@@ -41,6 +41,7 @@ Structural gates run **before** owner review, so they cannot drift when the mode
 | When | Command |
 | --- | --- |
 | Before `/specify` (Medium+) | `npx @luizsantiago/agentic-harness feature-init "<description>"` (Tier 0) |
+| Optional project config | `init-config --preset node-ts` or `install --preset python` (see `preset list`) |
 | Before confirming a spec | `python3 .specs/harness/scripts/validate_spec.py [feature]` |
 | Before approving tasks | `python3 .specs/harness/scripts/analyze_artifacts.py [feature]` |
 | Before presenting tasks for approval | `python3 .specs/harness/scripts/validate_tasks.py [feature]` |
