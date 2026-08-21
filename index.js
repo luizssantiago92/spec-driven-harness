@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 import { archiveFeature } from "./lib/archive.js";
+import { projectInit } from "./lib/brownfield.js";
 import { PACKAGE_VERSION } from "./lib/constants.js";
 import { phaseContext } from "./lib/config.js";
 import { featureInit } from "./lib/feature.js";
@@ -22,6 +23,13 @@ Commands:
     [--force]                        Replace existing config.yaml
   preset list                        List built-in config presets
   preset show <name>                 Print a preset YAML file
+  project-init                       Map an existing repo into .specs/ project memory (brownfield)
+    [--preset <name>]                Config preset (auto-detected when omitted)
+    [--domains a,b,c]                Explicit domain slugs (overrides auto-detect)
+    [--no-domains]                   Skip .specs/domains/ scaffolding
+    [--no-project]                   Skip PROJECT.md generation
+    [--force]                        Overwrite generated project/domain/config files
+    [--dry-run]                      Print scan results without writing files
   feature-init "<description>"       Allocate NNN-slug feature, STATE, local branch (Tier 0)
     [--no-branch]                    Skip git checkout -b
     [--no-spec]                      Skip spec.md stub
@@ -123,6 +131,67 @@ if (command === "--version" || command === "-v" || command === "version") {
     } else {
       throw new Error("Usage: preset list | preset show <name>");
     }
+  } catch (err) {
+    console.error(`❌ ${err.message}`);
+    process.exit(1);
+  }
+} else if (command === "project-init") {
+  try {
+    const initOptions = {
+      skipDomains: false,
+      skipProject: false,
+      force: false,
+      dryRun: false,
+    };
+
+    for (let i = 0; i < args.length; i++) {
+      const arg = args[i];
+      if (arg === "--preset") {
+        initOptions.preset = args[++i];
+        if (!initOptions.preset) {
+          throw new Error("--preset requires a name. Run preset list.");
+        }
+      } else if (arg === "--domains") {
+        const raw = args[++i];
+        if (!raw) {
+          throw new Error("--domains requires a comma-separated list.");
+        }
+        initOptions.domains = raw.split(",").map((item) => item.trim()).filter(Boolean);
+      } else if (arg === "--no-domains") {
+        initOptions.skipDomains = true;
+      } else if (arg === "--no-project") {
+        initOptions.skipProject = true;
+      } else if (arg === "--force") {
+        initOptions.force = true;
+      } else if (arg === "--dry-run") {
+        initOptions.dryRun = true;
+      } else {
+        throw new Error(`Unknown project-init flag: ${arg}`);
+      }
+    }
+
+    const result = await projectInit(initOptions);
+
+    if (result.dryRun) {
+      console.log(`🔍 Brownfield scan: ${result.repoName}`);
+      console.log(`   Stack: ${result.stack.stack}`);
+      console.log(`   Preset: ${result.preset}`);
+      if (result.domains.length) {
+        console.log(`   Domains: ${result.domains.map((d) => d.domain).join(", ")}`);
+      } else {
+        console.log("   Domains: (none detected — use --domains or add code layout)");
+      }
+      console.log("   Dry run — no files written.");
+      process.exit(0);
+    }
+
+    console.log(`✅ Brownfield project memory initialized for ${result.repoName}`);
+    console.log(`   Stack: ${result.stack.stack}`);
+    console.log(`   Preset: ${result.preset}`);
+    for (const line of result.planned) {
+      console.log(`   ${line}`);
+    }
+    console.log("   Tier 0 — review PROJECT.md and domain stubs, then run feature-init.");
   } catch (err) {
     console.error(`❌ ${err.message}`);
     process.exit(1);

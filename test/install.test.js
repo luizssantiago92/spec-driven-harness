@@ -938,6 +938,7 @@ describe("reference catalog", () => {
   it("includes v0.8 phase procedures and gate scripts", () => {
     for (const file of [
       "explore.md",
+      "project-init.md",
       "constitution.md",
       "analyze.md",
       "converge.md",
@@ -953,7 +954,7 @@ describe("reference catalog", () => {
       );
     }
 
-    assert.equal(REFERENCE_ASSETS.length, 16);
+    assert.equal(REFERENCE_ASSETS.length, 17);
     assert.equal(
       SCRIPT_ASSETS.some((asset) => asset.file === "lessons.py"),
       true,
@@ -1039,9 +1040,10 @@ describe("CLI", () => {
     assert.match(stderr, /Usage: agentic-harness/);
   });
 
-  it("lists preset, init-config, archive-feature, and phase-context in help", async () => {
+  it("lists project-init, preset, init-config, archive-feature, and phase-context in help", async () => {
     const { code, stdout } = await runCli(["--help"]);
     assert.equal(code, 0);
+    assert.match(stdout, /project-init/);
     assert.match(stdout, /feature-init/);
     assert.match(stdout, /archive-feature/);
     assert.match(stdout, /phase-context/);
