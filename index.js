@@ -83,7 +83,6 @@ if (command === "--version" || command === "-v" || command === "version") {
     }
 
     await install(installOptions);
-    console.log("✨ Setup complete. Your agent now runs on a spec-driven harness.");
   } catch (err) {
     console.error(`❌ ${err.message}`);
     process.exit(1);
