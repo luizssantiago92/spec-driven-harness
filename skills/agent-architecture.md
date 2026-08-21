@@ -24,7 +24,15 @@ This file is the contract and the map. Phase procedures live in `references/`; c
 2. **Gate before done** — A task is complete only when the project harness (tests, linter, compiler) passes. The runner decides, never self-assessment.
 3. **One atomic commit per task** — Mark the task complete in `tasks.md` and include that update in the same commit. Never batch tasks; never weaken, skip, or delete tests to make them pass.
 4. **Author ≠ verifier** — After the last task, `/verify` runs with a fresh, clean context that never wrote the code. It is mandatory, not prompted.
-5. **Blast radius** — Approving a spec or tasks authorizes local implementation and local commits only. `git push`, force-push, deploy, production data changes, and other externally visible or destructive operations require an explicit go-ahead for that specific action.
+5. **Blast radius (git tiers)** — Approving a spec or tasks authorizes **Tier 0** local work only. Higher tiers need owner go-ahead.
+
+| Tier | Authorized by spec/tasks approval | Owner go-ahead required |
+| --- | --- | --- |
+| **0 — Local sandbox** | `feature-init`, feature folder, `git checkout -b feat/NNN-slug`, local commits (code + `.specs/`) | — |
+| **1 — Share** | — | `git push`, open/update PR for this feature |
+| **2 — External impact** | — | merge to default branch, deploy/release, force-push, production data or secrets |
+
+Quick tier skips dedicated feature branches — commit on the current branch. See `git-handoff.md` for phase triggers.
 
 ## Deterministic Gates
 
@@ -32,7 +40,9 @@ Structural gates run **before** owner review, so they cannot drift when the mode
 
 | When | Command |
 | --- | --- |
+| Before `/specify` (Medium+) | `npx @luizsantiago/agentic-harness feature-init "<description>"` (Tier 0) |
 | Before confirming a spec | `python3 .specs/harness/scripts/validate_spec.py [feature]` |
+| Before approving tasks | `python3 .specs/harness/scripts/analyze_artifacts.py [feature]` |
 | Before presenting tasks for approval | `python3 .specs/harness/scripts/validate_tasks.py [feature]` |
 | On each commit | `python3 .specs/harness/scripts/check_commit.py --message "<message>"` |
 | Before declaring a feature done | `python3 .specs/harness/scripts/validate_state.py [feature]` |
@@ -47,17 +57,22 @@ A **non-zero exit means STOP** — fix the artifact, then re-run the gate. Never
 ## Phase Map
 
 ```
-SPECIFY → DISCUSS (conditional) → DESIGN (optional) → TASKS (optional) → EXECUTE (loop) → VERIFY
+EXPLORE (optional) → SPECIFY → DISCUSS (conditional) → DESIGN (optional) → TASKS (optional) → ANALYZE → EXECUTE (loop) → VERIFY → ARCHIVE
 ```
 
 | Phase | Required | Reference | Sister skill | Gate |
 | --- | --- | --- | --- | --- |
+| **Explore** | Optional | `references/explore.md` | — | — |
+| **Constitution** | Once per project | `references/constitution.md` | — | — |
 | **Specify** | Yes | `references/specify.md` | — | `validate_spec.py` |
 | **Discuss** | Conditional | `references/discuss.md` | — | — |
 | **Design** | No | `references/design.md` | — | — |
 | **Tasks** | No | `references/tasks.md` | `task-graph-engineering.md` | `validate_tasks.py` |
+| **Analyze** | Before task approval | `references/analyze.md` | — | `analyze_artifacts.py` |
 | **Execute** | Yes | `references/implement.md` | `engineering-standards.md` | `check_commit.py` |
 | **Verify** | Yes | `references/validate.md` | `security-review.md` | `validate_state.py` |
+| **Archive** | After Verify PASS | `references/archive.md` | `git-handoff.md` | — |
+| **Converge** | On drift | `references/converge.md` | — | `analyze_artifacts.py` |
 | **Handoff** | Yes | `references/memory.md` | `git-handoff.md` | — |
 | **Quick** | Alternative | `references/quick-mode.md` | — | `check_commit.py` |
 | **Context** | Always | `references/context-limits.md` | — | — |
@@ -109,9 +124,12 @@ When in doubt, start at **Medium** and drop phases only with owner approval.
 | `.specs/lessons.json` | Canonical lessons store, owned by `lessons.py` |
 | `.specs/LESSONS.md` | Generated playbook of confirmed lessons — read, never write |
 | `.specs/project/PROJECT.md` | Vision, stack, constraints (when the project defines them) |
+| `.specs/project/CONSTITUTION.md` | Governing principles (when Constitution ran) |
 | `.specs/project/ROADMAP.md` | Milestones and feature status |
+| `.specs/config.yaml` | Optional project context and per-phase rules |
+| `.specs/domains/[domain]/spec.md` | Long-lived domain truth after Archive |
 | `.specs/quick/NNN-slug/` | Quick-mode tasks and summaries |
-| `.specs/features/[feature]/spec.md` | Requirements and acceptance criteria |
+| `.specs/features/[feature]/spec.md` | Requirements (use `NNN-slug` from `feature-init`) |
 | `.specs/features/[feature]/context.md` | Owner decisions for gray areas (only when Discuss ran) |
 | `.specs/features/[feature]/design.md` | Architecture (Complex tier) |
 | `.specs/features/[feature]/tasks.md` | Atomic task breakdown |
@@ -173,15 +191,20 @@ Project rules: `.cursor/rules/engineering-baseline.mdc` (always applied in Curso
 
 | Command | Reference | Action |
 | --- | --- | --- |
-| `/specify` | `references/specify.md` | Define requirements; EARS patterns; `SHALL`/`MUST` |
+| `/explore` | `references/explore.md` | Think through ideas before Specify |
+| `/constitution` | `references/constitution.md` | Create project governing principles |
+| `/specify` | `references/specify.md` | `feature-init` then requirements; EARS; delta specs |
 | `/discuss` | `references/discuss.md` | Resolve gray areas into `context.md` |
 | `/plan` | `references/design.md` | Create technical design |
 | `/tasks` | `references/tasks.md` | Atomic breakdown; coverage matrix (authoring) |
+| `/analyze` | `references/analyze.md` | Cross-artifact consistency before task approval |
 | `/task-graph` | `task-graph-engineering.md` | Draw or revise the job DAG |
 | `/loop` | `references/implement.md` | Autonomous loop; adequacy A–D before each commit |
-| `/verify` | `references/validate.md` | Independent technical validation; lean UAT; conditional AppSec then QA (one at a time) |
-| `/quick` | `references/quick-mode.md` | Express lane for ≤3-file changes |
-| `/handoff` | `references/memory.md` | Update STATE, commit `.specs/`, no push |
+| `/verify` | `references/validate.md` | Independent validation; lean UAT; conditional AppSec/QA |
+| `/converge` | `references/converge.md` | Reassess drift; append remaining tasks |
+| `/archive` | `references/archive.md` | Fold verified feature into domain truth |
+| `/quick` | `references/quick-mode.md` | Express lane for ≤3-file changes (no feature branch) |
+| `/handoff` | `references/memory.md` | Update STATE, commit `.specs/` (Tier 0; no push) |
 | `/sync-spec` | `git-handoff.md` | Commit current feature artifacts only |
 | `/lessons` | `references/lessons.md` | Record or load grounded lessons |
 

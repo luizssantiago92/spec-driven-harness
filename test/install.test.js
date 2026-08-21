@@ -184,6 +184,7 @@ describe("install harness", () => {
         assert.match(rulesContent, /engineering-baseline\.mdc/);
         assert.match(rulesContent, /references\//);
         assert.match(rulesContent, /validate_spec\.py/);
+        assert.match(rulesContent, /analyze_artifacts\.py/);
         assert.doesNotMatch(rulesContent, /pt-BR/);
       } finally {
         await fs.rm(cwd, { recursive: true, force: true });
@@ -333,6 +334,7 @@ describe("install harness", () => {
       assert.match(baseline, /# Custom rules/);
       assert.match(baseline, /harness-managed:skills-map:start/);
       assert.match(baseline, /appsec\.md/);
+      assert.match(baseline, /analyze_artifacts\.py/);
 
       const hub = await fs.readFile(
         path.join(cwd, ".cursor/skills/agent-architecture.md"),
@@ -932,24 +934,66 @@ describe("download safety", () => {
 });
 
 describe("reference catalog", () => {
-  it("includes context-limits and lessons next to the phase procedures", () => {
-    assert.equal(
-      REFERENCE_ASSETS.some((asset) => asset.file === "context-limits.md"),
-      true,
-    );
-    assert.equal(
-      REFERENCE_ASSETS.some((asset) => asset.file === "lessons.md"),
-      true,
-    );
-    assert.equal(
-      REFERENCE_ASSETS.some((asset) => asset.file === "sub-agents.md"),
-      true,
-    );
-    assert.equal(REFERENCE_ASSETS.length, 11);
+  it("includes v0.8 phase procedures and gate scripts", () => {
+    for (const file of [
+      "explore.md",
+      "constitution.md",
+      "analyze.md",
+      "converge.md",
+      "archive.md",
+      "context-limits.md",
+      "lessons.md",
+      "sub-agents.md",
+    ]) {
+      assert.equal(
+        REFERENCE_ASSETS.some((asset) => asset.file === file),
+        true,
+        `missing reference asset ${file}`,
+      );
+    }
+
+    assert.equal(REFERENCE_ASSETS.length, 16);
     assert.equal(
       SCRIPT_ASSETS.some((asset) => asset.file === "lessons.py"),
       true,
     );
+    assert.equal(
+      SCRIPT_ASSETS.some((asset) => asset.file === "analyze_artifacts.py"),
+      true,
+    );
+  });
+});
+
+describe("shipped baseline", () => {
+  it("installs analyze gate, config example, and project dirs from package", async () => {
+    const cwd = await createTempDir("baseline-shipped-");
+
+    try {
+      await install({ cwd, silent: true });
+
+      const baseline = await fs.readFile(
+        path.join(cwd, ".cursor/rules/engineering-baseline.mdc"),
+        "utf8",
+      );
+      assert.match(baseline, /analyze_artifacts\.py/);
+      assert.match(baseline, /feature-init/);
+      assert.match(baseline, /explore/);
+
+      assert.equal(
+        await pathExists(path.join(cwd, ".specs/config.yaml.example")),
+        true,
+      );
+      assert.equal(await pathExists(path.join(cwd, ".specs/project")), true);
+      assert.equal(await pathExists(path.join(cwd, ".specs/domains")), true);
+      assert.equal(
+        await pathExists(
+          path.join(cwd, HARNESS_SCRIPTS_DIR, "analyze_artifacts.py"),
+        ),
+        true,
+      );
+    } finally {
+      await fs.rm(cwd, { recursive: true, force: true });
+    }
   });
 });
 
@@ -992,5 +1036,12 @@ describe("CLI", () => {
     assert.equal(code, 1);
     assert.equal(stdout, "");
     assert.match(stderr, /Usage: agentic-harness/);
+  });
+
+  it("lists feature-init and analyze-artifacts in help", async () => {
+    const { code, stdout } = await runCli(["--help"]);
+    assert.equal(code, 0);
+    assert.match(stdout, /feature-init/);
+    assert.match(stdout, /analyze-artifacts/);
   });
 });

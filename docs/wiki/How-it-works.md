@@ -15,11 +15,17 @@ If any of those steps is incomplete, the harness **stops the agent** until it’
 
 ## The journey (in plain words)
 
+### 0. Explore — “What are we even building?” (optional)
+
+When the idea is fuzzy, the agent thinks with you first — no spec file yet. When it’s clear, **Specify** allocates a numbered feature folder and local git branch automatically.
+
 ### 1. Specify — “What are we building?”
 
 You and the agent agree on the outcome in writing: who it’s for, what must happen, what’s out of scope.
 
 No vague “make auth better”. Clear “when the user logs in with a valid password, they get a session” — and the same sharpness for errors and always-on rules.
+
+Each feature gets an ID like `003-chat-system` and a matching branch `feat/003-chat-system` (local only until you say push).
 
 ### 2. Discuss / Design — only when needed
 
@@ -32,6 +38,8 @@ The work becomes a list of small, checkable jobs: which files change, how we’l
 Keep the **feature** as one user path. If you also installed Agentic Fullstack, each job’s file list stays on one floor (UI vs API) — details on [[Companion-agentic-fullstack]].
 
 Two agents won’t edit the same file at the same time unless the list says they should wait for each other.
+
+Before you approve the list, a **cross-check** runs: every goal has a task owner, and nothing references a requirement that doesn’t exist.
 
 ### 4. Execute — “Do the next job only”
 
@@ -50,6 +58,10 @@ On bigger or riskier work the verifier may also, **one guide at a time**:
 - a **walkthrough** script you can click through  
 
 Tiny or backend-only changes skip those extras. Optional **ship-ready** is only when you ask to go live — and it never pushes for you without an explicit go-ahead.
+
+### 6. Archive — “File it away”
+
+After a pass, the feature folds into long-lived project memory. **Push and merge still need your go-ahead** — the harness stops at local commits unless you say otherwise.
 
 ## What you get day to day
 

@@ -205,4 +205,6 @@ Lean walkthrough for **Complex-tier user-facing** work (UI or a human-observable
 
 ## Next
 
-`memory.md` and `git-handoff.md` — record decisions, commit `.specs/`, hand off.
+After `validate_state.py` passes → `archive.md` to fold the feature into domain truth and reset STATE.
+
+Otherwise → `memory.md` and `git-handoff.md` — record decisions, commit `.specs/`, hand off.
