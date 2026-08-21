@@ -64,21 +64,15 @@ More: [Token efficiency](docs/guide/Token-efficiency.md)
 
 ## How the pieces fit together
 
-Four ideas stack — full explanation with diagrams: **[Concepts](docs/guide/concepts.md)**
+Four ideas stack — full explanation: **[Concepts](docs/guide/concepts.md)**
 
-| Idea | One line |
-| --- | --- |
-| **Spec-driven** | Write `spec.md` and `tasks.md` before code; prove done with evidence |
-| **Seatbelt** | This package — skills + gates that stop incomplete work |
-| **Loop** | Execute in waves via `loop-plan`; parallel sub-agents when files are disjoint |
-| **Graph** | `task-graph.md` — which tasks can run in parallel without file collisions |
-
-```mermaid
-flowchart LR
-  SD[Spec-driven<br/>what & proof] --> SB[Seatbelt<br/>skills + gates]
-  SB --> LP[Loop<br/>loop-plan waves]
-  LP --> TG[Graph<br/>parallel DAG]
-```
+| Idea | What it is | What it does |
+| --- | --- | --- |
+| **Spec-driven** | Written plan before code | `spec.md` + `tasks.md`; evidence before “done” |
+| **Seatbelt** | This package | Skills + Python gates that stop incomplete work |
+| **Loop** | Execute in waves | `loop-plan` picks the next jobs; sub-agents when files don’t overlap |
+| **Graph** | Parallel task map | `task-graph.md` — safe parallelism without file collisions |
+| **Memory** | Repo-local state | `.specs/` — specs, decisions, and handoff survive across chats |
 
 **You** approve specs and tasks. **The agent** runs gates and implements. **Gates** exit non-zero when paperwork or evidence is missing.
 
@@ -98,7 +92,7 @@ The hub **Complexity Router** picks how much ceremony a feature needs — Quick,
 | **Complex** | APIs, architecture, infra | + `/discuss`, `/plan`, optional security/QA on verify |
 | **Parallel** | Splittable work | Above + `/task-graph` when 3+ tasks |
 
-Diagram and rules: [Concepts → Complexity tiers](docs/guide/concepts.md#complexity-tiers--how-the-agent-chooses-depth)
+Rules and examples: [Concepts → Complexity tiers](docs/guide/concepts.md#complexity-tiers--how-the-agent-chooses-depth)
 
 ---
 
@@ -106,21 +100,16 @@ Diagram and rules: [Concepts → Complexity tiers](docs/guide/concepts.md#comple
 
 Install copies a **hub** (`agent-architecture.md`), **phase references** (`references/*.md`), and **sister skills** (security, task-graph, …). The agent loads **one phase file at a time**.
 
-```mermaid
-flowchart TB
-  HUB[Hub — contract & router] --> REF[One reference<br/>specify / tasks / implement / …]
-  HUB --> SIS[Sister skills<br/>on demand]
-  REF --> GATE[Gates at boundaries]
-```
+| Load order | Layer | Role | Examples |
+| ---: | --- | --- | --- |
+| 1 | **Hub** | Contract, complexity router, gate schedule | `agent-architecture.md` |
+| 2 | **Reference** | One phase procedure per turn | `specify.md`, `implement.md`, `validate.md` |
+| 3 | **Sister** (optional) | Cross-cutting depth, on demand | `engineering-standards.md`, `task-graph-engineering.md` |
+| 4 | **Gate** | Automatic check at the boundary | `validate-spec`, `loop-plan`, `check-commit` |
 
-| Layer | Examples |
-| --- | --- |
-| Hub | Phase map, complexity router, gate schedule |
-| References | `specify.md`, `implement.md`, `validate.md`, … |
-| Sisters | `engineering-standards.md`, `task-graph-engineering.md`, `security-review.md`, … |
-| Conditional | `appsec.md`, `qa-strategy.md` — **one at a time** |
+Conditional sisters (`appsec.md`, `qa-strategy.md`, …) load **one at a time** on Verify when risk warrants it.
 
-Full map and diagrams: **[Skills and hub](docs/guide/skills-and-hub.md)**
+Full map: **[Skills and hub](docs/guide/skills-and-hub.md)**
 
 ---
 
@@ -128,23 +117,16 @@ Full map and diagrams: **[Skills and hub](docs/guide/skills-and-hub.md)**
 
 Scripts in `.specs/seatbelt/scripts/`. **Exit ≠ 0 → stop and fix.**
 
-```mermaid
-flowchart LR
-  VS[validate-spec] --> VT[validate-tasks]
-  VT --> LP[loop-plan]
-  LP --> CC[check-commit]
-  CC --> LP
-  LP --> VST[validate-state]
-```
-
-| Gate | Blocks |
-| --- | --- |
-| `validate-spec` | Incomplete or untestable spec |
-| `validate-tasks` | Bad tasks; missing graph when 3+ tasks |
-| `analyze-artifacts` | Spec ↔ tasks drift |
-| `loop-plan` | Nothing ready / blocked dependencies |
-| `check-commit` | Non-Conventional commit message |
-| `validate-state` | Fake “done” without test evidence |
+| When | Gate | What it blocks |
+| --- | --- | --- |
+| Before approving spec | `validate-spec` | Incomplete or untestable spec |
+| Before approving tasks | `analyze-artifacts` | Spec ↔ tasks drift |
+| Before approving tasks | `validate-tasks` | Bad tasks; missing graph when 3+ tasks |
+| Each `/loop` wave | `loop-plan` | Blocked dependencies; shows parallel groups |
+| Each commit | `check-commit` | Non-Conventional commit message |
+| Before “done” | `validate-state` | Fake PASS without test evidence |
+| After Verify FAIL | `lessons` | Ungrounded “lessons learned” |
+| After Verify PASS | `archive-feature` | (CLI) folds feature into domain memory |
 
 Full reference: **[Gates](docs/guide/gates.md)** · [Gates and guarantees](docs/guide/Gates-and-guarantees.md)
 
@@ -214,7 +196,7 @@ Spec Seatbelt adapts open ideas; we did not invent spec-driven phases, loop desi
 
 ### Adjacent (not vendored)
 
-[DeepCode](https://github.com/HKUDS/DeepCode) · [RepoGraph](https://github.com/ozyyshr/RepoGraph) · [harness/harness-skills](https://github.com/harness/harness-skills) (**Harness.io** — different product, similar name)
+[DeepCode](https://github.com/HKUDS/DeepCode) · [RepoGraph](https://github.com/ozyyshr/RepoGraph)
 
 Extended attribution: [docs/guide/credits.md](docs/guide/credits.md)
 
