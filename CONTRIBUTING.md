@@ -40,6 +40,6 @@ npm test
 When developing inside this repository, use the local CLI entrypoint (avoids `npx` name conflicts with the package itself):
 
 ```bash
-npm run harness -- install
-npm run harness -- --help
+npm run seatbelt -- install
+npm run seatbelt -- --help
 ```

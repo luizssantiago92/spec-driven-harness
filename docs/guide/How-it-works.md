@@ -41,9 +41,9 @@ Two agents won’t edit the same file at the same time unless the list says they
 
 Before you approve the list, a **cross-check** runs: every goal has a task owner, and nothing references a requirement that doesn’t exist.
 
-### 4. Execute — “Do the next job only”
+### 4. Execute — “Do the next wave”
 
-The agent picks **one** task, writes a test for the outcome, implements it, runs your project’s checks, and commits only if that still matches the job. Then the next task. No giant mystery PR.
+The agent runs **`loop-plan`** to see which tasks are ready. Tasks with **disjoint files** can run **in parallel** (sub-agents, with your OK). Otherwise it works **one task at a time**: test for the outcome, implement, run your project’s checks, commit only if it still matches the job. Then the next wave.
 
 When the work is bigger, it may offer a short **simplify** pass (cleaner code, same behavior) — only if you want it.
 

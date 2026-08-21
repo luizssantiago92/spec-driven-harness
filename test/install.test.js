@@ -963,6 +963,10 @@ describe("reference catalog", () => {
       true,
     );
     assert.equal(
+      SCRIPT_ASSETS.some((asset) => asset.file === "loop_plan.py"),
+      true,
+    );
+    assert.equal(
       SCRIPT_ASSETS.some((asset) => asset.file === "analyze_artifacts.py"),
       true,
     );
