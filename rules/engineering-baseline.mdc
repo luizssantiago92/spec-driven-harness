@@ -25,7 +25,7 @@ Chat language is a personal preference. Set it in your own agent settings if you
 | Skill | Purpose |
 | --- | --- |
 | `.cursor/skills/agent-architecture.md` | SDD hub — contract, phases, gates, complexity router |
-| `.cursor/skills/references/` | Phase procedures (explore, constitution, specify, discuss, design, tasks, analyze, implement, validate, converge, archive, memory, quick-mode, context-limits, lessons, sub-agents) |
+| `.cursor/skills/references/` | Phase procedures (explore, project-init, constitution, specify, discuss, design, tasks, analyze, implement, validate, converge, archive, memory, quick-mode, context-limits, lessons, sub-agents) |
 | `.cursor/skills/task-graph-engineering.md` | Task DAG, parallelism, verify topology |
 | `.cursor/skills/engineering-standards.md` | Code quality, secure coding, git hygiene |
 | `.cursor/skills/security-review.md` | Security checklist for verification |
@@ -45,6 +45,7 @@ Structural gates live in `.specs/harness/scripts/` and require Python 3. A non-z
 | --- | --- |
 | Before `/specify` (Medium+) | `npx @luizsantiago/agentic-harness feature-init "<description>"` (Tier 0 — folder + branch + STATE) |
 | Optional brownfield bootstrap | `npx @luizsantiago/agentic-harness project-init` (existing repos — before first `/specify`) |
+| After install or upgrade | `npx @luizsantiago/agentic-harness doctor` (readiness score + next actions) |
 | Optional project config | `npx @luizsantiago/agentic-harness init-config --preset node-ts` or `install --preset python` |
 | Before a phase procedure (optional) | `npx @luizsantiago/agentic-harness phase-context <phase>` |
 | Before confirming a spec | `python3 .specs/harness/scripts/validate_spec.py [feature]` |

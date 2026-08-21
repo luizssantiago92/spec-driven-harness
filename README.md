@@ -3,92 +3,225 @@
 [![npm version](https://img.shields.io/npm/v/@luizsantiago/agentic-harness.svg)](https://www.npmjs.com/package/@luizsantiago/agentic-harness)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**A seatbelt for AI coding agents.** Agree on the goal in writing, break work into provable steps, run automatic checks before calling anything “done”, and verify with a fresh context that did not write the code.
+**A seatbelt for AI coding agents** — agree on the goal in writing, break work into provable steps, run automatic checks before calling anything “done”, and verify with a fresh context that did not write the code.
 
-npm package: [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **1.2.x**. Works in **Cursor** and **Claude Code**. The agent loads **one phase at a time** (~70% fewer skill tokens than dumping the full kit every turn).
-
-**New here?** Start with [docs/guide/Home.md](docs/guide/Home.md) (plain language). This README is the engineering reference.
-
-## What you get
-
-| Piece | Purpose |
-| --- | --- |
-| **Skills + hub** | Tells the agent *what to do when* (Specify, Tasks, Verify, …) |
-| **Python gates** | Scripts that reject incomplete specs, tasks, or verify reports *before* you trust them |
-| **`.specs/` memory** | Durable feature folders, decisions, and project context between sessions |
-| **CLI** | Install, scaffold brownfield repos, start features, archive finished work |
-
-## Quick start
+## Install
 
 ```bash
 npx @luizsantiago/agentic-harness install
-npx @luizsantiago/agentic-harness feature-init "user can reset password"
-# Draft .specs/features/001-.../spec.md, then:
-npx @luizsantiago/agentic-harness validate-spec 001-user-can-reset-password
 ```
 
-Re-run `install` to refresh skills and gate scripts. It does **not** overwrite `STATE.md`, `LESSONS.md`, or rules you edited.
+That is the whole setup. It copies skills, gate scripts, and an empty `.specs/` memory folder into **your** project (Cursor and Claude Code).
 
-**Requirements:** Node.js 18+. Python 3.10+ for gates (without Python the agent still follows the same checklist by hand).
+**Requirements:** Node.js 18+. Python 3.10+ for automatic gates (without Python the agent still follows the same checklists by hand).
 
-## Common flows (CLI)
+**Brownfield repo?** After install, run `npx @luizsantiago/agentic-harness project-init` to generate `PROJECT.md` and domain stubs from existing code.
 
-These are **optional steps** except where your feature tier needs them. Think of them as “setup once” vs “per feature”.
+**Check the install:** `npx @luizsantiago/agentic-harness doctor`
 
-### One-time / occasional
+Re-run `install` anytime to refresh skills and gates. It does **not** overwrite `STATE.md`, `LESSONS.md`, or rules you edited.
 
-| Command | When | What it does |
-| --- | --- | --- |
-| `install` | First time, or after upgrading the package | Copies skills, 17 phase references, gate scripts, `.cursorrules`, and empty `.specs/` scaffold into your project |
-| `install --preset node-ts` | First install on a Node/TS repo | Same as install, and seeds `.specs/config.yaml` from a stack preset if missing |
-| `init-config --preset python` | You want config without reinstalling | Creates `.specs/config.yaml` from `default`, `node-ts`, or `python` |
-| `preset list` / `preset show <name>` | Choosing a stack preset | Lists or prints preset YAML (branch prefix, test command, phase rules) |
-| `project-init` | **Brownfield** — repo already has code | Scans stack, writes `PROJECT.md`, optional domain stubs, `ROADMAP`, and config. Use `--dry-run` to preview |
-| `phase-context specify` | Optional before a phase | Prints your `config.yaml` context + rules for that phase |
-| `doctor` | After install or upgrade | Audits skills, gates, config, STATE; prints Harness Ready score + next actions |
+npm: [`@luizsantiago/agentic-harness`](https://www.npmjs.com/package/@luizsantiago/agentic-harness) **1.2.x**
 
-### Per feature
+---
 
-| Command | When | What it does |
-| --- | --- | --- |
-| `feature-init "description"` | Starting Medium+ work | Creates `.specs/features/NNN-slug/`, updates `STATE.md`, checks out `feat/NNN-slug` (Tier 0) |
-| `validate-spec [feature]` | Spec draft ready | Blocks weak requirements (missing `SHALL`/`MUST`, bad IDs, …) |
-| `analyze-artifacts` + `validate-tasks` | Task list ready | Cross-checks spec ↔ tasks before you approve work |
-| `check-commit --message "..."` | Each commit | Conventional Commits gate |
-| `validate-state [feature]` | Before calling the feature done | Requires `validation.md` with PASS and test `file:line` evidence |
-| `archive-feature [feature]` | After Verify PASS | Merges spec into domain truth, updates `ROADMAP`, resets `STATE` (Tier 0) |
+## What this package is (and is not)
 
-**Git tiers:** Tier 0 (branch, local commits, `.specs/` edits) is automatic after you approve a spec/tasks. Push, PR, merge, and deploy need explicit owner go-ahead.
+| This package | Not this package |
+| --- | --- |
+| Skills + Python gates + `.specs/` memory | A desktop agent or chat runtime |
+| Spec → tasks → verify workflow | Harness.io CI/CD ([different product](https://github.com/harness/harness-skills)) |
+| One phase loaded at a time (saves tokens) | Pasting every prompt into every message |
+
+Plain-language tour: [docs/guide/Home.md](docs/guide/Home.md). This README is the engineering reference.
+
+---
+
+## Your first feature (walkthrough)
+
+The commands below are **examples**. Replace the description with your real feature.
+
+```bash
+# 1) Install the harness into the current repo
+npx @luizsantiago/agentic-harness install
+
+# 2) Start a new feature (creates folder + branch + STATE.md)
+npx @luizsantiago/agentic-harness feature-init "add CSV export to reports"
+
+# 3) You (or the agent) write .specs/features/001-add-csv-export-to-reports/spec.md
+#    with requirements and acceptance criteria (SHALL / MUST).
+
+# 4) Gate: spec must be complete before you approve it
+npx @luizsantiago/agentic-harness validate-spec 001-add-csv-export-to-reports
+
+# 5) For Medium+ work: write tasks.md, then validate before approval
+npx @luizsantiago/agentic-harness validate-tasks 001-add-csv-export-to-reports
+
+# 6) Implement task by task (/loop in the agent — see below)
+
+# 7) Before calling the feature done
+npx @luizsantiago/agentic-harness validate-state 001-add-csv-export-to-reports
+
+# 8) After independent Verify PASS — fold into domain memory
+npx @luizsantiago/agentic-harness archive-feature 001-add-csv-export-to-reports
+```
+
+**Quick fixes (≤3 files)?** Skip `feature-init` and use the Quick tier — see [How work flows](#how-work-flows).
+
+---
 
 ## How work flows
 
+### Feature pipeline (phases)
+
+The agent follows phases in order. Only the phases your **tier** needs run.
+
 ```
-EXPLORE (optional) → SPECIFY → DISCUSS? → DESIGN? → TASKS? → ANALYZE → EXECUTE → VERIFY → ARCHIVE
+EXPLORE? → SPECIFY → DISCUSS? → DESIGN? → TASKS? → ANALYZE → EXECUTE → VERIFY → ARCHIVE
 ```
 
-| Tier | Typical path |
+| Tier | When to use | Path |
+| --- | --- | --- |
+| **Quick** | ≤3 files, no design decisions | Describe → implement → verify → commit |
+| **Simple** | Small localized change | Specify → Execute → Verify |
+| **Medium** | New feature, &lt;10 tasks | Specify → Tasks → Execute → Verify |
+| **Complex** | Architecture, APIs, infra | + Discuss, Design, optional AppSec/QA |
+
+Phase procedures live in `.cursor/skills/references/` (loaded on demand). The hub `agent-architecture.md` is the map.
+
+### The Execute loop (`/loop`)
+
+**`/loop`** is not a CLI command — it is the **agent skill** for implementation (`references/implement.md`):
+
+1. Pick **one task** from `tasks.md`
+2. Write or run tests first
+3. Implement the smallest change that passes
+4. Run the task’s **Gate** command (usually your test runner)
+5. **One atomic commit** per task
+6. Repeat until all tasks are done → then **Verify** with a **fresh context**
+
+If the harness fails, fix and retry up to **3 times**, then escalate. Verify failures become fix tasks (bounded loop).
+
+### Operational loops (repo maintenance)
+
+Separate from feature work: triage, CI babysitting, dependency sweeps. See [docs/guide/loop-patterns.md](docs/guide/loop-patterns.md).
+
+---
+
+## Skills (what gets installed)
+
+After `install`, skills live in `.cursor/skills/` and `.claude/skills/`. The agent loads **one working set per turn**, not the full library.
+
+### Hub
+
+| Skill | Role |
 | --- | --- |
-| **Quick** | ≤3 files — describe, implement, verify, commit |
-| **Simple** | Specify → Execute → Verify |
-| **Medium** | Specify → Tasks → Execute → Verify |
-| **Complex** | + Discuss, Design, conditional AppSec/QA |
+| `agent-architecture.md` | **Start here** — contract, phase map, complexity router, gate table |
 
-Phase procedures live in `.cursor/skills/references/` (loaded on demand). The hub `agent-architecture.md` maps each phase to skills and gates.
+### Sister skills (cross-cutting)
 
-## Gates (summary)
-
-Scripts live in `.specs/harness/scripts/`. Non-zero exit = stop and fix the artifact.
-
-| Gate | Blocks |
+| Skill | When the agent loads it |
 | --- | --- |
-| `validate-spec` | Incomplete spec shape, untestable criteria, bad requirement IDs |
-| `validate-tasks` | Missing task fields, uncovered REQs, illegal parallel `Files` overlap |
-| `analyze-artifacts` | Spec/task drift before approval |
-| `check-commit` | Non-conventional commit messages |
-| `validate-state` | Missing verify report, non-PASS verdict, missing test evidence |
-| `lessons` | Ungrounded lesson entries |
+| `engineering-standards.md` | During Execute — code quality, secrets, commit rules |
+| `task-graph-engineering.md` | 3+ tasks or parallel work — DAG, fake edges, diamond verify |
+| `security-review.md` | During Verify — OWASP-style checklist |
+| `git-handoff.md` | Session end, phase boundaries — commit `.specs/`, STATE |
+| `appsec.md` | **Conditional** — auth, payments, PII, uploads (Complex / attack surface) |
+| `qa-strategy.md` | **Conditional** — multi-step UI flows, regression (after AppSec if both apply) |
+| `code-simplify.md` | **Conditional** — polish without behavior change (Medium+ or owner ask) |
+| `ship-ready.md` | **Conditional** — ship checklist when owner asks (does not authorize push) |
 
-Gates check **form**, not whether the feature is morally correct. Full tables and guarantees: [docs/guide/Gates-and-guarantees.md](docs/guide/Gates-and-guarantees.md) and [`prd/gate-stability.md`](prd/gate-stability.md).
+At most **one** conditional sister in context at a time.
+
+### Phase references (loaded per phase)
+
+| Reference | Phase | What it does |
+| --- | --- | --- |
+| `explore.md` | Explore | Think before Specify |
+| `project-init.md` | Brownfield | Map existing repo → PROJECT + domains |
+| `constitution.md` | Once | Project governing principles |
+| `specify.md` | Specify | Requirements, EARS, `feature-init` |
+| `discuss.md` | Discuss | Resolve gray areas → `context.md` |
+| `design.md` | Design | Technical design (Complex) |
+| `tasks.md` | Tasks | Atomic tasks + coverage matrix |
+| `analyze.md` | Analyze | Spec ↔ tasks consistency |
+| `implement.md` | Execute | **`/loop`** — test-first, one commit per task |
+| `validate.md` | Verify | Independent verifier, evidence, mutants |
+| `archive.md` | Archive | Fold feature into domain truth |
+| `converge.md` | On drift | Re-sync spec and tasks |
+| `memory.md` | Handoff | Update `STATE.md` |
+| `quick-mode.md` | Quick | Express lane for tiny changes |
+| `context-limits.md` | Always (budget) | What **not** to load — token discipline |
+| `lessons.md` | On FAIL | Grounded lessons from verify gaps |
+| `sub-agents.md` | Parallel Execute | Worker payloads when graph splits |
+
+Always-on rule: `.cursor/rules/engineering-baseline.mdc` (skills map + gate reminders).
+
+---
+
+## Gates (automatic brakes)
+
+Gates are Python scripts in `.specs/harness/scripts/`. **Exit code ≠ 0 means STOP** — fix the artifact, re-run.
+
+| CLI / script | When you run it | What it blocks |
+| --- | --- | --- |
+| `validate-spec` | Spec draft ready | Weak requirements, bad IDs, missing `SHALL`/`MUST` |
+| `analyze-artifacts` | Before approving tasks | Spec ↔ tasks drift |
+| `validate-tasks` | Task list ready | Missing fields, uncovered REQs, parallel `Files` overlap, missing `task-graph.md` when 3+ tasks |
+| `check-commit` | Each commit | Non-conventional commit messages |
+| `validate-state` | Before “done” | Missing `validation.md`, non-PASS, missing test `file:line` evidence |
+| `lessons` | After verify FAIL | Ungrounded lesson entries |
+
+Gates check **form and evidence shape**, not whether the feature is morally correct. Details: [docs/guide/Gates-and-guarantees.md](docs/guide/Gates-and-guarantees.md), [`prd/gate-stability.md`](prd/gate-stability.md).
+
+**Git tiers:** Tier 0 (branch, local commits, `.specs/` edits) runs after you approve spec/tasks. Push, PR, merge, and deploy need explicit owner go-ahead.
+
+---
+
+## Token cost (measured)
+
+Loading **one phase at a time** keeps skill context small. Figures below are **estimates** (`chars ÷ 4`, English/code mix) from the packaged skills — run `npm test` → `test_token_cost.test.js` to reproduce.
+
+| Load profile | Est. tokens | Files | Typical turn |
+| --- | ---: | ---: | --- |
+| Naive full dump (all skills + refs) | ~31k | 27 | ❌ Don’t do this every message |
+| Specify turn | ~9k | 5 | Planning a feature |
+| Tasks turn | ~10k | 5 | Breaking down work |
+| Execute `/loop` | ~4k | 3 | One implementation task |
+| Verify turn | ~6k | 4 | Independent review |
+
+**Savings vs naive dump:** ~71% on Specify, ~86% on Execute (CI test enforces minimum savings).
+
+More: [docs/guide/Token-efficiency.md](docs/guide/Token-efficiency.md).
+
+---
+
+## CLI reference
+
+### Setup once (or occasionally)
+
+| Command | What it does |
+| --- | --- |
+| `install` | Copy skills, 17 references, gates, `.cursorrules`, `.specs/` scaffold |
+| `install --preset node-ts` | Install + seed `.specs/config.yaml` if missing |
+| `init-config --preset python` | Create config only (no full reinstall) |
+| `preset list` / `preset show <name>` | Inspect built-in presets |
+| `project-init` | Brownfield: scan repo → `PROJECT.md`, domains, `ROADMAP` |
+| `doctor` | Harness Ready score + top 3 fixes |
+| `phase-context <phase>` | Print config context + rules for a phase |
+
+### Per feature
+
+| Command | What it does |
+| --- | --- |
+| `feature-init "description"` | New `.specs/features/NNN-slug/`, `STATE.md`, branch |
+| `validate-spec [feature]` | Gate the spec |
+| `analyze-artifacts` + `validate-tasks` | Gate tasks + consistency |
+| `check-commit --message "..."` | Conventional Commits gate |
+| `validate-state [feature]` | Gate completion |
+| `archive-feature [feature]` | Merge into domain + `ROADMAP` |
+
+---
 
 ## What install writes
 
@@ -100,7 +233,9 @@ Gates check **form**, not whether the feature is morally correct. Full tables an
 | `.specs/STATE.md` · `LESSONS.md` | Handoff and lessons (preserved on reinstall) |
 | `.specs/features/` · `project/` · `domains/` | Created empty for you to fill |
 
-Asset provenance: install copies from the **npm package**, not live GitHub. Override with `HARNESS_REPO_URL` only for forks or tests (HTTPS, same-origin redirects, size cap).
+Assets copy from the **npm package**, not live GitHub. Override with `HARNESS_REPO_URL` only for forks or tests.
+
+---
 
 ## Learn more
 
@@ -108,14 +243,12 @@ Asset provenance: install copies from the **npm package**, not live GitHub. Over
 | --- | --- |
 | [Quick start](docs/guide/Quick-start.md) | First ten minutes |
 | [How it works](docs/guide/How-it-works.md) | Phases in plain language |
-| [Token efficiency](docs/guide/Token-efficiency.md) | Why progressive loading matters |
-| [FAQ](docs/guide/FAQ.md) | Everyday questions |
 | [Loop patterns](docs/guide/loop-patterns.md) | Feature vs operational loops |
-| [Ecosystem map](docs/guide/ecosystem.md) | How this fits harness / loop / graph tooling |
-| [Brownfield context](docs/guide/brownfield-context.md) | Why KG / RepoGraph are deferred |
-| [Credits](docs/guide/credits.md) | Full attribution list |
+| [Ecosystem map](docs/guide/ecosystem.md) | How this fits other harness tools |
+| [FAQ](docs/guide/FAQ.md) | Common questions |
+| [Credits](docs/guide/credits.md) | Full attribution |
 
-Full index: [`docs/guide/`](docs/guide/).
+---
 
 ## Upgrading
 
@@ -123,16 +256,16 @@ Full index: [`docs/guide/`](docs/guide/).
 npx @luizsantiago/agentic-harness install
 ```
 
-Memory and edited rules are kept. After a major jump, skim [GitHub Releases](https://github.com/luizssantiago92/spec-driven-harness/releases) for CLI or gate changes. Notable recent lines:
+Memory and edited rules are kept. Skim [GitHub Releases](https://github.com/luizssantiago92/spec-driven-harness/releases) after major jumps.
 
 | Version | Highlights |
 | --- | --- |
 | **1.1.x** | `project-init` for brownfield repos |
 | **1.0.x** | Config presets, `extends` / `overrides`, `init-config` |
-| **0.9.x** | `archive-feature`, `phase-context`, delta spec merge |
-| **0.8.x** | `feature-init`, explore/analyze/archive refs, git tiers |
+| **0.9.x** | `archive-feature`, `phase-context`, delta merge |
+| **0.8.x** | `feature-init`, explore/analyze/archive, git tiers |
 
-Older upgrade steps (0.3–0.7 gate contract) remain in release notes — only follow them if you are upgrading from those versions.
+---
 
 ## Development
 
@@ -140,24 +273,22 @@ Older upgrade steps (0.3–0.7 gate contract) remain in release notes — only f
 git clone https://github.com/luizssantiago92/spec-driven-harness.git
 cd spec-driven-harness
 npm test
-npm run harness -- install   # local CLI; avoids npx name clash in this repo
+npm run harness -- install
 ```
 
-Publish: GitHub Actions workflow on release tags (see `.github/workflows/publish.yml`).
+---
 
 ## Credits
 
-Lineage and borrowed patterns — see [docs/guide/credits.md](docs/guide/credits.md) for the full list.
+We adapted patterns from the open-source community — see [docs/guide/credits.md](docs/guide/credits.md).
 
-| Source | License | Contribution |
+| Source | License | What we borrowed |
 | --- | --- | --- |
-| [tlc-spec-driven](https://github.com/tech-leads-club/agent-skills/tree/main/packages/skills-catalog/skills/(development)/tlc-spec-driven) | CC-BY-4.0 | Phases, memory, gate lineage |
-| [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) | MIT | Discuss / DoD patterns |
-| [graph-engineering](https://github.com/codejunkie99/graph-engineering) | MIT | Task-graph topology (adapted in `task-graph-engineering.md`) |
-| [loop-engineering](https://github.com/cobusgreyling/loop-engineering) | MIT | Operational loop patterns; `doctor` readiness metaphor |
-| [awesome-harness-engineering](https://github.com/ai-boost/awesome-harness-engineering) | CC0 | Ecosystem taxonomy reference |
-
-Research/adjacent (not vendored): [DeepCode](https://github.com/HKUDS/DeepCode), [RepoGraph](https://github.com/ozyyshr/RepoGraph). **Not** [harness/harness-skills](https://github.com/harness/harness-skills) (Harness.io CI/CD — different product).
+| [tlc-spec-driven](https://github.com/tech-leads-club/agent-skills/tree/main/packages/skills-catalog/skills/(development)/tlc-spec-driven) | CC-BY-4.0 | Phases, `.specs/` memory, gate lineage |
+| [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills) | MIT | Discuss / definition-of-done |
+| [graph-engineering](https://github.com/codejunkie99/graph-engineering) | MIT | Task-graph topology |
+| [loop-engineering](https://github.com/cobusgreyling/loop-engineering) | MIT | Operational loop patterns; `doctor` metaphor |
+| [awesome-harness-engineering](https://github.com/ai-boost/awesome-harness-engineering) | CC0 | Ecosystem taxonomy |
 
 ## License
 
