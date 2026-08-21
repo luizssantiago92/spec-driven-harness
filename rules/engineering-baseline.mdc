@@ -25,7 +25,7 @@ Chat language is a personal preference. Set it in your own agent settings if you
 | Skill | Purpose |
 | --- | --- |
 | `.cursor/skills/agent-architecture.md` | SDD hub — contract, phases, gates, complexity router |
-| `.cursor/skills/references/` | Phase procedures (specify, discuss, design, tasks, implement, validate, memory, quick-mode, context-limits, lessons, sub-agents) |
+| `.cursor/skills/references/` | Phase procedures (explore, constitution, specify, discuss, design, tasks, analyze, implement, validate, converge, archive, memory, quick-mode, context-limits, lessons, sub-agents) |
 | `.cursor/skills/task-graph-engineering.md` | Task DAG, parallelism, verify topology |
 | `.cursor/skills/engineering-standards.md` | Code quality, secure coding, git hygiene |
 | `.cursor/skills/security-review.md` | Security checklist for verification |
@@ -38,12 +38,14 @@ Chat language is a personal preference. Set it in your own agent settings if you
 
 # Deterministic Gates
 
+<!-- harness-managed:gates-map:start -->
 Structural gates live in `.specs/harness/scripts/` and require Python 3. A non-zero exit means STOP.
 
 | When | Command |
 | --- | --- |
+| Before `/specify` (Medium+) | `npx @luizsantiago/agentic-harness feature-init "<description>"` (Tier 0 — folder + branch + STATE) |
 | Before confirming a spec | `python3 .specs/harness/scripts/validate_spec.py [feature]` |
-| Before approving tasks | `python3 .specs/harness/scripts/validate_tasks.py [feature]` |
+| Before approving tasks | `python3 .specs/harness/scripts/analyze_artifacts.py [feature]` then `validate_tasks.py [feature]` |
 | On each commit | `python3 .specs/harness/scripts/check_commit.py --message "<message>"` |
 | Before declaring done | `python3 .specs/harness/scripts/validate_state.py [feature]` |
 | After a grounded verify FAIL | `python3 .specs/harness/scripts/lessons.py add --source .specs/features/[feature]/validation.md` |
@@ -52,4 +54,7 @@ Gates accept a feature name, a feature directory, or a path to the artifact. Wit
 
 If Python is unavailable, perform the same checks by reading the artifact against the reference checklist.
 
+**Git tiers:** Tier 0 (feature-init, local branch, commits) runs on phase triggers. Tier 1 (`git push`, PR) and Tier 2 (merge, deploy, force-push) need explicit owner go-ahead. See `git-handoff.md`.
+
 Persistent state: `.specs/STATE.md` (decisions/handoff), `.specs/lessons.json` (canonical lessons), `.specs/LESSONS.md` (generated playbook). Commit `.specs/` via `/handoff` — see `git-handoff.md`.
+<!-- harness-managed:gates-map:end -->

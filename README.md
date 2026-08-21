@@ -57,7 +57,7 @@ Dumping every skill and reference into every turn is the expensive default. This
 
 | Load pattern | What enters context | Relative size |
 | --- | --- | --- |
-| Naive full dump | Hub + all 11 phase refs + 8 sister skills + project rule | ~27k tokens |
+| Naive full dump | Hub + all 16 phase refs + 8 sister skills + project rule | ~27k tokens |
 | Progressive (plan turn) | Hub + current phase ref + mapped sister skill + `context-limits` + rule | ~7k tokens (~**70% less**) |
 | Execute lean | Current phase ref + sister skill + `context-limits` | ~4k tokens |
 | Execute + simplify | Execute lean + `code-simplify.md` (never with AppSec/QA/ship) | ~+0.9k vs Execute lean |
@@ -133,7 +133,8 @@ A non-zero exit means stop, fix the artifact, and re-run.
 
 | Gate | Rejects |
 | --- | --- |
-| `validate_spec` | Missing `Requirements` / `Assumptions` / `Out of Scope`, a criterion without `SHALL` or `MUST`, malformed IDs, a requirement without acceptance criteria, unfilled template placeholders outside fenced samples and HTML comments |
+| `validate_spec` | Missing `Goal`, `Requirements` / `Assumptions` / `Out of Scope` (full spec), or delta sections (`ADDED`/`MODIFIED`/`REMOVED`), a criterion without `SHALL` or `MUST`, malformed IDs, a requirement without acceptance criteria, unfilled template placeholders outside fenced samples and HTML comments; open `[NEEDS CLARIFICATION]` warns (`--strict` blocks) |
+| `analyze_artifacts` | Spec requirement without task coverage, task `Requirement` referencing unknown REQ ID; open `[NEEDS CLARIFICATION]` warns (`--strict` blocks) |
 | `validate_tasks` | Missing required field (`Requirement`, `Files`, `Depends on`, `Tests`, `Gate`, `Done when`), `Files`/`Tests`/`Gate`/`Done when` set to none/—, unknown or forward dependency, dependency on a later phase, dependency cycle, a title on the vague-phrase list, uncovered spec requirement IDs (only headings under `## Requirements`; fences and HTML comments ignored), independent tasks sharing a `Files` path (`./path`, `/path`, `../path`, quotes, markdown links, case variants, and `path` count as one) |
 | `check_commit` | Non-Conventional header, unknown type, header over 72 characters, trailing period |
 | `validate_state` | Missing `validation.md`, verdict other than exact `PASS`/`PASSED` (`PASS WITH GAPS` fails), verdict only under a non-Verdict section, conflicting preamble vs `## Verdict`, no **test** `file:line` evidence (fences and HTML comments ignored), a spec requirement without same-line test evidence, open task, `PASS` with a surviving mutant (sensor/mutant lines only), Medium+ `PASS` without a **killed** mutant there, Medium+ feature without a sensor **outcome** (`killed`/`survived`/`injected`), `PASS` with open `Gaps` or Security Review `Result: fail` |
