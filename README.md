@@ -45,6 +45,69 @@ Plain-language tour: [docs/guide/Home.md](docs/guide/Home.md) · [Quick start](d
 
 ---
 
+## `/specify` — start every real feature here
+
+**`/specify`** is the first mandatory phase for anything bigger than a quick fix. It is **not** a terminal command — you ask the **agent** to specify, and it loads `references/specify.md`.
+
+### Purpose
+
+Before any production code, you and the agent **agree in writing** on:
+
+- **What** must be built (requirements with IDs like `REQ-001`)
+- **What** is assumed or explicitly out of scope
+- **How** success is tested (acceptance criteria with `SHALL` / `MUST`)
+
+That agreement lives in `.specs/features/NNN-slug/spec.md`. Nothing gets implemented until you approve this document (and the spec gate passes).
+
+### How to invoke it (chat)
+
+In Cursor or Claude Code, after `install`:
+
+```
+/specify
+
+Add CSV export to the reports page. Users pick a date range.
+Out of scope: PDF export and scheduled emails.
+```
+
+Plain language works too — the agent should recognize the Specify phase:
+
+```
+Specify a feature: users can export reports as CSV for a date range.
+Keep PDF out of scope.
+```
+
+**What the agent does:**
+
+1. Runs `feature-init` (creates folder, branch, `STATE.md`) — Medium+ work
+2. Drafts `spec.md` with requirements and testable criteria
+3. Runs `validate-spec` and fixes until the gate passes
+4. **Stops and asks you to approve** before Tasks or Execute
+
+### CLI tied to Specify (optional for you)
+
+You rarely run these yourself — the agent does. Useful to know what is happening:
+
+| Command | Role in Specify |
+| --- | --- |
+| `feature-init "description"` | Creates `.specs/features/001-slug/`, updates `STATE.md`, branch `feat/001-slug` |
+| `validate-spec [feature]` | Gate: spec is complete and testable — **must pass before you approve** |
+| `phase-context specify` | Prints project rules from `.specs/config.yaml` for this phase |
+
+Example if you start from the terminal:
+
+```bash
+npx @luizsantiago/agentic-harness feature-init "add CSV export to reports"
+# Agent or you draft .specs/features/001-add-csv-export-to-reports/spec.md
+npx @luizsantiago/agentic-harness validate-spec 001-add-csv-export-to-reports
+```
+
+### When to skip Specify
+
+**Quick tier only** — ≤3 files, no design decisions, no new dependencies. Use `/quick` instead. Everything else starts with `/specify`.
+
+---
+
 ## What this package is (and is not)
 
 | This package | Not this package |

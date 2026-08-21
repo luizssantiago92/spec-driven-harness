@@ -5,11 +5,20 @@ You installed the **Spec-Driven Harness**. You do **not** need to memorize CLI c
 ## What to do now
 
 1. Open **Cursor** or **Claude Code** in this project.
-2. Describe what you want in plain language, for example:
+2. Start with **Specify** — the written agreement before any code:
 
-   > Specify a feature: add CSV export to the reports page. Keep PDF out of scope.
+   ```
+   /specify
 
-3. Ask the agent to follow the installed harness (`agent-architecture.md` / Spec-Driven hub).
+   Add CSV export to the reports page. Users pick a date range.
+   Out of scope: PDF export.
+   ```
+
+   Or in plain language:
+
+   > Specify a feature: users can export reports as CSV. Keep PDF out of scope.
+
+3. Review the draft in `.specs/features/…/spec.md`. Approve only when you agree with every requirement.
 
 The agent loads **one phase at a time**, writes plans under `.specs/`, and runs automatic checks before calling work “done”.
 
@@ -18,8 +27,9 @@ The agent loads **one phase at a time**, writes plans under `.specs/`, and runs 
 | Command | Only when |
 | --- | --- |
 | `npx @luizsantiago/agentic-harness install` | First time, or after upgrading the package |
-| `npx @luizsantiago/agentic-harness feature-init "…"` | You want to start a feature from the terminal (optional — the agent can do this on `/specify`) |
-| `npx @luizsantiago/agentic-harness doctor` | Something looks broken after install |
+| `feature-init "…"` | Optional — `/specify` usually runs this for you |
+| `validate-spec [feature]` | Optional — double-check the spec gate yourself |
+| `doctor` | Something looks broken after install |
 
 **Gates** (`validate-spec`, `validate-tasks`, …) are usually run **by the agent** at the right phase. You can run them manually to double-check paperwork.
 
