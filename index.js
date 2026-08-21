@@ -1,9 +1,12 @@
 #!/usr/bin/env node
 
+import path from "node:path";
+
 import { archiveFeature } from "./lib/archive.js";
 import { projectInit } from "./lib/brownfield.js";
 import { PACKAGE_VERSION } from "./lib/constants.js";
 import { phaseContext } from "./lib/config.js";
+import { doctor } from "./lib/doctor.js";
 import { featureInit } from "./lib/feature.js";
 import { GATE_COMMANDS, runGate } from "./lib/gates.js";
 import { install } from "./lib/install.js";
@@ -40,6 +43,9 @@ Commands:
     [--no-domain]                    Skip domain spec merge
     [--no-state]                     Skip STATE reset
   phase-context <phase>              Print .specs/config.yaml context + rules for a phase
+  doctor [path]                      Audit harness readiness (score + next actions)
+    [--json]                         Machine-readable output
+    [--no-suggest]                   Hide per-check remediation hints
   validate-spec [spec.md|feature]    Closure gate for a feature spec
   analyze-artifacts [feature]        Cross-artifact consistency before task approval
   validate-tasks [tasks.md|feature]  Granularity gate for a task breakdown
@@ -281,6 +287,27 @@ if (command === "--version" || command === "-v" || command === "version") {
     }
     const output = await phaseContext(phase);
     process.stdout.write(output);
+  } catch (err) {
+    console.error(`❌ ${err.message}`);
+    process.exit(1);
+  }
+} else if (command === "doctor") {
+  try {
+    const doctorOptions = { json: false, suggest: true };
+    const positional = [];
+
+    for (const arg of args) {
+      if (arg === "--json") {
+        doctorOptions.json = true;
+      } else if (arg === "--no-suggest") {
+        doctorOptions.suggest = false;
+      } else {
+        positional.push(arg);
+      }
+    }
+
+    const target = positional[0] ? path.resolve(positional[0]) : process.cwd();
+    await doctor(target, doctorOptions);
   } catch (err) {
     console.error(`❌ ${err.message}`);
     process.exit(1);

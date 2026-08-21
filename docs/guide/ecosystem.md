@@ -1,0 +1,56 @@
+# Ecosystem map
+
+Where the Spec-Driven Harness sits among harness, loop, and graph engineering — and what we deliberately **do not** try to be.
+
+## Layers
+
+```text
+┌─────────────────────────────────────────────────────────────┐
+│  Runtime (sessions, tools, models, desktop)                 │
+│  e.g. DeepCode, harness-foundry                             │
+├─────────────────────────────────────────────────────────────┤
+│  Operational loops (cadence, triage, CI, cost)              │
+│  e.g. loop-engineering                                      │
+├─────────────────────────────────────────────────────────────┤
+│  Spec + gates + memory  ←  @luizsantiago/agentic-harness    │
+├─────────────────────────────────────────────────────────────┤
+│  Code context (repo graphs, search)                         │
+│  e.g. RepoGraph                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## This package
+
+| Responsibility | Mechanism |
+| --- | --- |
+| Agree on goals in writing | `.specs/features/*/spec.md`, domains |
+| Break work into provable steps | `tasks.md`, `task-graph.md` |
+| Stop fake “done” | Python gates (`validate-*`, `check-commit`) |
+| Fresh verify | `references/validate.md`, independent context |
+| Brownfield onboarding | `project-init`, `PROJECT.md`, domain stubs |
+| Readiness audit | `doctor` |
+
+## Adjacent projects (curated)
+
+| Project | Role | Relationship |
+| --- | --- | --- |
+| [tlc-spec-driven](https://github.com/tech-leads-club/agent-skills/tree/main/packages/skills-catalog/skills/(development)/tlc-spec-driven) | SDD phases, memory | Lineage (CC-BY-4.0) |
+| [graph-engineering](https://github.com/codejunkie99/graph-engineering) | Task DAG + KG course | Task half adapted (MIT) |
+| [loop-engineering](https://github.com/cobusgreyling/loop-engineering) | Operational loops | Complementary patterns |
+| [awesome-harness-engineering](https://github.com/ai-boost/awesome-harness-engineering) | Curated index | Taxonomy reference |
+| [DeepCode](https://github.com/HKUDS/DeepCode) | Full agent runtime | Adjacent product |
+| [harness/harness-skills](https://github.com/harness/harness-skills) | Harness.io CI/CD skills | **Different product** (name collision only) |
+| [RepoGraph](https://github.com/ozyyshr/RepoGraph) | Repo-level code graph | Optional brownfield context (not bundled) |
+
+## What we are not building
+
+- A desktop agent or session runtime (see DeepCode, Cursor, Claude Code)
+- Harness.io pipeline generator (see harness-skills + MCP)
+- Full knowledge-graph pipeline (see graph-engineering KG half)
+- SWE-bench research integration (see RepoGraph)
+
+## Further reading
+
+- [loop-patterns.md](loop-patterns.md) — feature vs operational loops
+- [brownfield-context.md](brownfield-context.md) — why KG / RepoGraph are deferred
+- [credits.md](credits.md) — full attribution list

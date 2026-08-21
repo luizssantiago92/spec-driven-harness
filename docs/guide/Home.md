@@ -32,18 +32,18 @@ npx @luizsantiago/agentic-harness check-commit --message "feat(auth): add token 
 npx @luizsantiago/agentic-harness lessons list --status confirmed
 ```
 
-Plain meaning on [[Quick-start]] and [[Gates-and-guarantees]].
+Plain meaning on [Quick start](Quick-start.md) and [Gates and guarantees](Gates-and-guarantees.md).
 
 ## Start here
 
 | Page | Read when |
 | --- | --- |
-| [[How-it-works]] | You want the story from goal → done |
-| [[Gates-and-guarantees]] | You want what the brakes catch (and what they don’t) |
-| [[Token-efficiency]] | You care about chat cost / context |
-| [[Quick-start]] | You want ten minutes to first success |
-| [[FAQ]] | You have a concrete question |
-| [[Companion-agentic-fullstack]] | You also use frontend / backend / data skills |
+| [How it works](How-it-works.md) | You want the story from goal → done |
+| [Gates and guarantees](Gates-and-guarantees.md) | You want what the brakes catch (and what they don’t) |
+| [Token efficiency](Token-efficiency.md) | You care about chat cost / context |
+| [Quick start](Quick-start.md) | You want ten minutes to first success |
+| [FAQ](FAQ.md) | You have a concrete question |
+| [Companion: Agentic Fullstack](Companion-agentic-fullstack.md) | You also use frontend / backend / data skills |
 
 ## Links
 

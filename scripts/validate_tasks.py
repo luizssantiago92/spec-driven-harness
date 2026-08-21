@@ -16,6 +16,7 @@ Checks:
   * dependency graph is acyclic
   * every requirement ID in sibling spec.md is covered by at least one task
   * independent tasks do not share Files paths
+  * 3+ tasks require sibling task-graph.md (when validating on disk)
   * vague task titles are flagged as granularity smells
 
 Exit codes: 0 pass, 1 blocking issues, 2 usage error.
@@ -199,6 +200,7 @@ def build_report(
     text: str,
     *,
     spec_text: str | None = None,
+    feature_dir: Path | None = None,
 ) -> Report:
     report = Report(gate=GATE, target=target)
     visible = visible_markdown(text)
@@ -329,6 +331,16 @@ def build_report(
     else:
         report.ok("no unresolved placeholders")
 
+    if len(seen) >= 3 and feature_dir is not None:
+        graph_path = feature_dir / "task-graph.md"
+        if graph_path.is_file():
+            report.ok("task-graph.md present for 3+ task breakdown")
+        else:
+            report.error(
+                "3+ tasks require task-graph.md - draw the DAG before approval "
+                "(see task-graph-engineering.md)"
+            )
+
     return report
 
 
@@ -354,7 +366,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     path, text = resolve_artifact(args.tasks, "tasks.md", GATE)
-    report = build_report(str(path), text, spec_text=_load_sibling_spec(path))
+    report = build_report(
+        str(path),
+        text,
+        spec_text=_load_sibling_spec(path),
+        feature_dir=path.parent,
+    )
     return report.emit(strict=args.strict)
 
 

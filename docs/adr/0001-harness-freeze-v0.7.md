@@ -20,10 +20,10 @@ For **0.7.x**:
 ## Consequences
 
 - Skill PASS language that gates do not enforce stays labeled as verifier judgment.
-- Docs and wiki link here for the freeze table; adversarial details point at the matrix file, not a separate `tests/adversarial/` tree.
+- Docs link here for the freeze table; adversarial details point at the matrix file, not a separate `tests/adversarial/` tree.
 
 ## References
 
 - `prd/gate-stability.md`
 - `test/test_adversarial_gates.py`
-- Wiki: Gates and guarantees
+- `docs/guide/Gates-and-guarantees.md`

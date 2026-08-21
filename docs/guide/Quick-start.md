@@ -74,11 +74,11 @@ More gates (tasks, “are we actually done?”) live in the [README Gates sectio
 
 - **No Python?** The playbook still guides the agent; install Python 3 when you want the automatic stop checks.  
 - **Agent ignores the harness?** Point it at `.cursor/skills/agent-architecture.md` and say “follow this”.  
-- **Want the big picture?** → [[How-it-works]]  
-- **Want the brakes explained?** → [[Gates-and-guarantees]]  
+- **Want the big picture?** → [How it works](How-it-works.md)  
+- **Want the brakes explained?** → [Gates and guarantees](Gates-and-guarantees.md)  
 
 ## Next
 
-- Save money on context → [[Token-efficiency]]  
-- Common questions → [[FAQ]]  
-- Back → [[Home]]
+- Save money on context → [Token efficiency](Token-efficiency.md)  
+- Common questions → [FAQ](FAQ.md)  
+- Back → [Home](Home.md)
