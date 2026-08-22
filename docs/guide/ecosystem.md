@@ -1,14 +1,14 @@
 # Ecosystem map
 
-Where the Spec Seatbelt sits among harness, loop, and graph engineering — and what we deliberately **do not** try to be.
+Where the Spec Guardrails sits among harness, loop, and graph engineering — and what we deliberately **do not** try to be.
 
 ## Layers
 
-| Layer | Examples | Relationship to Spec Seatbelt |
+| Layer | Examples | Relationship to Spec Guardrails |
 | --- | --- | --- |
 | **Runtime** (sessions, tools, models, desktop) | DeepCode, harness-foundry | Adjacent — we do not ship a runtime |
 | **Operational loops** (cadence, triage, CI, cost) | loop-engineering | Complementary — see [loop-patterns.md](loop-patterns.md) |
-| **Spec + gates + memory** | **@luizsantiago/spec-seatbelt** | **This package** — skills, `.specs/`, Python gates |
+| **Spec + gates + memory** | **@luizsantiago/spec-guardrails** | **This package** — skills, `.specs/`, Python gates |
 | **Floor map** (Lane Execute manuals + specialists; **Desks** planned 0.5.0) | [@luizsantiago/fullstack-floor-map](https://www.npmjs.com/package/@luizsantiago/fullstack-floor-map) | Optional companion — see [Companion-fullstack-floor-map.md](Companion-fullstack-floor-map.md) |
 | **Code context** (repo graphs, search) | RepoGraph | Optional brownfield plugin — not bundled |
 

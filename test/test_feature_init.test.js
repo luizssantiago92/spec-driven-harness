@@ -11,7 +11,7 @@ import {
   nextFeatureNumber,
   slugifyDescription,
 } from "../lib/feature.js";
-import { initSeatbeltMemory } from "../lib/memory.js";
+import { initGuardrailsMemory } from "../lib/memory.js";
 
 async function createTempDir(prefix) {
   return fs.mkdtemp(path.join(os.tmpdir(), prefix));
@@ -49,7 +49,7 @@ describe("feature init", () => {
 
   it("creates feature folder, spec stub, and STATE", async () => {
     const cwd = await createTempDir("feature-init-");
-    await initSeatbeltMemory(cwd);
+    await initGuardrailsMemory(cwd);
 
     const result = await featureInit("chat with presence", {
       cwd,
@@ -71,7 +71,7 @@ describe("feature init", () => {
   it("creates and checks out a feature branch (Tier 0)", async () => {
     const cwd = await createTempDir("feature-branch-");
     await initGitRepo(cwd);
-    await initSeatbeltMemory(cwd);
+    await initGuardrailsMemory(cwd);
 
     const result = await featureInit("dark mode toggle", { cwd });
     assert.equal(result.branchCreated, true);

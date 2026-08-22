@@ -80,4 +80,4 @@ Escalate instead of `Result: pass` when the feature introduces or materially cha
 - `security-review.md` — OWASP Verify checklist
 - `references/validate.md` — Verify procedure; load AppSec then drop before QA
 - `references/context-limits.md` — at most one conditional sister in context
-- [Gate stability](https://github.com/luizssantiago92/spec-seatbelt/blob/main/prd/gate-stability.md) — AppSec is non-guarantee / judgment
+- [Gate stability](https://github.com/luizssantiago92/spec-guardrails/blob/main/prd/gate-stability.md) — AppSec is non-guarantee / judgment

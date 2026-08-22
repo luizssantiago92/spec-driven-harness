@@ -20,14 +20,14 @@ How to record, promote, and load grounded lessons. The engine owns the files; th
 | --- | --- | --- |
 | `.specs/lessons.json` | `lessons.py` | Canonical store |
 | `.specs/LESSONS.md` | `lessons.py` | Rendered playbook — read, never write |
-| `.specs/seatbelt/scripts/lessons.py` | Harness | `add`, `list`, `penalize`, `prune`, `status` |
+| `.specs/guardrails/scripts/lessons.py` | Harness | `add`, `list`, `penalize`, `prune`, `status` |
 
 ## How to Phrase
 
 A lesson is a trigger plus a rule the next agent can apply without the original thread:
 
 ```bash
-python3 .specs/seatbelt/scripts/lessons.py add \
+python3 .specs/guardrails/scripts/lessons.py add \
   --title "Assert error codes, not just status" \
   --trigger "mutant returning 403 instead of 401 survived" \
   --rule "Acceptance criteria must name the error code, and tests must assert it" \
@@ -55,7 +55,7 @@ Same-feature recurrence does not promote. One noisy feature must not turn a gues
 At the start of Specify and Design:
 
 ```bash
-python3 .specs/seatbelt/scripts/lessons.py list --status confirmed
+python3 .specs/guardrails/scripts/lessons.py list --status confirmed
 ```
 
 Apply every confirmed rule that matches this work. Candidates are not guidance — they live in `lessons.json` until a second feature corroborates them.

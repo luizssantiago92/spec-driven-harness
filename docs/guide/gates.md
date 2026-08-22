@@ -1,6 +1,6 @@
 # Gates reference — how automatic brakes work
 
-Gates are **Python scripts** in `.specs/seatbelt/scripts/`. The agent (or you) runs them at phase boundaries.
+Gates are **Python scripts** in `.specs/guardrails/scripts/`. The agent (or you) runs them at phase boundaries.
 
 **Exit code 0** = pass. **Non-zero** = stop, fix the artifact, re-run. Gates do not replace your judgment — they block **structural** gaps (empty specs, fake done, bad commit titles).
 
@@ -35,7 +35,7 @@ Gates are **Python scripts** in `.specs/seatbelt/scripts/`. The agent (or you) r
 | Step | What happens |
 | ---: | --- |
 | 1 | Agent writes or updates the artifact (e.g. `spec.md`) |
-| 2 | Agent runs `python3 .specs/seatbelt/scripts/validate_spec.py <feature>` |
+| 2 | Agent runs `python3 .specs/guardrails/scripts/validate_spec.py <feature>` |
 | 3 | **Exit 0** → OK, present to you for approval |
 | 4 | **Exit 1** → STOP, fix listed issues, re-run (no Tasks/Execute until pass) |
 
@@ -67,18 +67,18 @@ Freeze policy for maintainers: [Gates and guarantees](Gates-and-guarantees.md) �
 ## Running gates yourself
 
 ```bash
-npx @luizsantiago/spec-seatbelt validate-spec auth
-npx @luizsantiago/spec-seatbelt validate-tasks auth
-npx @luizsantiago/spec-seatbelt loop-plan auth --json
-npx @luizsantiago/spec-seatbelt validate-state auth
-npx @luizsantiago/spec-seatbelt check-commit --message "feat(auth): add session"
-npx @luizsantiago/spec-seatbelt lessons list --status confirmed
+npx @luizsantiago/spec-guardrails validate-spec auth
+npx @luizsantiago/spec-guardrails validate-tasks auth
+npx @luizsantiago/spec-guardrails loop-plan auth --json
+npx @luizsantiago/spec-guardrails validate-state auth
+npx @luizsantiago/spec-guardrails check-commit --message "feat(auth): add session"
+npx @luizsantiago/spec-guardrails lessons list --status confirmed
 ```
 
 `doctor` checks that scripts exist, Python works, and suggests `loop-plan` when Execute is next.
 
 ## Related
 
-- [Concepts](concepts.md) — where gates sit in the seatbelt model
+- [Concepts](concepts.md) — where gates sit in the guardrails model
 - [Agent commands](agent-commands.md) — which command triggers which gate
 - [Skills and hub](skills-and-hub.md) — hub gate schedule table

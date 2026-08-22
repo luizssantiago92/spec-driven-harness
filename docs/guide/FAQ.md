@@ -2,11 +2,11 @@
 
 ## What is this package, in plain language?
 
-A **seatbelt for AI coding agents**. It makes them write down the plan, build against that plan, and prove the work before calling it done—so you get fewer half-finished “looks good” moments.
+A **guardrails for AI coding agents**. It makes them write down the plan, build against that plan, and prove the work before calling it done—so you get fewer half-finished “looks good” moments.
 
 ## Is this a framework or a product I run in production?
 
-It’s a **process kit** for agents (skills + docs + a completion gate). Your app is still your app. Spec Seatbelt shapes *how the agent works*, not your runtime stack.
+It’s a **process kit** for agents (skills + docs + a completion gate). Your app is still your app. Spec Guardrails shapes *how the agent works*, not your runtime stack.
 
 ## Do I need to change how my team codes?
 
@@ -29,11 +29,11 @@ Cost and focus. Most turns don’t need a full audit. When you do, say so and lo
 
 ## How is this different from Test-Led Coding or Addy’s agent-skills?
 
-| | Spec Seatbelt | TLC | Addy-style catalogs |
+| | Spec Guardrails | TLC | Addy-style catalogs |
 |--|--------------|-----|---------------------|
 | Focus | Spec → prove done | Tests as the spine | Broad SDLC skill set |
 | Gate | Stronger on “really finished?” | Different emphasis | Usually lighter formal gate |
-| Stance | Standalone seatbelt | Inspired / credited | Inspired / credited |
+| Stance | Standalone guardrails | Inspired / credited | Inspired / credited |
 
 See the README **Credits** section for licenses and links.
 
@@ -53,7 +53,7 @@ No. It checks **structure and evidence**. Humans (and sisters) still review qual
 
 | Command | In one line |
 | --- | --- |
-| `npx @luizsantiago/spec-seatbelt validate-spec auth` | Checks that the **auth** feature’s written goal is complete enough to build from |
+| `npx @luizsantiago/spec-guardrails validate-spec auth` | Checks that the **auth** feature’s written goal is complete enough to build from |
 | `… check-commit --message "feat(auth): …"` | Checks the commit title style before you land a change |
 | `… lessons list --status confirmed` | Lists project rules learned from past failures (confirmed only) |
 
@@ -61,7 +61,7 @@ You need Python 3 for these. Without a real `.specs/features/auth` folder, `vali
 
 ## I’m not technical—can I still use this?
 
-Yes at a high level: ask your agent to **install Spec Seatbelt**, then to **specify before building** and **verify before done**. Engineers maintain the repo and the gate; you can still insist on the process in plain language.
+Yes at a high level: ask your agent to **install Spec Guardrails**, then to **specify before building** and **verify before done**. Engineers maintain the repo and the gate; you can still insist on the process in plain language.
 
 ## Where should I start reading?
 
@@ -73,12 +73,12 @@ Then [Gates and guarantees](Gates-and-guarantees.md) / [Token efficiency](Token-
 
 ## How do I use this with frontend or backend skills?
 
-Spec Seatbelt is stack-agnostic. Optional floor maps live in [`@luizsantiago/fullstack-floor-map`](https://www.npmjs.com/package/@luizsantiago/fullstack-floor-map): one Execute manual per **Lane**, one Lane per task, optional specialist depth (Desks for continuity planned in 0.5.0). Pairing contract: [Companion: Full Stack Floor Map](Companion-fullstack-floor-map.md).
+Spec Guardrails is stack-agnostic. Optional floor maps live in [`@luizsantiago/fullstack-floor-map`](https://www.npmjs.com/package/@luizsantiago/fullstack-floor-map): one Execute manual per **Lane**, one Lane per task, optional specialist depth (Desks for continuity planned in 0.5.0). Pairing contract: [Companion: Full Stack Floor Map](Companion-fullstack-floor-map.md).
 
 ## Something looks wrong after install?
 
-Run `npx @luizsantiago/spec-seatbelt doctor` — it scores the install (skills, gates, config, STATE) and suggests the next CLI step (`loop-plan`, `init-config`, …).
+Run `npx @luizsantiago/spec-guardrails doctor` — it scores the install (skills, gates, config, STATE) and suggests the next CLI step (`loop-plan`, `init-config`, …).
 
 ## Something broken or unclear?
 
-Open an issue on [GitHub](https://github.com/luizssantiago92/spec-seatbelt/issues). For contributing rules (especially the frozen gate), see [CONTRIBUTING](../../CONTRIBUTING.md).
+Open an issue on [GitHub](https://github.com/luizssantiago92/spec-guardrails/issues). For contributing rules (especially the frozen gate), see [CONTRIBUTING](../../CONTRIBUTING.md).

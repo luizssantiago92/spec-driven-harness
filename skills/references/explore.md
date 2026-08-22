@@ -35,7 +35,7 @@ None required. Optionally capture decisions in chat. When the idea crystallizes,
 5. **Estimate complexity** using the hub router (Quick / Simple / Medium / Complex).
 6. **Transition** when the owner picks a direction:
    ```bash
-   npx @luizsantiago/spec-seatbelt feature-init "chat with presence"
+   npx @luizsantiago/spec-guardrails feature-init "chat with presence"
    ```
    Then open `references/specify.md`.
 

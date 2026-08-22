@@ -1,20 +1,20 @@
-# Spec Seatbelt
+# Spec Guardrails
 
-[![npm version](https://img.shields.io/npm/v/@luizsantiago/spec-seatbelt.svg)](https://www.npmjs.com/package/@luizsantiago/spec-seatbelt)
+[![npm version](https://img.shields.io/npm/v/@luizsantiago/spec-guardrails.svg)](https://www.npmjs.com/package/@luizsantiago/spec-guardrails)
 [![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-**A seatbelt for AI coding agents** — agree on the goal in writing, break work into provable steps, run automatic checks before calling anything “done”, and verify with a fresh context that did not write the code.
+**Guardrails for AI coding agents** — agree on the goal in writing, break work into provable steps, run automatic checks before calling anything “done”, and verify with a fresh context that did not write the code.
 
 **Token-efficient by design:** the agent loads **one phase guide per turn** (~9k est. tokens on Specify) instead of dumping the full skill library (~31k). Measured savings: **~72%** on planning, **~86%** on Execute vs a naive full reload ([details below](#token-cost)).
 
-npm: [`@luizsantiago/spec-seatbelt`](https://www.npmjs.com/package/@luizsantiago/spec-seatbelt) **2.2.x**
+npm: [`@luizsantiago/spec-guardrails`](https://www.npmjs.com/package/@luizsantiago/spec-guardrails) **3.0.x**
 
 ---
 
 ## Install
 
 ```bash
-npx @luizsantiago/spec-seatbelt install
+npx @luizsantiago/spec-guardrails install
 ```
 
 ### What you need
@@ -29,7 +29,7 @@ npx @luizsantiago/spec-seatbelt install
 | Lands in your project | Purpose |
 | --- | --- |
 | `.cursor/skills/` + `.claude/skills/` | Hub, phase references, sister skills |
-| `.specs/seatbelt/scripts/` | Python gate scripts |
+| `.specs/guardrails/scripts/` | Python gate scripts |
 | `.specs/STATE.md`, `.specs/features/`, … | Project memory |
 | `.cursor/rules/engineering-baseline.mdc` | Always-on Cursor rule |
 
@@ -69,7 +69,7 @@ Four ideas stack — full explanation: **[Concepts](docs/guide/concepts.md)**
 | Idea | What it is | What it does |
 | --- | --- | --- |
 | **Spec-driven** | Written plan before code | `spec.md` + `tasks.md`; evidence before “done” |
-| **Seatbelt** | This package | Skills + Python gates that stop incomplete work |
+| **Guardrails** | This package | Skills + Python gates that stop incomplete work |
 | **Loop** | Execute in waves | `loop-plan` picks the next jobs; sub-agents when files don’t overlap |
 | **Graph** | Parallel task map | `task-graph.md` — safe parallelism without file collisions |
 | **Memory** | Repo-local state | `.specs/` — specs, decisions, and handoff survive across chats |
@@ -115,7 +115,7 @@ Full map: **[Skills and hub](docs/guide/skills-and-hub.md)**
 
 ## Gates (summary)
 
-Scripts in `.specs/seatbelt/scripts/`. **Exit ≠ 0 → stop and fix.**
+Scripts in `.specs/guardrails/scripts/`. **Exit ≠ 0 → stop and fix.**
 
 | When | Gate | What it blocks |
 | --- | --- | --- |
@@ -138,7 +138,7 @@ Full reference: **[Gates](docs/guide/gates.md)** · [Gates and guarantees](docs/
 | --- | --- |
 | [Agent commands](docs/guide/agent-commands.md) | Every `/specify`, `/loop`, `/verify`, … — purpose, when, examples |
 | [Quick start](docs/guide/Quick-start.md) | First ten minutes |
-| [Concepts](docs/guide/concepts.md) | Spec-driven + seatbelt + loop + graph |
+| [Concepts](docs/guide/concepts.md) | Spec-driven + guardrails + loop + graph |
 | [Skills and hub](docs/guide/skills-and-hub.md) | What each skill file does |
 | [Gates](docs/guide/gates.md) | How each gate works |
 | [FAQ](docs/guide/FAQ.md) | Common questions |
@@ -151,32 +151,33 @@ Start after install: [Quick start](docs/guide/Quick-start.md) · [Agent commands
 ## Upgrading
 
 ```bash
-npx @luizsantiago/spec-seatbelt install
+npx @luizsantiago/spec-guardrails install
 ```
 
 | Version | What you gain |
 | --- | --- |
-| **2.2.x** | Seatbelt paths & markers; `doctor` Execute hints; docs split from README |
+| **3.0.x** | Final name Spec Guardrails; `.specs/guardrails/`; no dual-path ([Migration](docs/guide/Migration.md)) |
+| **2.2.x** | Seatbelt-era paths & markers; `doctor` Execute hints; docs split from README |
 | **2.1.x** | `loop-plan` + parallel `/loop` waves |
-| **2.0.x** | Package rename → `@luizsantiago/spec-seatbelt` |
+| **2.0.x** | Package rename → `@luizsantiago/spec-seatbelt` (superseded by 3.0) |
 | **1.1.x** | `project-init` for brownfield repos |
 | **0.9.x** | `archive-feature` + domain memory merge |
 
-Full history: [CHANGELOG](docs/CHANGELOG.md) · [Releases](https://github.com/luizssantiago92/spec-seatbelt/releases)
+Full history: [CHANGELOG](docs/CHANGELOG.md) · [Releases](https://github.com/luizssantiago92/spec-guardrails/releases) · [Stability policy](docs/guide/Stability-policy.md)
 
-Renamed from `@luizsantiago/agentic-harness`. Run `install` once after switching. Legacy `.specs/harness/scripts/` and `AGENTIC-HARNESS` markers still work on 2.x until `install` migrates them; planned removal in **3.0**.
+Lineage: `agentic-harness` → `spec-seatbelt` → **`spec-guardrails` (final)**. Run `install` once after switching. See [Migration](docs/guide/Migration.md).
 
 ---
 
 ## Contributing
 
-See [CONTRIBUTING.md](CONTRIBUTING.md) — tests, gate freeze policy, local `npm run seatbelt -- install`.
+See [CONTRIBUTING.md](CONTRIBUTING.md) — tests, gate freeze policy, local `npm run guardrails -- install`.
 
 ---
 
 ## Credits
 
-Spec Seatbelt adapts open ideas; we did not invent spec-driven phases, loop design, or task-graph rules.
+Spec Guardrails adapts open ideas; we did not invent spec-driven phases, loop design, or task-graph rules.
 
 ### Core lineage
 

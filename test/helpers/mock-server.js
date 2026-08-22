@@ -49,15 +49,15 @@ alwaysApply: true
 ---
 # Engineering Baseline (test fixture)
 
-# Seatbelt Skills
+# Guardrails Skills
 
-<!-- seatbelt-managed:skills-map:start -->
+<!-- guardrails-managed:skills-map:start -->
 | Skill | Purpose |
 | --- | --- |
 | \`.cursor/skills/agent-architecture.md\` | SDD hub |
 | \`.cursor/skills/appsec.md\` | Application security sister |
 | \`.cursor/skills/qa-strategy.md\` | QA strategy sister |
-<!-- seatbelt-managed:skills-map:end -->
+<!-- guardrails-managed:skills-map:end -->
 `;
 
 export const SPECIFY_REFERENCE_FIXTURE = `# Specify (test fixture)

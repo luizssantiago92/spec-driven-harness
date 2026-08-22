@@ -103,7 +103,7 @@ Full operational contract (worker payload, compact summary template, failure tab
 
 **Verifier** — After the final task, dispatch a fresh verifier regardless of batch count. It is the closing step of Execute, never prompted. See `references/validate.md`.
 
-**Model tier per role** — When Spec Seatbelt allows choosing a model per sub-agent:
+**Model tier per role** — When Spec Guardrails allows choosing a model per sub-agent:
 
 | Role | Tier |
 | --- | --- |
@@ -112,7 +112,7 @@ Full operational contract (worker payload, compact summary template, failure tab
 | Design phase | High reasoning |
 | Verifier | Mid-to-high — adversarial reasoning, mutant design |
 
-If Spec Seatbelt cannot set a per-agent model, ignore this and invest more care on the heavy steps.
+If Spec Guardrails cannot set a per-agent model, ignore this and invest more care on the heavy steps.
 
 ## Human Gate
 

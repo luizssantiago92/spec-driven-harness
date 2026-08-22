@@ -1,6 +1,6 @@
 # Getting started
 
-You installed the **Spec Seatbelt**. You do **not** need to memorize CLI commands.
+You installed the **Spec Guardrails**. You do **not** need to memorize CLI commands.
 
 ## What to do now
 
@@ -32,7 +32,7 @@ Type these in **Cursor or Claude Code**. They load phase procedures from `.curso
 
 **Typical order:** `/specify` → `/tasks` → `/analyze` → `/loop` → `/verify` → `/archive`
 
-**Full reference** (every command, examples, CLI): [Agent commands](https://github.com/luizssantiago92/spec-seatbelt/blob/main/docs/guide/agent-commands.md)
+**Full reference** (every command, examples, CLI): [Agent commands](https://github.com/luizssantiago92/spec-guardrails/blob/main/docs/guide/agent-commands.md)
 
 ---
 
@@ -56,6 +56,6 @@ Everything else (`loop-plan`, `validate-tasks`, `check-commit`, …) is normally
 | `.cursor/skills/agent-architecture.md` | Hub — phase map |
 | `.specs/STATE.md` | Where you left off |
 | `.specs/features/` | One folder per feature |
-| `.specs/seatbelt/scripts/` | Automatic gates |
+| `.specs/guardrails/scripts/` | Automatic gates |
 
-More guides: [docs/guide/Home.md](https://github.com/luizssantiago92/spec-seatbelt/blob/main/docs/guide/Home.md)
+More guides: [docs/guide/Home.md](https://github.com/luizssantiago92/spec-guardrails/blob/main/docs/guide/Home.md)

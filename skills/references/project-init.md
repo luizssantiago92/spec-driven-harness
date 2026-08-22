@@ -4,7 +4,7 @@ Map an existing codebase into `.specs/` project memory before the first `/specif
 
 ## When to Use
 
-- Adopting Spec Seatbelt on a repo that already has code
+- Adopting Spec Guardrails on a repo that already has code
 - Owner wants domain specs and `PROJECT.md` before feature work
 - Before `/constitution` or the first Medium+ feature on a brownfield repo
 
@@ -30,8 +30,8 @@ Map an existing codebase into `.specs/` project memory before the first `/specif
 
 1. **Run the scan (Tier 0):**
    ```bash
-   npx @luizsantiago/spec-seatbelt project-init --dry-run
-   npx @luizsantiago/spec-seatbelt project-init [--preset node-ts] [--domains auth,billing]
+   npx @luizsantiago/spec-guardrails project-init --dry-run
+   npx @luizsantiago/spec-guardrails project-init [--preset node-ts] [--domains auth,billing]
    ```
 2. **Review with the owner** — edit `PROJECT.md`, trim false-positive domains, fill Vision/Constraints.
 3. **Draft domain truth** — replace stub requirements in `.specs/domains/*/spec.md` from code review (or leave stubs until features archive in).

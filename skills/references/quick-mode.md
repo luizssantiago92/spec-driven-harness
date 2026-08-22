@@ -47,7 +47,7 @@ Announce the switch — do not silently expand a quick task into a feature.
 5. **Run the project harness** — tests and linter.
 6. **Commit atomically**, Conventional Commits format:
    ```bash
-   python3 .specs/seatbelt/scripts/check_commit.py --message "fix(theme): persist dark mode preference"
+   python3 .specs/guardrails/scripts/check_commit.py --message "fix(theme): persist dark mode preference"
    ```
 7. **Write `SUMMARY.md`** with the commit hash and the evidence line.
 8. **Record a lesson** with `lessons.py add --source` if the defect revealed a gap that will recur and a `validation.md` exists. Quick-mode copy fixes usually record nothing.

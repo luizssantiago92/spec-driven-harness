@@ -1,4 +1,4 @@
-# Concepts — spec-driven, seatbelt, loop, and graph
+# Concepts — spec-driven, guardrails, loop, and graph
 
 Four ideas work together. You do not need to memorize jargon — this page explains how they connect.
 
@@ -15,9 +15,9 @@ Four ideas work together. You do not need to memorize jargon — this page expla
 
 Everything lives under `.specs/` in your repo so the next chat session can continue without re-explaining the project.
 
-## Seatbelt (this package)
+## Guardrails (this package)
 
-The **seatbelt** is the process kit: hub skill, phase references, sister skills, and Python **gates** that stop the agent when paperwork or evidence is incomplete.
+**Guardrails** here means the process kit: hub skill, phase references, sister skills, and Python **gates** that stop the agent when paperwork or evidence is incomplete.
 
 | Step | What happens |
 | --- | --- |
@@ -26,7 +26,7 @@ The **seatbelt** is the process kit: hub skill, phase references, sister skills,
 | 3 | Gate runs — **fail** → stop, fix artifact, re-run |
 | 4 | Gate passes → your approval → next phase |
 
-Without the seatbelt, agents often jump to code and say “done”. With it, **incomplete specs, empty stubs, and missing test evidence fail automatic checks** before you waste time reviewing fake progress.
+Without these guardrails, agents often jump to code and say “done”. With them, **incomplete specs, empty stubs, and missing test evidence fail automatic checks** before you waste time reviewing fake progress.
 
 ## Loop engineering (Execute)
 
@@ -89,7 +89,7 @@ Yes — **“How work flows”** is exactly this: the hub **Complexity Router** 
 | Layer | Role |
 | --- | --- |
 | **Spec-driven** | *What* to build and *how we know it is done* |
-| **Seatbelt** | Skills + gates that enforce the process |
+| **Guardrails** | Skills + gates that enforce the process |
 | **Loop** | *How* to implement in waves (`loop-plan`, sub-agents) |
 | **Graph** | *When* tasks can run in parallel safely |
 | **Memory** | `.specs/` — specs, STATE, domains persist across sessions |

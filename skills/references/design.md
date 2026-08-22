@@ -20,7 +20,7 @@ Skipping Design is the default for Simple and Medium tiers.
 - Approved `spec.md`
 - `context.md` when Discuss ran
 - `.specs/STATE.md` decisions (`AD-NNN`)
-- Confirmed lessons: `python3 .specs/seatbelt/scripts/lessons.py list --status confirmed`
+- Confirmed lessons: `python3 .specs/guardrails/scripts/lessons.py list --status confirmed`
 - Existing codebase structure and conventions
 - `context-limits.md` — this feature only
 

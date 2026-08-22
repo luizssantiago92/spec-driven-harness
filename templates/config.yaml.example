@@ -1,5 +1,5 @@
-# Project seatbelt config (optional). Copy to .specs/config.yaml and edit.
-# Or run: npx @luizsantiago/spec-seatbelt init-config --preset node-ts
+# Project guardrails config (optional). Copy to .specs/config.yaml and edit.
+# Or run: npx @luizsantiago/spec-guardrails init-config --preset node-ts
 # Injected into phase procedures via phase-context.
 
 schema: spec-driven
