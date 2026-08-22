@@ -2,18 +2,18 @@
 
 **Who this is for:** anyone who wonders *“what does Spec Guardrails actually enforce?”*
 
-The short answer: it **blocks** some incomplete work (missing files, empty stubs, weak evidence) and **guides** the rest (judgment, how you write specs). Not everything is a hard stop—and that’s intentional.
+The short answer: it **blocks** incomplete **markdown artifacts** (missing sections, empty placeholders, missing REQ coverage lines, weak evidence citations in `validation.md`) and **guides** the rest (judgment, how you write specs). Gates do **not** prove that source code implements a criterion — they check paperwork structure.
 
 ## Freeze (do not loosen)
 
-These guarantees are locked for the **0.7.x** line. Changing them needs a new major and a clear reason.
+These guarantees are locked for the **0.7.x** line onward unless a major revises the contract. Changing them needs a clear reason (see [Stability policy](Stability-policy.md)).
 
 | Guarantee | What it means in practice |
 |-----------|---------------------------|
 | **Hub + sisters always install** | Planning, building, and checking aren’t optional pieces of the kit (hub + eight sister skills). |
-| **Specify before Verify** | You can’t “finish” without a written plan the guardrails can check against. |
+| **Specify before Verify** | You can’t “finish” without a written plan the gates can check against. |
 | **`.specs/` is the memory** | Plans and status live in the repo, not only in chat. |
-| **Structural gates stay on** | Empty plans, stub code, missing tests, and similar gaps fail the gate. |
+| **Structural gates stay on** | Thin specs, missing task fields, open task checkboxes, and missing evidence *citations* fail the gate. |
 | **Conditional sisters** | Extra reviews (security, QA, simplify, ship) load only when you ask—and **one at a time**. |
 | **Python gate scripts stay frozen** | The automated checker’s behavior doesn’t drift casually. |
 
@@ -21,15 +21,17 @@ Full freeze text: [ADR 0001](../adr/0001-harness-freeze-v0.7.md).
 
 ## What the gate **blocks** (hard)
 
-When you claim you’re done, the gate looks for real artifacts—not vibes:
+When you claim you’re done, the gate looks for **structured artifacts** — not vibes:
 
 - Spec folder and plan documents present  
-- Status that matches a finished flow  
-- Code that isn’t an empty stub  
-- Tests that actually exercise something  
-- Evidence that validation ran  
+- Required sections / REQ IDs / task shape in markdown  
+- `validation.md` with a PASS verdict and `file:line` evidence citations  
+- REQ IDs covered by tasks (`analyze-artifacts` / `validate-traceability`) and by coverage lines (`validate-state` / `validate-traceability`)  
+- Status that matches a finished flow (no open task checkboxes)
 
-If those aren’t there, **done** doesn’t stick.
+**Honest limit:** citing `test/foo.test.ts:12` next to `REQ-001` does **not** prove that line asserts the acceptance criterion. Gates validate the **traceability paperwork**, not semantic test↔REQ alignment.
+
+If those artifacts aren’t there, **done** doesn’t stick.
 
 ## Run the brakes yourself
 
@@ -37,6 +39,7 @@ Same checks the agent should run — from your shell after install:
 
 ```bash
 npx @luizsantiago/spec-guardrails validate-spec auth
+npx @luizsantiago/spec-guardrails validate-traceability auth
 npx @luizsantiago/spec-guardrails check-commit --message "feat(auth): add token refresh"
 npx @luizsantiago/spec-guardrails lessons list --status confirmed
 ```
@@ -44,6 +47,7 @@ npx @luizsantiago/spec-guardrails lessons list --status confirmed
 | Command | Catches |
 | --- | --- |
 | `validate-spec` | Thin or incomplete written goals |
+| `validate-traceability` | REQ missing from tasks or from validation coverage lines |
 | `check-commit` | Sloppy commit titles |
 | `lessons list --status confirmed` | Nothing broken — lists hard-won rules to reuse |
 
@@ -60,6 +64,8 @@ These stay in the **guides** (judgment and authoring quality):
 | Exact shape of every plan section | Authoring skill, not a parser. |
 | Perfect task graphs | Guidance + templates; not a full dependency engine. |
 | “Did we talk enough before coding?” | Process habit—skills teach it; the gate doesn’t score chats. |
+| “Does this test assert REQ-001?” | Semantic — out of scope for structural gates. |
+| “Is this source file a stub?” | Gates read `.specs/` markdown, not your implementation AST. |
 
 **Rule of thumb:** if it isn’t in the freeze table or the gate scripts, don’t promise users that Spec Guardrails “guarantees” it.
 
@@ -67,7 +73,7 @@ These stay in the **guides** (judgment and authoring quality):
 
 A large suite of failure cases must keep failing. That stops “helpful” edits from accidentally making the gate too soft.
 
-Details: [`test/test_adversarial_gates.py`](../../test/test_adversarial_gates.py) and [CONTRIBUTING](../../CONTRIBUTING.md).
+Details: [`test/test_adversarial_gates.py`](../../test/test_adversarial_gates.py), [`test/test_validate_traceability.py`](../../test/test_validate_traceability.py), and [CONTRIBUTING](../../CONTRIBUTING.md).
 
 ## Related
 

@@ -51,6 +51,7 @@ Commands:
   validate-tasks [tasks.md|feature]  Granularity gate for a task breakdown
   loop-plan [tasks.md|feature]       Next Execute wave — parallel groups + sub-agent hints
     [--json]                         Machine-readable plan for agents
+  validate-traceability [feature]    REQ → tasks → validation coverage chain
   validate-state [feature]           Completion gate before declaring a feature done
   check-commit --message "<msg>"     Conventional Commits gate
   lessons <add|list|penalize|prune|status>  Lessons engine

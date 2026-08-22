@@ -7,7 +7,7 @@
 
 **Token-efficient by design:** the agent loads **one phase guide per turn** (~9k est. tokens on Specify) instead of dumping the full skill library (~31k). Measured savings: **~72%** on planning, **~86%** on Execute vs a naive full reload ([details below](#token-cost)).
 
-npm: [`@luizsantiago/spec-guardrails`](https://www.npmjs.com/package/@luizsantiago/spec-guardrails) **3.0.x**
+npm: [`@luizsantiago/spec-guardrails`](https://www.npmjs.com/package/@luizsantiago/spec-guardrails) **3.1.x**
 
 ---
 
@@ -122,6 +122,7 @@ Scripts in `.specs/guardrails/scripts/`. **Exit ≠ 0 → stop and fix.**
 | Before approving spec | `validate-spec` | Incomplete or untestable spec |
 | Before approving tasks | `analyze-artifacts` | Spec ↔ tasks drift |
 | Before approving tasks | `validate-tasks` | Bad tasks; missing graph when 3+ tasks |
+| After tasks / with validation | `validate-traceability` | REQ missing from tasks or coverage lines |
 | Each `/loop` wave | `loop-plan` | Blocked dependencies; shows parallel groups |
 | Each commit | `check-commit` | Non-Conventional commit message |
 | Before “done” | `validate-state` | Fake PASS without test evidence |
@@ -156,6 +157,7 @@ npx @luizsantiago/spec-guardrails install
 
 | Version | What you gain |
 | --- | --- |
+| **3.1.x** | Doctor STATE fix + Python banner; `validate-traceability`; honest gates docs |
 | **3.0.x** | Final name Spec Guardrails; `.specs/guardrails/`; no dual-path ([Migration](docs/guide/Migration.md)) |
 | **2.2.x** | Seatbelt-era paths & markers; `doctor` Execute hints; docs split from README |
 | **2.1.x** | `loop-plan` + parallel `/loop` waves |

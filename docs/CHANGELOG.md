@@ -6,6 +6,12 @@ Version history for `@luizsantiago/spec-guardrails`. Upgrade steps: [Migration](
 
 —
 
+## 3.1.0 — Hardening (doctor + traceability)
+
+- **Doctor:** parse canonical STATE `- Feature:` (Execute hints work again); visible **PYTHON MISSING** banner; smoke test uses `resolvePython()`
+- **`validate-traceability`:** new structural gate — REQ → tasks → same-line validation coverage evidence (no semantic test↔criterion claim)
+- **Docs:** [Gates and guarantees](guide/Gates-and-guarantees.md) stops overclaiming stub-code enforcement; Quick tier called out on [Home](guide/Home.md)
+
 ## 3.0.0 — Spec Guardrails (final name)
 
 **Breaking rename + clean break.** No production consumers expected; dual-path removed.

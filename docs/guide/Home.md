@@ -42,10 +42,13 @@ You talk to the agent in **chat**, not the terminal — `/specify`, `/loop`, `/v
 
 | Command | When |
 | --- | --- |
+| `/quick` | Tiny change (≤3 files, no new deps) — light path |
 | `/specify` | Start any real feature |
 | `/tasks` | Job list after spec approval |
 | `/loop` | Implement (`loop-plan` each wave) |
 | `/verify` | Proof after last task |
+
+**Quick tier:** typos and one-file fixes use `/quick` → verify → commit — not the full Medium ceremony. See [Concepts → Complexity tiers](concepts.md#complexity-tiers--how-the-agent-chooses-depth).
 
 **Full reference:** [agent-commands.md](agent-commands.md) · [Concepts](concepts.md)
 

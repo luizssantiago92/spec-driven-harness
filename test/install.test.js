@@ -972,6 +972,10 @@ describe("reference catalog", () => {
       SCRIPT_ASSETS.some((asset) => asset.file === "analyze_artifacts.py"),
       true,
     );
+    assert.equal(
+      SCRIPT_ASSETS.some((asset) => asset.file === "validate_traceability.py"),
+      true,
+    );
   });
 });
 
@@ -1060,6 +1064,7 @@ describe("CLI", () => {
     assert.match(stdout, /init-config/);
     assert.match(stdout, /preset list/);
     assert.match(stdout, /analyze-artifacts/);
+    assert.match(stdout, /validate-traceability/);
     assert.match(stdout, /doctor/);
   });
 });
