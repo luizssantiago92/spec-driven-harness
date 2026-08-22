@@ -24,7 +24,7 @@ describe("guardrails doctor", () => {
     await fs.mkdir(path.join(cwd, ".specs/guardrails/scripts"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/skills"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/rules"), { recursive: true });
-    await fs.writeFile(path.join(cwd, ".specs/STATE.md"), "# State\n\n- **Active feature**: none\n");
+    await fs.writeFile(path.join(cwd, ".specs/STATE.md"), "# State\n\n- Feature: —\n");
     await fs.writeFile(path.join(cwd, ".specs/config.yaml"), "schema: spec-driven\n");
     await fs.writeFile(path.join(cwd, ".cursor/skills/agent-architecture.md"), "# Hub\n");
     await fs.writeFile(path.join(cwd, ".cursor/rules/engineering-baseline.mdc"), "---\n");
@@ -49,7 +49,7 @@ describe("guardrails doctor", () => {
     await fs.mkdir(path.join(cwd, ".specs/guardrails/scripts"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/skills"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/rules"), { recursive: true });
-    await fs.writeFile(path.join(cwd, ".specs/STATE.md"), "# State\n\n- **Active feature**: none\n");
+    await fs.writeFile(path.join(cwd, ".specs/STATE.md"), "# State\n\n- Feature: —\n");
     await fs.writeFile(path.join(cwd, ".cursor/skills/agent-architecture.md"), "# Hub\n");
     await fs.writeFile(path.join(cwd, ".cursor/rules/engineering-baseline.mdc"), "---\n");
 
@@ -70,7 +70,7 @@ describe("guardrails doctor", () => {
     await fs.mkdir(path.join(cwd, ".cursor/rules"), { recursive: true });
     await fs.writeFile(
       path.join(cwd, ".specs/STATE.md"),
-      `# State\n\n- **Active feature**: ${feature}\n`,
+      `# State\n\n- Feature: ${feature}\n`,
     );
     await fs.writeFile(path.join(cwd, ".specs/config.yaml"), "schema: spec-driven\n");
     await fs.writeFile(path.join(cwd, ".cursor/skills/agent-architecture.md"), "# Hub\n");
@@ -102,7 +102,7 @@ describe("guardrails doctor", () => {
     await fs.mkdir(featureDir, { recursive: true });
     await fs.writeFile(
       path.join(cwd, ".specs/STATE.md"),
-      `# State\n\n- **Active feature**: ${feature}\n`,
+      `# State\n\n- Feature: ${feature}\n`,
     );
     await fs.writeFile(
       path.join(featureDir, "tasks.md"),
@@ -112,6 +112,40 @@ describe("guardrails doctor", () => {
     const hint = await resolveExecuteHint(cwd, feature);
     assert.match(hint ?? "", /loop-plan/);
     assert.match(hint ?? "", /001-auth/);
+  });
+
+  it("reads canonical STATE Feature line for execute hints", async () => {
+    const cwd = await createTempDir("doctor-state-feature-");
+    const feature = "003-trace";
+    const featureDir = path.join(cwd, ".specs/features", feature);
+    await fs.mkdir(featureDir, { recursive: true });
+    await fs.mkdir(path.join(cwd, ".specs/project"), { recursive: true });
+    await fs.mkdir(path.join(cwd, ".specs/guardrails/scripts"), { recursive: true });
+    await fs.mkdir(path.join(cwd, ".cursor/skills"), { recursive: true });
+    await fs.mkdir(path.join(cwd, ".cursor/rules"), { recursive: true });
+    await fs.writeFile(
+      path.join(cwd, ".specs/STATE.md"),
+      `# Project State\n\n## Active Feature\n- Feature: ${feature}\n- Phase: Execute\n`,
+    );
+    await fs.writeFile(path.join(cwd, ".specs/config.yaml"), "schema: spec-driven\n");
+    await fs.writeFile(path.join(cwd, ".cursor/skills/agent-architecture.md"), "# Hub\n");
+    await fs.writeFile(path.join(cwd, ".cursor/rules/engineering-baseline.mdc"), "---\n");
+    await fs.writeFile(
+      path.join(featureDir, "tasks.md"),
+      "# Tasks\n\n## T1: wire gate\n",
+    );
+
+    const logs = [];
+    const original = console.log;
+    console.log = (...args) => logs.push(args.join(" "));
+    try {
+      await doctor(cwd, { suggest: false });
+      assert.match(logs.join("\n"), /Execute hint:/);
+      assert.match(logs.join("\n"), /loop-plan/);
+      assert.match(logs.join("\n"), /003-trace/);
+    } finally {
+      console.log = original;
+    }
   });
 
   it("suggests validate-state when all tasks are complete", async () => {
@@ -140,7 +174,7 @@ describe("guardrails doctor", () => {
     await fs.mkdir(path.join(cwd, ".cursor/rules"), { recursive: true });
     await fs.writeFile(
       path.join(cwd, ".specs/STATE.md"),
-      `# State\n\n- **Active feature**: ${feature}\n`,
+      `# State\n\n- Feature: ${feature}\n`,
     );
     await fs.writeFile(path.join(cwd, ".specs/config.yaml"), "schema: spec-driven\n");
     await fs.writeFile(path.join(cwd, ".cursor/skills/agent-architecture.md"), "# Hub\n");
@@ -169,7 +203,7 @@ describe("guardrails doctor", () => {
     await fs.mkdir(path.join(cwd, ".specs/guardrails/scripts"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/skills"), { recursive: true });
     await fs.mkdir(path.join(cwd, ".cursor/rules"), { recursive: true });
-    await fs.writeFile(path.join(cwd, ".specs/STATE.md"), "# State\n\n- **Active feature**: none\n");
+    await fs.writeFile(path.join(cwd, ".specs/STATE.md"), "# State\n\n- Feature: —\n");
     await fs.writeFile(path.join(cwd, ".specs/config.yaml"), "schema: spec-driven\n");
     await fs.writeFile(path.join(cwd, ".cursor/skills/agent-architecture.md"), "# Hub\n");
     await fs.writeFile(path.join(cwd, ".cursor/rules/engineering-baseline.mdc"), "---\n");
@@ -181,6 +215,7 @@ describe("guardrails doctor", () => {
       const result = await doctor(cwd, { json: true });
       assert.ok(result.score >= 0);
       assert.match(logs.join("\n"), /"score"/);
+      assert.match(logs.join("\n"), /"pythonMissing"/);
     } finally {
       console.log = original;
     }

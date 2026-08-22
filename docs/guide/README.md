@@ -1,6 +1,6 @@
 # Documentation
 
-Plain-language guides for Spec Guardrails **3.0.x**. Start at [Home](Home.md).
+Plain-language guides for Spec Guardrails **3.1.x**. Start at [Home](Home.md).
 
 ## Start here
 

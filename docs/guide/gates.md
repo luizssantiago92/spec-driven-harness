@@ -12,8 +12,9 @@ Gates are **Python scripts** in `.specs/guardrails/scripts/`. The agent (or you)
 | | 2 | `validate-spec` |
 | | 3 | `analyze-artifacts` |
 | | 4 | `validate-tasks` |
+| | 4b | `validate-traceability` (REQ ↔ tasks; again when `validation.md` exists) |
 | **Building** | 5 | `loop-plan` → implement → `check-commit` (repeat per wave) |
-| **Closing** | 6 | `validate-state` |
+| **Closing** | 6 | `validate-traceability` (full coverage lines) → `validate-state` |
 | | 7 | `archive-feature` (CLI) |
 | | — | `lessons` (after Verify FAIL) |
 
@@ -24,6 +25,7 @@ Gates are **Python scripts** in `.specs/guardrails/scripts/`. The agent (or you)
 | **validate-spec** | `validate_spec.py` | Before you approve `spec.md` | Required sections, `SHALL`/`MUST` criteria, assumptions |
 | **analyze-artifacts** | `analyze_artifacts.py` | Before task approval; on drift | Every REQ has task coverage; no orphan tasks |
 | **validate-tasks** | `validate_tasks.py` | Before you approve `tasks.md` | Task shape, binary done criteria, `task-graph.md` when 3+ tasks, file overlap |
+| **validate-traceability** | `validate_traceability.py` | After tasks; again with `validation.md` | REQ → tasks → same-line coverage evidence (structural only) |
 | **loop-plan** | `loop_plan.py` | Start of each `/loop` wave | Next runnable tasks; parallel groups (disjoint files) |
 | **check-commit** | `check_commit.py` | Every commit | Conventional Commits shape |
 | **validate-state** | `validate_state.py` | Before declaring feature done | PASS verdict, evidence cites `file:line`, no open gaps |
