@@ -123,6 +123,7 @@ Scripts in `.specs/guardrails/scripts/`. **Exit ≠ 0 → stop and fix.**
 | Before approving tasks | `analyze-artifacts` | Spec ↔ tasks drift |
 | Before approving tasks | `validate-tasks` | Bad tasks; missing graph when 3+ tasks |
 | After tasks / with validation | `validate-traceability` | REQ missing from tasks or coverage lines |
+| End of `/quick` | `validate-quick` | Incomplete Quick TASK/SUMMARY; >3 files; sensitive paths |
 | Each `/loop` wave | `loop-plan` | Blocked dependencies; shows parallel groups |
 | Each commit | `check-commit` | Non-Conventional commit message |
 | Before “done” | `validate-state` | Fake PASS without test evidence |
@@ -142,6 +143,7 @@ Full reference: **[Gates](docs/guide/gates.md)** · [Gates and guarantees](docs/
 | [Concepts](docs/guide/concepts.md) | Spec-driven + guardrails + loop + graph |
 | [Skills and hub](docs/guide/skills-and-hub.md) | What each skill file does |
 | [Gates](docs/guide/gates.md) | How each gate works |
+| [Platform parity](docs/guide/Platform-parity.md) | Cursor vs Claude Code |
 | [FAQ](docs/guide/FAQ.md) | Common questions |
 | [Changelog](docs/CHANGELOG.md) | Full version history |
 

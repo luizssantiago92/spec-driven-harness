@@ -6,11 +6,16 @@ Version history for `@luizsantiago/spec-guardrails`. Upgrade steps: [Migration](
 
 —
 
-## 3.1.0 — Hardening (doctor + traceability)
+## 3.1.0 — Hardening (doctor + traceability + CLI helpers)
 
 - **Doctor:** parse canonical STATE `- Feature:` (Execute hints work again); visible **PYTHON MISSING** banner; smoke test uses `resolvePython()`
-- **`validate-traceability`:** new structural gate — REQ → tasks → same-line validation coverage evidence (no semantic test↔criterion claim)
-- **Docs:** [Gates and guarantees](guide/Gates-and-guarantees.md) stops overclaiming stub-code enforcement; Quick tier called out on [Home](guide/Home.md)
+- **`validate-traceability`:** structural gate — REQ → tasks → same-line validation coverage evidence
+- **`validate-quick`:** structural gate for `.specs/quick/` TASK.md / SUMMARY.md
+- **CLI:** `classify-change` (heuristic tier), `feature-status` (artifacts + next step)
+- **Install:** writes `.claude/CLAUDE.md` alongside `.cursorrules` — [Platform parity](guide/Platform-parity.md)
+- **Archive close:** re-runs `validate-traceability` before `validate-state`
+- **Token fixtures:** three pinned profiles (`naive` / `specify` / `execute`) under `test/fixtures/token-cost/`
+- **Docs:** honest [Gates and guarantees](guide/Gates-and-guarantees.md); Quick tier on [Home](guide/Home.md); FAQ → Discussions Q&A
 
 ## 3.0.0 — Spec Guardrails (final name)
 

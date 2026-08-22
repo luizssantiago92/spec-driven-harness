@@ -4,10 +4,12 @@ import path from "node:path";
 
 import { archiveFeature } from "./lib/archive.js";
 import { projectInit } from "./lib/brownfield.js";
+import { classifyChange, formatClassifyChange } from "./lib/classify-change.js";
 import { PACKAGE_VERSION, CLI_NAME } from "./lib/constants.js";
 import { phaseContext } from "./lib/config.js";
 import { doctor } from "./lib/doctor.js";
 import { featureInit } from "./lib/feature.js";
+import { featureStatus, formatFeatureStatus } from "./lib/feature-status.js";
 import { GATE_COMMANDS, AUX_COMMANDS, runGate, runGuardrailsScript } from "./lib/gates.js";
 import { install } from "./lib/install.js";
 import {
@@ -42,6 +44,10 @@ Commands:
     [--no-roadmap]                   Skip ROADMAP update
     [--no-domain]                    Skip domain spec merge
     [--no-state]                     Skip STATE reset
+  classify-change [desc] [files...]  Heuristic complexity tier (quick/simple/medium/complex)
+    [--json]                         Machine-readable output
+  feature-status [feature]           Artifact checklist + next step for a feature
+    [--json]                         Machine-readable output
   phase-context <phase>              Print .specs/config.yaml context + rules for a phase
   doctor [path]                      Audit guardrails readiness (score + next actions)
     [--json]                         Machine-readable output
@@ -52,6 +58,7 @@ Commands:
   loop-plan [tasks.md|feature]       Next Execute wave — parallel groups + sub-agent hints
     [--json]                         Machine-readable plan for agents
   validate-traceability [feature]    REQ → tasks → validation coverage chain
+  validate-quick [quick-folder]      Quick-mode TASK.md / SUMMARY.md structural gate
   validate-state [feature]           Completion gate before declaring a feature done
   check-commit --message "<msg>"     Conventional Commits gate
   lessons <add|list|penalize|prune|status>  Lessons engine
@@ -314,8 +321,59 @@ if (command === "--version" || command === "-v" || command === "version") {
     console.error(`❌ ${err.message}`);
     process.exit(1);
   }
-} else if (AUX_COMMANDS.includes(command)) {
+} else if (command === "classify-change") {
   try {
+    let json = false;
+    const positional = [];
+    for (const arg of args) {
+      if (arg === "--json") {
+        json = true;
+      } else {
+        positional.push(arg);
+      }
+    }
+    if (positional.length === 0) {
+      throw new Error(
+        'Description or files required. Example: classify-change "fix theme toggle" src/hooks/useTheme.ts',
+      );
+    }
+    const files = positional.filter((item) => /[\\/]|\.[a-z0-9]+$/i.test(item));
+    const descriptionParts = positional.filter((item) => !files.includes(item));
+    const result = classifyChange({
+      description: descriptionParts.join(" "),
+      files,
+    });
+    if (json) {
+      console.log(JSON.stringify(result, null, 2));
+    } else {
+      process.stdout.write(formatClassifyChange(result));
+    }
+  } catch (err) {
+    console.error(`❌ ${err.message}`);
+    process.exit(1);
+  }
+} else if (command === "feature-status") {
+  try {
+    let json = false;
+    const positional = [];
+    for (const arg of args) {
+      if (arg === "--json") {
+        json = true;
+      } else {
+        positional.push(arg);
+      }
+    }
+    const status = await featureStatus(positional[0]);
+    if (json) {
+      console.log(JSON.stringify(status, null, 2));
+    } else {
+      process.stdout.write(formatFeatureStatus(status));
+    }
+  } catch (err) {
+    console.error(`❌ ${err.message}`);
+    process.exit(1);
+  }
+} else if (AUX_COMMANDS.includes(command)) {  try {
     const code = await runGuardrailsScript(command, args);
     process.exit(code);
   } catch (err) {

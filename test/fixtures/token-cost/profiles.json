@@ -1,0 +1,26 @@
+{
+  "description": "Three real progressive-load profiles measured from packaged skills. Bands are est. tokens (chars/4), not a billing API.",
+  "charsPerToken": 4,
+  "profiles": {
+    "naive": {
+      "label": "Naive full dump",
+      "pathsKey": "naiveFullDump",
+      "minTokens": 20000,
+      "maxTokens": 80000
+    },
+    "specify": {
+      "label": "Specify turn",
+      "pathsKey": "specifyTurn",
+      "minTokens": 4000,
+      "maxTokens": 20000,
+      "maxRatioOfNaive": 0.4
+    },
+    "execute": {
+      "label": "Execute /loop wave",
+      "pathsKey": "executeLoop",
+      "minTokens": 500,
+      "maxTokens": 8000,
+      "maxRatioOfNaive": 0.2
+    }
+  }
+}
