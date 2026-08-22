@@ -159,7 +159,7 @@ npx @luizsantiago/spec-guardrails install
 
 | Version | What you gain |
 | --- | --- |
-| **3.1.x** | Doctor STATE fix + Python banner; `validate-traceability`; honest gates docs |
+| **3.1.x** | Doctor STATE fix; `validate-traceability` / `validate-quick`; `classify-change` / `feature-status`; Claude `CLAUDE.md` |
 | **3.0.x** | Final name Spec Guardrails; `.specs/guardrails/`; no dual-path ([Migration](docs/guide/Migration.md)) |
 | **2.2.x** | Seatbelt-era paths & markers; `doctor` Execute hints; docs split from README |
 | **2.1.x** | `loop-plan` + parallel `/loop` waves |

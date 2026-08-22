@@ -263,11 +263,16 @@ describe("install guardrails", () => {
         assert.equal(await fs.readFile(specGate, "utf8"), SPEC_GATE_FIXTURE);
 
         const mode = (await fs.stat(specGate)).mode & 0o777;
-        assert.equal(
-          (mode & 0o100) !== 0,
-          true,
-          `gate script should be executable, got ${mode.toString(8)}`,
-        );
+        // Windows does not preserve Unix execute bits the same way; skip on win32.
+        if (process.platform !== "win32") {
+          assert.equal(
+            (mode & 0o100) !== 0,
+            true,
+            `gate script should be executable, got ${mode.toString(8)}`,
+          );
+        } else {
+          assert.ok(typeof mode === "number");
+        }
       } finally {
         await fs.rm(cwd, { recursive: true, force: true });
       }
@@ -505,7 +510,12 @@ keep me
     );
   });
 
-  it("throws a clear permission error when directory creation is denied", async () => {
+  it("throws a clear permission error when directory creation is denied", async (t) => {
+    if (process.platform === "win32") {
+      t.skip("POSIX directory permission denial is not reliable on Windows");
+      return;
+    }
+
     await withMockServer(async (mockServer) => {
       const cwd = await createTempDir("harness-permission-");
       const blockedDir = path.join(cwd, "blocked");

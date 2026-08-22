@@ -78,7 +78,20 @@ Out of scope: PDF export and scheduled emails.
 | **When** | ≤3 files, no design decisions, no new dependencies, no auth/payments |
 | **How** | `/quick` + short description of the change |
 
-**What the agent does:** Implements → runs tests → `check-commit` → done. No `feature-init`, no `spec.md`.
+**What the agent does:**
+
+1. Optionally runs `classify-change` to confirm Quick tier
+2. Writes `.specs/quick/NNN-slug/TASK.md` → implement → tests
+3. `check-commit` → writes `SUMMARY.md`
+4. Runs `validate-quick` until the gate passes
+
+**CLI (agent runs — optional for you):**
+
+| Command | Role in Quick |
+| --- | --- |
+| `classify-change "…" [files…]` | Heuristic tier check (quick vs promote to specify) |
+| `validate-quick [NNN-slug]` | Gate: TASK.md / SUMMARY.md shape, ≤3 files, no sensitive paths |
+| `check-commit --message "…"` | Conventional Commits before landing |
 
 **Skip when:** More than 3 files, new dependencies, auth/payments/data — use `/specify` instead.
 
@@ -135,15 +148,21 @@ Implement approved tasks — test-first, one commit per task, gates between step
 
 ## `/verify` — independent proof (always required)
 
-Prove the spec was met — with test `file:line` evidence, not self-report. Verifier must **not** have written the code. Runs `validate-state`.
+Prove the spec was met — with test `file:line` evidence, not self-report. Verifier must **not** have written the code.
 
-**Never skip** (except Quick tier uses a lighter path inside `quick-mode.md`).
+**What the agent does:**
+
+1. Drafts `validation.md` with coverage lines
+2. Runs `validate-traceability` (REQ → tasks → coverage)
+3. Runs `validate-state` (PASS verdict, evidence, sensor on Medium+)
+
+**Never skip** (except Quick tier uses a lighter path inside `quick-mode.md` + `validate-quick`).
 
 ---
 
 ## `/archive` — fold finished work into project memory
 
-Only after `/verify` returns **PASS**. Runs `archive-feature`; updates domain spec, `ROADMAP.md`, resets `STATE.md`.
+Only after `/verify` returns **PASS**. Runs `archive-feature` (re-checks `validate-traceability` then `validate-state`); updates domain spec, `ROADMAP.md`, resets `STATE.md`.
 
 ---
 
@@ -177,9 +196,27 @@ Record grounded lessons when Verify fails. Uses `lessons.py`; confirmed lessons 
 
 ---
 
+## CLI helpers (terminal — humans or agents)
+
+These are **not** chat slash commands. Useful when you want a status check without opening a full phase:
+
+| Command | Purpose |
+| --- | --- |
+| `doctor [path]` | Install readiness score + Execute hint; banners if Python is missing |
+| `classify-change "desc" [files…]` | Heuristic complexity tier (`--json` optional) |
+| `feature-status [feature]` | Artifacts present, task counts, next recommended gate |
+| `validate-traceability [feature]` | REQ → tasks → validation coverage chain |
+| `validate-quick [quick-folder]` | Quick-mode structural gate |
+| `phase-context <phase>` | Print `.specs/config.yaml` rules for a phase |
+
+Full CLI list: `npx @luizsantiago/spec-guardrails --help`.
+
+---
+
 ## Related
 
 - [Concepts](concepts.md) — how spec-driven, loop, and graph fit together
 - [Skills and hub](skills-and-hub.md) — what each skill file does
 - [Gates reference](gates.md) — what the agent runs at each phase
+- [Platform parity](Platform-parity.md) — Cursor vs Claude Code
 - [Quick start](Quick-start.md) — first ten minutes
