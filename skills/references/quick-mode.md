@@ -57,7 +57,11 @@ Announce the switch — do not silently expand a quick task into a feature.
 Quick mode compresses ceremony, not carelessness — but it is **not** the full Verify gate:
 
 - Prove the change with a test or an explicit, documented manual check.
-- Record evidence in `SUMMARY.md` (`file:line` or the exact manual steps). That is a **process** requirement; `validate_state.py` does not run on Quick artifacts.
+- Record evidence in `SUMMARY.md` (`file:line` or the exact manual steps). Run the Quick structural gate:
+  ```bash
+  npx @luizsantiago/spec-guardrails validate-quick 001-theme-persist
+  ```
+  `validate_state.py` does **not** run on Quick artifacts — that gate is for full-pipeline features.
 - Blast radius still applies — local commit only; `git push` and deploy need an explicit go-ahead.
 - If any Quick guardrail is exceeded, stop and route to `specify.md` (see When NOT to Use).
 

@@ -30,6 +30,7 @@ Plain-language guides for Spec Guardrails **3.1.x**. Start at [Home](Home.md).
 | [loop-patterns.md](loop-patterns.md) | Feature vs operational loops; `doctor` score |
 | [ecosystem.md](ecosystem.md) | Where Spec Guardrails sits |
 | [Companion-fullstack-floor-map.md](Companion-fullstack-floor-map.md) | Full Stack Floor Map pairing |
+| [Platform-parity.md](Platform-parity.md) | Cursor vs Claude Code install surface |
 | [brownfield-context.md](brownfield-context.md) | KG & RepoGraph deferral |
 | [FAQ.md](FAQ.md) | Common questions |
 | [credits.md](credits.md) | Full attribution |

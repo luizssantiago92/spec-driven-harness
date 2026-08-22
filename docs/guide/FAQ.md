@@ -81,4 +81,6 @@ Run `npx @luizsantiago/spec-guardrails doctor` — it scores the install (skills
 
 ## Something broken or unclear?
 
-Open an issue on [GitHub](https://github.com/luizssantiago92/spec-guardrails/issues). For contributing rules (especially the frozen gate), see [CONTRIBUTING](../../CONTRIBUTING.md).
+- **Bugs / frozen-gate regressions:** open an issue on [GitHub Issues](https://github.com/luizssantiago92/spec-guardrails/issues).
+- **How-do-I questions:** [GitHub Discussions (Q&A)](https://github.com/luizssantiago92/spec-guardrails/discussions) — keep the FAQ honest; Discussions is for community answers, not marketing.
+- Contributing rules (especially the frozen gate): [CONTRIBUTING](../../CONTRIBUTING.md).

@@ -141,6 +141,11 @@ describe("install guardrails", () => {
         assert.equal(await pathExists(gettingStarted), true);
         assert.match(await fs.readFile(gettingStarted, "utf8"), /do \*\*not\*\* need to memorize CLI/);
         assert.equal(await pathExists(cursorRules), true);
+        assert.equal(await pathExists(path.join(cwd, ".claude/CLAUDE.md")), true);
+        assert.match(
+          await fs.readFile(path.join(cwd, ".claude/CLAUDE.md"), "utf8"),
+          /SPEC-GUARDRAILS:BEGIN/,
+        );
 
         assert.equal(await fs.readFile(cursorSkill, "utf8"), SKILL_FIXTURE);
         assert.equal(
@@ -976,6 +981,10 @@ describe("reference catalog", () => {
       SCRIPT_ASSETS.some((asset) => asset.file === "validate_traceability.py"),
       true,
     );
+    assert.equal(
+      SCRIPT_ASSETS.some((asset) => asset.file === "validate_quick.py"),
+      true,
+    );
   });
 });
 
@@ -1065,6 +1074,9 @@ describe("CLI", () => {
     assert.match(stdout, /preset list/);
     assert.match(stdout, /analyze-artifacts/);
     assert.match(stdout, /validate-traceability/);
+    assert.match(stdout, /validate-quick/);
+    assert.match(stdout, /classify-change/);
+    assert.match(stdout, /feature-status/);
     assert.match(stdout, /doctor/);
   });
 });
