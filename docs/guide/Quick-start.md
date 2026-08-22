@@ -1,18 +1,18 @@
 # Quick start
 
-Get from zero to “the seatbelt is watching” in about ten minutes.
+Get from zero to “the guardrails is watching” in about ten minutes.
 
 ## 1. Install
 
-In your project folder (not in the Spec Seatbelt source repo):
+In your project folder (not in the Spec Guardrails source repo):
 
-    npx @luizsantiago/spec-seatbelt install
+    npx @luizsantiago/spec-guardrails install
 
 You should see a playbook land for Cursor (and Claude if you use it), plus a `.specs/` folder where the project keeps notes and the automatic checks.
 
 Optional sanity check:
 
-    npx @luizsantiago/spec-seatbelt doctor
+    npx @luizsantiago/spec-guardrails doctor
 
 ## 2. Tell your agent what you want
 
@@ -20,7 +20,7 @@ Open Cursor or Claude and say something concrete, for example:
 
 > Specify a small feature: users can sign in with email and password and get a session. Keep social login out of scope.
 
-Ask it to follow the installed seatbelt (the Spec-Driven / hub skill).
+Ask it to follow the installed guardrails (the Spec-Driven / hub skill).
 
 **Agent commands** (`/specify`, `/loop`, `/verify`, …) are chat phrases — not shell commands. Summary table: [Agent commands](agent-commands.md).
 
@@ -46,7 +46,7 @@ If the report still lists open gaps, it isn’t done.
 
 ## What “good” looks like after ten minutes
 
-- The seatbelt files are installed  
+- The guardrails files are installed  
 - There’s a written goal you actually agree with  
 - The agent isn’t inventing a giant PR in silence  
 - You know the next step (do job 1, or fix a failed check)
@@ -57,13 +57,13 @@ After install, you can run the same brakes from the terminal. Think of them as �
 
 ```bash
 # Is the written goal complete enough?
-npx @luizsantiago/spec-seatbelt validate-spec auth
+npx @luizsantiago/spec-guardrails validate-spec auth
 
 # Does this commit message follow the house style?
-npx @luizsantiago/spec-seatbelt check-commit --message "feat(auth): add token refresh"
+npx @luizsantiago/spec-guardrails check-commit --message "feat(auth): add token refresh"
 
 # What lessons has the project already confirmed?
-npx @luizsantiago/spec-seatbelt lessons list --status confirmed
+npx @luizsantiago/spec-guardrails lessons list --status confirmed
 ```
 
 Replace `auth` with your feature folder name under `.specs/features/`. A non-zero exit means: stop, fix the artifact, run again.
@@ -74,12 +74,12 @@ Replace `auth` with your feature folder name under `.specs/features/`. A non-zer
 | `check-commit` | The commit title looks Conventional (type, length, no trailing period) |
 | `lessons list` | Show rules the team already promoted — candidates stay hidden |
 
-More gates (tasks, loop-plan, “are we actually done?”): [Gates reference](gates.md) · [README Gates section](https://github.com/luizssantiago92/spec-seatbelt#gates-summary).
+More gates (tasks, loop-plan, “are we actually done?”): [Gates reference](gates.md) · [README Gates section](https://github.com/luizssantiago92/spec-guardrails#gates-summary).
 
 ## If something feels stuck
 
 - **No Python?** The playbook still guides the agent; install Python 3 when you want the automatic stop checks.  
-- **Agent ignores the seatbelt?** Point it at `.cursor/skills/agent-architecture.md` and say “follow this”.  
+- **Agent ignores the guardrails?** Point it at `.cursor/skills/agent-architecture.md` and say “follow this”.  
 - **Want the big picture?** → [How it works](How-it-works.md)  
 - **Want the brakes explained?** → [Gates and guarantees](Gates-and-guarantees.md)  
 

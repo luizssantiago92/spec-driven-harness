@@ -1,16 +1,16 @@
 {
-  "name": "@luizsantiago/spec-seatbelt",
-  "version": "2.2.8",
-  "description": "A seatbelt for AI coding agents — spec-driven phases, automatic gates, progressive skill loading (~70% fewer tokens per turn). Works in Cursor and Claude.",
+  "name": "@luizsantiago/spec-guardrails",
+  "version": "3.0.0",
+  "description": "Guardrails for AI coding agents — spec-driven phases, automatic gates, progressive skill loading (~70% fewer tokens per turn). Works in Cursor and Claude.",
   "type": "module",
   "bin": {
-    "spec-seatbelt": "./index.js"
+    "spec-guardrails": "./index.js"
   },
   "engines": {
     "node": ">=18"
   },
   "scripts": {
-    "seatbelt": "node index.js",
+    "guardrails": "node index.js",
     "test": "npm run test:node && npm run test:gates",
     "test:node": "node --test test/install.test.js test/test_feature_init.test.js test/test_config.test.js test/test_archive.test.js test/test_delta_merge.test.js test/test_presets.test.js test/test_brownfield.test.js test/test_doctor.test.js test/test_token_cost.test.js test/test_next_steps.test.js",
     "test:gates": "node test/run-gate-tests.mjs",
@@ -27,7 +27,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/luizssantiago92/spec-seatbelt.git"
+    "url": "git+https://github.com/luizssantiago92/spec-guardrails.git"
   },
   "keywords": [
     "ai",
@@ -35,7 +35,7 @@
     "cursor",
     "claude",
     "spec-driven",
-    "seatbelt",
+    "guardrails",
     "cli"
   ],
   "author": "luizsantiago",

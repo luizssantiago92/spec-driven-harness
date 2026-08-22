@@ -101,7 +101,7 @@ Write findings into the verifier's report at `.specs/features/[feature]/validati
 The completion gate reads this file:
 
 ```bash
-python3 .specs/seatbelt/scripts/validate_state.py .specs/features/[feature]
+python3 .specs/guardrails/scripts/validate_state.py .specs/features/[feature]
 ```
 
 ## Escalation

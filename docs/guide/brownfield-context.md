@@ -10,7 +10,7 @@ When `project-init` scans an existing repo, the agent needs:
 2. **What is true** — requirements, APIs, invariants (`.specs/domains/`)
 3. **What depends on what** — for safe parallel work and impact analysis
 
-KG and RepoGraph attack (2) and (3) with graphs. Spec Seatbelt already covers a lighter slice via markdown + gates.
+KG and RepoGraph attack (2) and (3) with graphs. Spec Guardrails already covers a lighter slice via markdown + gates.
 
 ## Knowledge graphs (graph-engineering KG half)
 

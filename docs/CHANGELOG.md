@@ -1,10 +1,28 @@
 # Changelog
 
-Version history for `@luizsantiago/spec-seatbelt`. For upgrade steps, see the [README](../README.md#upgrading).
+Version history for `@luizsantiago/spec-guardrails`. Upgrade steps: [Migration](guide/Migration.md). Name freeze: [Stability policy](guide/Stability-policy.md).
 
 ## Unreleased
 
-- Companion guide: [Full Stack Floor Map Desks v3 (planned 0.5.0)](guide/Companion-fullstack-floor-map.md) — Lane vs Desk vs Seatbelt ownership, harmony loop, non-destructive `.specs/desks/` coexistence; hub pointer in `agent-architecture.md`
+—
+
+## 3.0.0 — Spec Guardrails (final name)
+
+**Breaking rename + clean break.** No production consumers expected; dual-path removed.
+
+| Item | Was (2.x) | Now (3.0) |
+| --- | --- | --- |
+| Package | `@luizsantiago/spec-seatbelt` | `@luizsantiago/spec-guardrails` |
+| CLI | `spec-seatbelt` | `spec-guardrails` |
+| Scripts | `.specs/seatbelt/scripts/` (+ harness dual-path) | `.specs/guardrails/scripts/` **only** |
+| Markers | `SPEC-SEATBELT`, `seatbelt-managed` | `SPEC-GUARDRAILS`, `guardrails-managed` |
+| Env | `SPEC_SEATBELT_REPO_URL` / `HARNESS_REPO_URL` | `SPEC_GUARDRAILS_REPO_URL` |
+| APIs | `*Seatbelt*` | `*Guardrails*` |
+| Doctor | Seatbelt Ready | Guardrails Ready |
+
+- Docs: [Migration](guide/Migration.md), [Stability policy](guide/Stability-policy.md)
+- Companion guide updated for `@luizsantiago/spec-guardrails`
+- `install` still **upgrades** old `.cursorrules` / managed-rule markers (seatbelt + harness) to the new ones; it does **not** keep reading old script directories at runtime
 
 ## 2.2.x — Internal seatbelt branding
 
@@ -13,7 +31,8 @@ Version history for `@luizsantiago/spec-seatbelt`. For upgrade steps, see the [R
 - Config API renamed: `parseSeatbeltConfig`, `mergeSeatbeltConfigs`, …
 - `doctor`: **Seatbelt Ready** score + Execute hint (`loop-plan` / `validate-state`)
 - Docs: agent commands, skills/hub, gates reference moved out of README
-- Companion guide renamed to [Full Stack Floor Map](guide/Companion-fullstack-floor-map.md) (`@luizsantiago/fullstack-floor-map`; was Agentic Fullstack)
+- Companion guide: [Full Stack Floor Map](guide/Companion-fullstack-floor-map.md) (`@luizsantiago/fullstack-floor-map`)
+- Desks v3 pairing notes (planned Floor Map 0.5.0) — Lane vs Desk vs seatbelt ownership
 
 ## 2.1.x — Parallel Execute
 
@@ -29,7 +48,7 @@ Version history for `@luizsantiago/spec-seatbelt`. For upgrade steps, see the [R
 
 ## 1.3.x — Last `agentic-harness` release
 
-- Final publish under old package name — migrate to `spec-seatbelt` for 2.x
+- Final publish under old package name — migrate to `spec-seatbelt` for 2.x (then guardrails for 3.x)
 
 ## 1.1.x — Brownfield
 
@@ -69,8 +88,8 @@ Version history for `@luizsantiago/spec-seatbelt`. For upgrade steps, see the [R
 
 | From | Action |
 | --- | --- |
-| `agentic-harness` 1.x | `npx @luizsantiago/spec-seatbelt install` |
-| Pre-2.2 paths | `install` migrates scripts dir and `.cursorrules` markers |
-| **Planned 3.0** | Remove read-only legacy paths/markers after install migration |
+| `agentic-harness` 1.x | `npx @luizsantiago/spec-guardrails install` (fresh) |
+| `spec-seatbelt` 2.x | Same; then drop `.specs/seatbelt/` / `.specs/harness/` after verify |
+| **3.0** | No dual-path; see [Migration](guide/Migration.md) |
 
-[GitHub Releases](https://github.com/luizssantiago92/spec-seatbelt/releases)
+[GitHub Releases](https://github.com/luizssantiago92/spec-guardrails/releases)

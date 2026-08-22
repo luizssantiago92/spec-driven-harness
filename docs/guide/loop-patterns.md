@@ -1,11 +1,11 @@
 # Loop patterns (operational)
 
-The Spec Seatbelt governs **feature work**: Specify → Tasks → Execute → Verify.
+The Spec Guardrails governs **feature work**: Specify → Tasks → Execute → Verify.
 **Loop engineering** governs **recurring work** on the same repo: triage, CI babysitting, dependency sweeps.
 
 This guide maps when to use each. Patterns below are inspired by the open-source
 [loop-engineering](https://github.com/cobusgreyling/loop-engineering) project (MIT) —
-we do not ship their CLI; we document the *shape* so you can combine it with Spec Seatbelt.
+we do not ship their CLI; we document the *shape* so you can combine it with Spec Guardrails.
 
 ## Two loops, one repo
 
@@ -30,16 +30,16 @@ Feature loops need specs and gates. Operational loops need **constraints**, **bu
 
 Pick one pattern per automation. Mixing “fix CI + upgrade all deps + rewrite auth” in a single loop is how agents lose the plot.
 
-## Seatbelt Ready score
+## Guardrails Ready score
 
-Run an audit before relying on Spec Seatbelt in production:
+Run an audit before relying on Spec Guardrails in production:
 
 ```bash
-npx @luizsantiago/spec-seatbelt doctor
-npx @luizsantiago/spec-seatbelt doctor --json
+npx @luizsantiago/spec-guardrails doctor
+npx @luizsantiago/spec-guardrails doctor --json
 ```
 
-`doctor` checks skills, gates, config, STATE, optional PROJECT.md, and (for the active feature with 3+ tasks) `task-graph.md`. It prints **Seatbelt Ready: N/100**, up to three next actions, and an **Execute hint** (`loop-plan` when tasks are in progress, or `validate-state` when every task is marked complete).
+`doctor` checks skills, gates, config, STATE, optional PROJECT.md, and (for the active feature with 3+ tasks) `task-graph.md`. It prints **Guardrails Ready: N/100**, up to three next actions, and an **Execute hint** (`loop-plan` when tasks are in progress, or `validate-state` when every task is marked complete).
 
 Inspired by loop-engineering’s Loop Ready score — scoped to **this package’s** install surface, not their full foundry stack.
 
@@ -50,7 +50,7 @@ Optional companions (not bundled):
 - [loop-engineering](https://github.com/cobusgreyling/loop-engineering) — `loop init`, `loop doctor`, patterns, cost estimator
 - [harness-foundry](https://github.com/cobusgreyling/harness-foundry) — versioned harness runtime (sessions, traces)
 
-Use **Spec Seatbelt** for spec memory and gates; use **loop-engineering** when you want scored operational scaffolding on top.
+Use **Spec Guardrails** for spec memory and gates; use **loop-engineering** when you want scored operational scaffolding on top.
 
 ## Credits
 

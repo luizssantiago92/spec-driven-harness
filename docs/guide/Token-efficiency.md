@@ -6,13 +6,13 @@
 
 Load **only the phase you’re in**, keep the written plan on disk, and pull in extra reviews **only when you ask**.
 
-That’s the difference between “seatbelt” and “paste every skill into every message.”
+That’s the difference between “guardrails” and “paste every skill into every message.”
 
 ## Why chat dumps hurt
 
 If the agent reloads planning + building + checking + security + QA on every turn, you pay for text you aren’t using. Worse: the model’s attention spreads thin.
 
-Spec Seatbelt fights that with:
+Spec Guardrails fights that with:
 
 1. **Progressive skill loading** — one phase (or one sister) at a time  
 2. **`.specs/` on disk** — the plan doesn’t need to live only in the prompt  

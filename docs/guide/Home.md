@@ -1,8 +1,8 @@
-# Spec Seatbelt
+# Spec Guardrails
 
-**A seatbelt for AI coding agents.**
+**Guardrails for AI coding agents.**
 
-Agents are great at writing code and terrible at knowing when to stop. Spec Seatbelt gives them a simple loop: agree on the goal, break it into small jobs, prove each job, then let a fresh review ask for proof — not “trust me”.
+Agents are great at writing code and terrible at knowing when to stop. Spec Guardrails gives them a simple loop: agree on the goal, break it into small jobs, prove each job, then let a fresh review ask for proof — not “trust me”.
 
 It is not another pile of prompts. If the write-up is incomplete or there is no real test evidence, the agent is supposed to **stop and fix it** before saying the feature is done.
 
@@ -10,11 +10,11 @@ Works with **Cursor** and **Claude Code**. Install once; the project remembers w
 
 ## Install
 
-    npx @luizsantiago/spec-seatbelt install
+    npx @luizsantiago/spec-guardrails install
 
 Re-run anytime to refresh the playbook. Your notes and decisions in `.specs/` stay put.
 
-After install, `npx @luizsantiago/spec-seatbelt doctor` scores readiness (skills, gates, config) and suggests the next step.
+After install, `npx @luizsantiago/spec-guardrails doctor` scores readiness (skills, gates, config) and suggests the next step.
 
 ## Why people use it
 
@@ -29,9 +29,9 @@ After install, `npx @luizsantiago/spec-seatbelt doctor` scores readiness (skills
 ## Everyday brakes (after install)
 
 ```bash
-npx @luizsantiago/spec-seatbelt validate-spec auth
-npx @luizsantiago/spec-seatbelt check-commit --message "feat(auth): add token refresh"
-npx @luizsantiago/spec-seatbelt lessons list --status confirmed
+npx @luizsantiago/spec-guardrails validate-spec auth
+npx @luizsantiago/spec-guardrails check-commit --message "feat(auth): add token refresh"
+npx @luizsantiago/spec-guardrails lessons list --status confirmed
 ```
 
 Plain meaning on [Quick start](Quick-start.md) and [Gates and guarantees](Gates-and-guarantees.md).
@@ -64,6 +64,6 @@ You talk to the agent in **chat**, not the terminal — `/specify`, `/loop`, `/v
 
 ## Links
 
-- [README](https://github.com/luizssantiago92/spec-seatbelt#readme) (technical detail)
-- [npm `@luizsantiago/spec-seatbelt`](https://www.npmjs.com/package/@luizsantiago/spec-seatbelt)
-- Gate contract for maintainers: [`prd/gate-stability.md`](https://github.com/luizssantiago92/spec-seatbelt/blob/main/prd/gate-stability.md)
+- [README](https://github.com/luizssantiago92/spec-guardrails#readme) (technical detail)
+- [npm `@luizsantiago/spec-guardrails`](https://www.npmjs.com/package/@luizsantiago/spec-guardrails)
+- Gate contract for maintainers: [`prd/gate-stability.md`](https://github.com/luizssantiago92/spec-guardrails/blob/main/prd/gate-stability.md)

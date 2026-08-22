@@ -5,7 +5,7 @@ import path from "node:path";
 import { describe, it } from "node:test";
 
 import { archiveFeature, inferDomainFromFeature } from "../lib/archive.js";
-import { initSeatbeltMemory } from "../lib/memory.js";
+import { initGuardrailsMemory } from "../lib/memory.js";
 import { STATE_HEADER } from "../lib/constants.js";
 
 async function createTempDir(prefix) {
@@ -27,7 +27,7 @@ describe("archive feature", () => {
 
   it("updates ROADMAP, merges delta spec, and resets STATE", async () => {
     const cwd = await createTempDir("archive-");
-    await initSeatbeltMemory(cwd);
+    await initGuardrailsMemory(cwd);
 
     const featureId = "001-presence";
     await writeFeature(cwd, featureId, {
@@ -93,7 +93,7 @@ Verdict: PASS
 
   it("respects --no-domain and --no-state flags", async () => {
     const cwd = await createTempDir("archive-skip-");
-    await initSeatbeltMemory(cwd);
+    await initGuardrailsMemory(cwd);
 
     const featureId = "002-quick-fix";
     await writeFeature(cwd, featureId, {

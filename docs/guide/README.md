@@ -1,6 +1,6 @@
 # Documentation
 
-Plain-language guides for Spec Seatbelt **2.2.x**. Start at [Home](Home.md).
+Plain-language guides for Spec Guardrails **3.0.x**. Start at [Home](Home.md).
 
 ## Start here
 
@@ -8,8 +8,10 @@ Plain-language guides for Spec Seatbelt **2.2.x**. Start at [Home](Home.md).
 | --- | --- |
 | [Home.md](Home.md) | Overview and install |
 | [Quick-start.md](Quick-start.md) | First ten minutes |
-| [concepts.md](concepts.md) | Spec-driven, seatbelt, loop, graph, memory |
+| [concepts.md](concepts.md) | Spec-driven, guardrails, loop, graph, memory |
 | [agent-commands.md](agent-commands.md) | Every chat command — full reference |
+| [Migration.md](Migration.md) | agentic-harness → seatbelt → **guardrails** |
+| [Stability-policy.md](Stability-policy.md) | Final name freeze + semver |
 
 ## Deep dives
 
@@ -26,7 +28,7 @@ Plain-language guides for Spec Seatbelt **2.2.x**. Start at [Home](Home.md).
 | File | Topic |
 | --- | --- |
 | [loop-patterns.md](loop-patterns.md) | Feature vs operational loops; `doctor` score |
-| [ecosystem.md](ecosystem.md) | Where Spec Seatbelt sits |
+| [ecosystem.md](ecosystem.md) | Where Spec Guardrails sits |
 | [Companion-fullstack-floor-map.md](Companion-fullstack-floor-map.md) | Full Stack Floor Map pairing |
 | [brownfield-context.md](brownfield-context.md) | KG & RepoGraph deferral |
 | [FAQ.md](FAQ.md) | Common questions |

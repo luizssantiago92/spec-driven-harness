@@ -87,7 +87,7 @@ Dumping every skill + reference every turn ≈ **31k tokens** — see [Token eff
 | `.cursor/skills/*.md` | Sister skills |
 | `.claude/skills/` | Same tree for Claude Code |
 | `.cursor/rules/engineering-baseline.mdc` | Always-on rule |
-| `.specs/seatbelt/scripts/` | Python gate scripts |
+| `.specs/guardrails/scripts/` | Python gate scripts |
 
 ## Related
 

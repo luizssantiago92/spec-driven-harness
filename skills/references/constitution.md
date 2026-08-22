@@ -4,7 +4,7 @@ Establish project governing principles that guide every phase.
 
 ## When to Use
 
-- First seatbelt session on a new project
+- First guardrails session on a new project
 - Owner asks to define or refresh engineering principles
 - Before the first Medium+ feature when `.specs/project/CONSTITUTION.md` is missing
 

@@ -1,4 +1,4 @@
-"""Shared helpers for the Spec Seatbelt structural gates.
+"""Shared helpers for the Spec Guardrails structural gates.
 
 Gates are deterministic: they read an artifact, apply structural checks, and exit
 non-zero when the artifact is not ready for the next phase. They never mutate

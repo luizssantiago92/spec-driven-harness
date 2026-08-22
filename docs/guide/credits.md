@@ -1,6 +1,6 @@
 # Credits and lineage
 
-The Spec Seatbelt combines ideas from several open-source projects and essays.
+The Spec Guardrails combines ideas from several open-source projects and essays.
 We did not invent spec-driven phases, loop design, or task-graph topology — we adapted and gated them for installable agent skills.
 
 ## Core lineage
@@ -35,6 +35,6 @@ We did not invent spec-driven phases, loop design, or task-graph topology — we
 
 ## How to cite this package
 
-If you publish work that builds on Spec Seatbelt, please credit the upstream projects above in addition to `@luizsantiago/spec-seatbelt`.
+If you publish work that builds on Spec Guardrails, please credit the upstream projects above in addition to `@luizsantiago/spec-guardrails`.
 
 When adding new borrowed patterns, extend this file and the README Credits section in the same PR.

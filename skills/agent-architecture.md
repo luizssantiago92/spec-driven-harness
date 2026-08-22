@@ -5,7 +5,7 @@ description: Spec-Driven Development hub for AI-assisted engineering. Progressiv
 
 # Agent Architecture (Hub)
 
-Spec-Driven Development (SDD) seatbelt for AI-assisted software engineering.
+Spec-Driven Development (SDD) guardrails for AI-assisted software engineering.
 Replaces "Vibe Coding" with adaptive phases backed by persistent memory, sister skills, and gates enforced by code.
 
 **Token cost.** Load a working set, not the archive — see `references/context-limits.md`. Progressive phase loading is ~70% fewer skill tokens than dumping hub + all references + sister skills every turn; a Medium feature is typically ~80% cheaper in skill tokens than naive full reloads.
@@ -16,7 +16,7 @@ This file is the contract and the map. Phase procedures live in `references/`; c
 
 **Reference files.** Phase procedures live in `references/` next to this file (`.cursor/skills/references/`, `.claude/skills/references/`). Read a reference **completely** before acting on it. Never act on a partial read. Load the working set per `references/context-limits.md` — one feature at a time, current phase only.
 
-**Gate scripts.** Structural gates live in `.specs/seatbelt/scripts/` at the project root. Run them with `python3`; never assume a project-local `scripts/` directory belongs to Spec Seatbelt.
+**Gate scripts.** Structural gates live in `.specs/guardrails/scripts/` at the project root. Run them with `python3`; never assume a project-local `scripts/` directory belongs to Spec Guardrails.
 
 **Execution contract — non-negotiable, holds even if no reference file is open:**
 
@@ -40,16 +40,16 @@ Structural gates run **before** owner review, so they cannot drift when the mode
 
 | When | Command |
 | --- | --- |
-| Before `/specify` (Medium+) | `npx @luizsantiago/spec-seatbelt feature-init "<description>"` (Tier 0) |
+| Before `/specify` (Medium+) | `npx @luizsantiago/spec-guardrails feature-init "<description>"` (Tier 0) |
 | Optional project config | `init-config --preset node-ts` or `install --preset python` (see `preset list`) |
-| Before confirming a spec | `python3 .specs/seatbelt/scripts/validate_spec.py [feature]` |
-| Before approving tasks | `python3 .specs/seatbelt/scripts/analyze_artifacts.py [feature]` |
-| Before presenting tasks for approval | `python3 .specs/seatbelt/scripts/validate_tasks.py [feature]` |
-| On each commit | `python3 .specs/seatbelt/scripts/check_commit.py --message "<message>"` |
-| Before declaring a feature done | `python3 .specs/seatbelt/scripts/validate_state.py [feature]` |
-| After Verify PASS | `npx @luizsantiago/spec-seatbelt archive-feature [feature]` (Tier 0) |
-| Before a phase procedure (optional) | `npx @luizsantiago/spec-seatbelt phase-context <phase>` |
-| After a FAIL verdict | `python3 .specs/seatbelt/scripts/lessons.py add --source .specs/features/[feature]/validation.md` |
+| Before confirming a spec | `python3 .specs/guardrails/scripts/validate_spec.py [feature]` |
+| Before approving tasks | `python3 .specs/guardrails/scripts/analyze_artifacts.py [feature]` |
+| Before presenting tasks for approval | `python3 .specs/guardrails/scripts/validate_tasks.py [feature]` |
+| On each commit | `python3 .specs/guardrails/scripts/check_commit.py --message "<message>"` |
+| Before declaring a feature done | `python3 .specs/guardrails/scripts/validate_state.py [feature]` |
+| After Verify PASS | `npx @luizsantiago/spec-guardrails archive-feature [feature]` (Tier 0) |
+| Before a phase procedure (optional) | `npx @luizsantiago/spec-guardrails phase-context <phase>` |
+| After a FAIL verdict | `python3 .specs/guardrails/scripts/lessons.py add --source .specs/features/[feature]/validation.md` |
 
 Gates accept a feature name, a feature directory, or a path to the artifact. With no argument they auto-detect when the project has exactly one feature; with several they list candidates and exit 2. A spec is rejected unless every criterion uses `SHALL` or `MUST` and `## Assumptions` is present.
 
@@ -138,7 +138,7 @@ When in doubt, start at **Medium** and drop phases only with owner approval.
 | `.specs/features/[feature]/tasks.md` | Atomic task breakdown |
 | `.specs/features/[feature]/task-graph.md` | Job DAG and parallel groups (when applicable) |
 | `.specs/features/[feature]/validation.md` | Independent verification report |
-| `.specs/seatbelt/scripts/` | Deterministic gate scripts |
+| `.specs/guardrails/scripts/` | Deterministic gate scripts |
 
 **Create artifacts lazily.** Write a file only when its phase actually produces content. Never scaffold an empty `design.md`, `tasks.md`, or `context.md` — an empty file claims a phase ran when it did not. Absence is the correct state for a skipped phase.
 
@@ -167,7 +167,7 @@ Never skip to step 5 while steps 1–4 are available. Fabrication cascades throu
 - **Do the work; do not narrate the machinery.** Produce the artifact instead of announcing the phase.
 - **Match effort to the work.** Heavy reasoning for design and ambiguity; fast execution for mechanical tasks.
 - **Write artifacts in a plain, decided voice.** Lead with the verdict; cut filler and hedging.
-- **Artifacts in English** — code, tests, commits, and `.specs/` documents (see `engineering-standards.md`). Chat language is the owner's personal setting, not a seatbelt rule.
+- **Artifacts in English** — code, tests, commits, and `.specs/` documents (see `engineering-standards.md`). Chat language is the owner's personal setting, not guardrails rule.
 
 ## Model Selection
 
@@ -192,7 +192,7 @@ Project rules: `.cursor/rules/engineering-baseline.mdc` (always applied in Curso
 
 ## Optional companion: Full Stack Floor Map
 
-When [`@luizsantiago/fullstack-floor-map`](https://www.npmjs.com/package/@luizsantiago/fullstack-floor-map) is installed, **Execute** may load one **Lane** layer manual and at most one catalog specialist per turn; **`/verify` stays Seatbelt-only** (no Lane manuals, no catalog). Floor Map **0.5.0 (planned)** adds **Desk** memory under `.specs/desks/` for specialist continuity and handoff — companion-owned, not Seatbelt gates. Pairing contract: [Companion: Full Stack Floor Map](https://github.com/luizssantiago92/spec-seatbelt/blob/main/docs/guide/Companion-fullstack-floor-map.md).
+When [`@luizsantiago/fullstack-floor-map`](https://www.npmjs.com/package/@luizsantiago/fullstack-floor-map) is installed, **Execute** may load one **Lane** layer manual and at most one catalog specialist per turn; **`/verify` stays Guardrails-only** (no Lane manuals, no catalog). Floor Map **0.5.0 (planned)** adds **Desk** memory under `.specs/desks/` for specialist continuity and handoff — companion-owned, not Guardrails gates. Pairing contract: [Companion: Full Stack Floor Map](https://github.com/luizssantiago92/spec-guardrails/blob/main/docs/guide/Companion-fullstack-floor-map.md).
 
 ## Commands
 
@@ -218,4 +218,4 @@ When [`@luizsantiago/fullstack-floor-map`](https://www.npmjs.com/package/@luizsa
 
 ## Credits
 
-Lineage and inspiration (CC-BY / MIT notices): see the repository [Credits](https://github.com/luizssantiago92/spec-seatbelt#credits) — TLC Spec-Driven, Addy Osmani agent-skills, graph-engineering.
+Lineage and inspiration (CC-BY / MIT notices): see the repository [Credits](https://github.com/luizssantiago92/spec-guardrails#credits) — TLC Spec-Driven, Addy Osmani agent-skills, graph-engineering.

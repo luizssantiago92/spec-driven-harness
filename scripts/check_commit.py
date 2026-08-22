@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Conventional Commits gate for seatbelt commits.
+"""Conventional Commits gate for guardrails commits.
 
 Run before each atomic commit:
 
@@ -9,7 +9,7 @@ Run before each atomic commit:
 Wire it as a git hook to enforce the format without agent involvement:
 
     #!/bin/sh
-    python3 .specs/seatbelt/scripts/check_commit.py --file "$1"
+    python3 .specs/guardrails/scripts/check_commit.py --file "$1"
 
 Checks:
   * `type(scope): subject` shape with an allowed type
