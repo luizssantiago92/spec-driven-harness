@@ -43,7 +43,9 @@ Type these in **Cursor or Claude Code**. They load phase procedures from `.curso
 | `install` | First time or upgrade |
 | `project-init` | Brownfield repo (optional) |
 | `doctor` | Install looks broken |
-| `validate-spec` / `validate-state` | Double-check gates manually |
+| `classify-change` / `feature-status` | Pick a tier or see next step |
+| `validate-spec` / `validate-traceability` / `validate-state` | Double-check feature gates |
+| `validate-quick` | Double-check a Quick TASK/SUMMARY |
 
 Everything else (`loop-plan`, `validate-tasks`, `check-commit`, …) is normally run **by the agent**.
 

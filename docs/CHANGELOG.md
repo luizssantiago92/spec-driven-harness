@@ -6,6 +6,10 @@ Version history for `@luizsantiago/spec-guardrails`. Upgrade steps: [Migration](
 
 —
 
+## 3.1.1 — Release patch
+
+- npm publish of the 3.1 hardening line (same feature set as 3.1.0)
+
 ## 3.1.0 — Hardening (doctor + traceability + CLI helpers)
 
 - **Doctor:** parse canonical STATE `- Feature:` (Execute hints work again); visible **PYTHON MISSING** banner; smoke test uses `resolvePython()`
